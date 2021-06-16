@@ -50,12 +50,16 @@
 }
 
 /* Source: https://www.w3schools.com/css/tryit.asp?filename=trycss_navbar_sticky */
+body {
+    font-size: 28px;
+}
+
 ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #ffffff;
+    /* background-color: #333; */
     position: -webkit-sticky; /* Safari */
     position: sticky;
     top: 0;

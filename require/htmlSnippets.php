@@ -14,8 +14,8 @@ function navigationBar() {
 
 	echo "<ul>\n";
 
-	$perm0_names = array("Login", "Logout" , "Register", "Update");
-	$perm0_urls = array("user/login.php", "user/logout.php", "user/register.php", "user/update.php");
+	$perm0_names = array("Login", "Logout" , "Register");
+	$perm0_urls = array("user/login.php", "user/logout.php", "user/register.php");
 
 	for ($ind = 0; $ind < count($perm0_names); ++$ind)
 		echo makeLink($perm0_names[$ind], $perm0_urls[$ind]) . "\n";

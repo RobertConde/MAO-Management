@@ -26,12 +26,13 @@ else if (isset($_POST['cycle_code'])) {
 }
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "require/htmlSnippets.php";
+
 stylesheet();
 navigationBar();
 ?>
 
 <html>
-<h2><u>MAO Account Login</u></h2>
+<h2>MAO Account Login</h2>
 
 <h3>1) Get a New Login Code <i>(If Necessary)</i></h3>
 <form method="post" action="login.php">

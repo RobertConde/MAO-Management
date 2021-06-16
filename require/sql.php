@@ -20,16 +20,7 @@ function getDetail($table, $col, $id) {
 		else if ($result->num_rows == 1)
 			return $result->fetch_row()[0];
 		else
-			die("<p style=\"color:red;\">Get detail function fetched a non-singular result: num_rows = $result->num_rows.</p>\n");
+			die("Get detail function fetched a non-singular result: num_rows = $result->num_rows.");
 	} else
-		die("<p style=\"color:red;\">Get detail function occurred an error upon query!</p>\n");
-}
-
-function getRank($id) {
-	$perms = getDetail('people', 'perms', $id);
-
-	if ($perms < 1)
-		return -1;
-
-	return floor(log10($perms));
+		die("Get detail function occurred an error upon query!");
 }
