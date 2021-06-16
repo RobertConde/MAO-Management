@@ -7,23 +7,31 @@ $login_result = null;
 if (isset($_SESSION['id']))
 	header("Location: https://" . $_SERVER['HTTP_HOST'] . "/");
 else if (isset($_POST['cycle_code'])) {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/login/helpers/loginFunctions.php";
-	$cycle_and_email_result = cycleAndEmailLoginCode($_POST['id']);
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/basicAccountManage.php";
+
+	$cycle_and_email_result = cycleLoginCode($_POST['id']);
 } else if(isset($_POST['login'])) {
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/sql/standardSQL.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/require/sql.php";
 
     if (getDetail('login', 'code', $_POST['id']) == $_POST['code']) {
-        $_SESSION['id'] = $_POST['id']; // Login (session)
+        require_once $_SERVER['DOCUMENT_ROOT'] . "/require/basicAccountManage.php";
+
+	    updateLoginTime($_POST['id']);  // Update login time (in `login` table)
+
+	    $_SESSION['id'] = $_POST['id']; // Login (session)
 
 	    header("Refresh:0");    // Refresh page
     } else
         $login_result = false;
 }
+
+require_once $_SERVER['DOCUMENT_ROOT'] . "require/htmlSnippets.php";
+
+stylesheet();
+navigationBar();
 ?>
 
 <html>
-<link rel="stylesheet" href = "<?php echo "https://" . $_SERVER['HTTP_HOST'] . "/style.css" ?>">
-
 <h2>MAO Account Login</h2>
 
 <h3>1) Get a New Login Code <i>(If Necessary)</i></h3>
@@ -63,4 +71,3 @@ if (!is_null($login_result)) {
 		echo("<p style=\"color:red;\">Invalid credentials/failed to login! </p>\n");
 }
 ?>
-

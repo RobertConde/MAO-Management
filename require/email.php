@@ -4,13 +4,13 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
 function sendEmail($to, $subj, $msg) {
-	require_once "Exception.php";
-	require_once "OAuth.php";
-	require_once "PHPMailer.php";
-	require_once "POP3.php";
-	require_once "SMTP.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "PHPMailer-6.4.1/Exception.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "PHPMailer-6.4.1/OAuth.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "PHPMailer-6.4.1/PHPMailer.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "PHPMailer-6.4.1/POP3.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "PHPMailer-6.4.1/SMTP.php";
 
-	$email_config = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/config.ini", true)['email'];
+	$email_config = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "config.ini", true)['email'];
 
 	//Create a new PHPMailer instance
 	$mail = new PHPMailer();

@@ -1,7 +1,7 @@
 <?php
 
 function getDBConn() {
-	$sql_config = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/config.ini", true)['sql'];
+	$sql_config = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "config.ini", true)['sql'];
 
 	$sql_conn = new mysqli($sql_config['hostname'], $sql_config['username'], $sql_config['password'], $sql_config['database']);
 
