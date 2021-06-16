@@ -1,6 +1,11 @@
-<html>
-<link rel="stylesheet" href="../style.css">
+<?php
+require_once $_SERVER['DOCUMENT_ROOT'] . "require/htmlSnippets.php";
 
+stylesheet();
+navigationBar();
+?>
+
+<html>
 <h2>MAO Account Registration</h2>
 <form method="post" action="register.php">
 	<label for="id">ID:</label>
@@ -61,7 +66,7 @@
 
 <?php
 if (isset($_POST['register'])) { // If form is POSTed
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/people/helpers/peopleFunctions.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/basicAccountManage.php";
 
     $registered = registerAccount(  // Register account
             $_POST['id'],
@@ -75,9 +80,7 @@ if (isset($_POST['register'])) { // If form is POSTed
     if ($registered) {
 	    echo "<p style=\"color:green;\">Successfully registered at around " . gmdate('m/d/Y H:i:s') . " UTC.</p>";
 
-	    require_once $_SERVER['DOCUMENT_ROOT'] . "/login/helpers/loginFunctions.php";
-
-	    if (cycleAndEmailLoginCode($_POST['id']))
+	    if (cycleLoginCode($_POST['id']))
 		    echo("<p style=\"color:green;\">Successfully sent new login code to email! </p>");
 	    else
 	        echo("<p style=\"color:red;\">Failed to send new login code to email (retry on login)! </p>");
