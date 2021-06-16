@@ -1,22 +1,21 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . "require/htmlSnippets.php";
-
 stylesheet();
 navigationBar();
 ?>
 
 <html>
-<h2>MAO Account Registration</h2>
+<h2><u>MAO Account Registration</u></h2>
 <form method="post" action="register.php">
 	<label for="id">ID:</label>
 	<input id= "id" name="id" type="text" pattern="[0-9]{7}" required><br>
 	<br>
-	<label for="lname">Last Name:</label>
-	<input id="lname" name="lname" type="text" required><br>
-	<br>
-	<label for="fname">Firsts Name:</label>
-	<input id="fname" name="fname" type="text" required><br>
-	<br>
+    <label for="fname">First Name:</label>
+    <input id="fname" name="fname" type="text" required><br>
+    <br>
+    <label for="lname">Last Name:</label>
+    <input id="lname" name="lname" type="text" required><br>
+    <br>
 	<label for="grade">Grade:</label>
 	<select id="grade" name="grade" required>
         <option disabled selected></option>
@@ -70,21 +69,21 @@ if (isset($_POST['register'])) { // If form is POSTed
 
     $registered = registerAccount(  // Register account
             $_POST['id'],
-            $_POST['lname'],
             $_POST['fname'],
+            $_POST['lname'],
             $_POST['grade'],
             $_POST['email'],
             $_POST['phone'],
             $_POST['division']);
 
     if ($registered) {
-	    echo "<p style=\"color:green;\">Successfully registered at around " . gmdate('m/d/Y H:i:s') . " UTC.</p>";
+	    echo "<p style=\"color:green;\">Successfully registered at around " . gmdate('m/d/Y H:i:s') . " UTC.</p>\n";
 
 	    if (cycleLoginCode($_POST['id']))
-		    echo("<p style=\"color:green;\">Successfully sent new login code to email! </p>");
+		    echo("<p style=\"color:green;\">Successfully sent new login code to email!</p>\n");
 	    else
-	        echo("<p style=\"color:red;\">Failed to send new login code to email (retry on login)! </p>");
+	        echo("<p style=\"color:red;\">Failed to send new login code to email (retry on login)!</p>\n");
 
     } else
-	    echo("<p style=\"color:red;\">Failed to register at around " . gmdate('m/d/Y H:i:s') . " UTC!</p>");
+	    echo("<p style=\"color:red;\">Failed to register at around " . gmdate('m/d/Y H:i:s') . " UTC!</p>\n");
 }
