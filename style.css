@@ -80,3 +80,44 @@ li a:hover {
 .active {
     background-color: #4CAF50;
 }
+
+/* Navigation Bar Padding */
+.nav-bar {
+    margin-top: 13px;
+    margin-bottom: 13px;
+}
+
+/* Tables */
+table {
+    /*font-family: arial, sans-serif;*/
+    border-collapse: collapse;
+    width: auto;
+}
+
+td, th {
+    border: 1px solid #000000;
+    text-align: left;
+    padding: 8px;
+}
+
+th {
+    background-color: #ced4dA;
+    font-size: 115%;
+}
+
+tr:nth-child(odd) {
+    background-color: #e9ecef;
+}
+
+/* Forms */
+fieldset {
+    display: inline-block;
+}
+
+.readonly {
+    background-color: #adb5bd;
+}
+
+input:read-only, input:disabled, select:disabled {
+    background: darkgray;
+}
