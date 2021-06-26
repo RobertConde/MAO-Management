@@ -9,16 +9,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "require/checks.php";
 checkPerms();
 
 //DEBUG
-echo "SESSION<br>";
-foreach ($_SESSION as $key => $value) {
-	echo "Key: $key; Value: $value<br>";
-}
-echo "<br>", "POST<br>";
-foreach ($_POST as $key => $value) {
-	echo "Key: $key; Value: $value<br>";
-}
+//echo "SESSION<br>";
+//foreach ($_SESSION as $key => $value) {
+//	echo "Key: $key; Value: $value<br>";
+//}
+//echo "<br>", "POST<br>";
+//foreach ($_POST as $key => $value) {
+//	echo "Key: $key; Value: $value<br>";
+//}
 
-echo (isset($_POST['um-2021']) ? "UM SET" : "UM NOT SET") . "<br>";
+//echo (isset($_POST['um-2`021']) ? "UM SET" : "UM NOT SET") . "<br>";
 
 // Update process
 $updated = null;
@@ -28,7 +28,7 @@ if (isset($_POST['transaction'])) {  // Process POST update
 
 	require_once $_SERVER['DOCUMENT_ROOT'] . "require/paymentManage.php";
 
-	echo "TOGGLED PAYMENT (FROM POST; on ".$_POST['transaction'].")";
+//	echo "TOGGLED PAYMENT (FROM POST; on ".$_POST['transaction'].")";
 	$updated = togglePayment($_POST['id'] , $_POST['transaction']);
 }
 
@@ -45,7 +45,7 @@ if (isset($_GET['id']) && $_GET['id'] != $_SESSION['id']) {
 		die("<p style=\"color:red;\">You do not have the required permissions!</p>\n");
 }
 
-echo "<br>THE ID BEING USED IS $id!!!<br>";
+//echo "<br>THE ID BEING USED IS $id!!!<br>";
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "require/sql.php";
 ?>
@@ -112,9 +112,15 @@ if ($id != $_SESSION['id'])
 
 <h3>Payments</h3>
 <?php
+// Report if update was successful
+if (isset($updated)) {
+	echo $updated ?
+		"<p style=\"color:green;\">Successfully updated payment (ID Updated = " . $_POST['id'] . ") at around " . gmdate('m/d/Y H:i:s') . " UTC.</p>\n" :
+		"<p style=\"color:red;\">Failed to update payment (ID = " . $_POST['id'] . ")  at around " . gmdate('m/d/Y H:i:s') . " UTC.</p>\n";
+}
 
-echo "COMP: " . (checkCompareRank($_SESSION['id'], $id, true) ? "logged in user has GREATER (or equal)" : "logged in user has LESSER") . "<br>";
-if (checkCompareRank($_SESSION['id'], $id, true)) {
+//echo "COMP: " . (checkCompareRank($_SESSION['id'], $id, true) ? "logged in user has GREATER (or equal)" : "logged in user has LESSER") . "<br>";
+if (getRank($_SESSION['id']) > 0 /*checkCompareRank($_SESSION['id'], $id, true)*/) {
     $sql_conn = getDBConn();    // Get DB connection
 
     if (!is_a($result = $sql_conn->query("SELECT pd.payment_id, pd.info, tr.time_paid FROM payment_details pd LEFT OUTER JOIN transactions tr ON pd.payment_id = tr.payment_id AND id = $id ORDER BY pd.payment_id;"), 'mysqli_result'))
@@ -145,17 +151,9 @@ if (checkCompareRank($_SESSION['id'], $id, true)) {
 
     /* TODO: hiddens that POST an array containing transaction names; and each checkbox POSTs to its corresponding transaction name p */
     echo surrTags('table', $table_rows);
-} else {
-    echo sql_getTable("SELECT t.payment_id, pd.info, t.time_paid FROM payment_details pd JOIN transactions t ON pd.payment_id = t.payment_id WHERE t.id = $id") . "\n";
-}
+} else
+    echo sql_getTable("SELECT pd.payment_id, pd.info, tr.time_paid FROM payment_details pd LEFT OUTER JOIN transactions tr ON pd.payment_id = tr.payment_id AND id = $id ORDER BY pd.payment_id;") . "\n";
 
 ?>
 </form>
 </html>
-
-<?php
-if (isset($updated)) {
-echo $updated ?
-    "<p style=\"color:green;\">Successfully updated (ID Updated = " . $_POST['id'] . ") at around " . gmdate('m/d/Y H:i:s') . " UTC.</p>\n" :
-    "<p style=\"color:red;\">Failed to update (ID Updated--Failed = " . $_POST['id'] . ")  at around " . gmdate('m/d/Y H:i:s') . " UTC.</p>\n";
-}

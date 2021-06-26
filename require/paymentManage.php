@@ -2,7 +2,7 @@
 
 function isPaid($id, $payment_id) : bool
 {
-	echo "CHECKiNG ID :" . $payment_id;
+//	echo "CHECKiNG ID :" . $payment_id;
 	require_once $_SERVER['DOCUMENT_ROOT'] . "require/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
@@ -18,8 +18,7 @@ function isPaid($id, $payment_id) : bool
 
 	$find_payment_statement->fetch();
 
-
-	echo "ROWS:$num_rows";
+//	echo "ROWS:$num_rows";
 	return ($num_rows > 0);
 }
 
@@ -30,7 +29,7 @@ function togglePayment($id, $payment_id) : bool
 
 	// If not already set as 'paid', then insert transaction (indicates 'paid'); else (currently indicating 'paid'), delete transaction
 	if (!isPaid($id, $payment_id)) {
-		echo "111";
+//		echo "111";
 		$insert_transaction_statement = $sql_conn->prepare("INSERT INTO transactions(id, payment_id) VALUES (?, ?)");
 
 		$insert_transaction_statement->bind_param('ss', $id, $payment_id);
@@ -38,7 +37,7 @@ function togglePayment($id, $payment_id) : bool
 		if (!$insert_transaction_statement->execute())
 			die("Error occurred inserting transaction: $insert_transaction_statement->error.");
 	} else {
-		echo "222";
+//		echo "222";
 		$delete_transaction_statement = $sql_conn->prepare("DELETE FROM transactions WHERE id = ? AND payment_id = ?");
 
 		$delete_transaction_statement->bind_param('ss', $id, $payment_id);

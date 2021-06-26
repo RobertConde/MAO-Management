@@ -83,6 +83,7 @@ li a:hover {
 
 /* Navigation Bar Padding */
 .nav-bar {
+    text-align: center;
     margin-top: 13px;
     margin-bottom: 13px;
 }

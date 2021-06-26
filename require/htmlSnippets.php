@@ -21,7 +21,7 @@ function navigationBar() {
 
 	/* OTHER PERMISSIONS */
 
-	echo surrTags('center', surrTags('div', surrTags('ul', $links), "class=\"nav-bar\"")) . "\n";
+	echo surrTags('div', surrTags('ul', $links), "class=\"nav-bar\"") . "\n";
 
 //	echo surrTags('center', surrTags('div', "<img src=\"https://i.ibb.co/c1CWDg5/images.jpg\" alt=\"Trulli\" height=\"75px\">" . surrTags('ul', $links), "class=\"nav-bar\"")) . "\n";
 }
@@ -97,7 +97,7 @@ function TR($row_array) : string
 
 function sql_getTable($query) : string
 {
-	echo $query;
+//	echo $query;
 	require_once $_SERVER['DOCUMENT_ROOT'] . "require/sql.php";
 
 	$sql_conn = getDBConn();    // Get DB connection
