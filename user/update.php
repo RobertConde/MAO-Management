@@ -137,6 +137,6 @@ if ($id != $_SESSION['id'])
 <?php
 if (isset($updated)) {
 	echo $updated ?
-		"<p style=\"color:green;\">Successfully updated (ID Updated = " . $_POST['id'] . ") at around " . gmdate('m/d/Y H:i:s') . " UTC.</p>\n" :
-		"<p style=\"color:red;\">Failed to update (ID Updated--Failed = " . $_POST['id'] . ")  at around " . gmdate('m/d/Y H:i:s') . " UTC.</p>\n";
+		"<p style=\"color:green;\">Successfully updated account information (ID Updated = " . $_POST['id'] . ") at around " . gmdate('m/d/Y H:i:s') . " UTC.</p>\n" :
+		"<p style=\"color:red;\">Failed to update account information (ID = " . $_POST['id'] . ")  at around " . gmdate('m/d/Y H:i:s') . " UTC.</p>\n";
 }
