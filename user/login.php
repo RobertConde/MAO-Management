@@ -11,18 +11,18 @@ else if (isset($_POST['cycle_code'])) {
 
 	$cycle_and_email_result = cycleLoginCode($_POST['id']);
 } else if(isset($_POST['login'])) {
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/require/sql.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/sql.php";
 
-    if (getDetail('login', 'code', $_POST['id']) == $_POST['code']) {
-        require_once $_SERVER['DOCUMENT_ROOT'] . "/require/basicAccountManage.php";
+	if (getDetail('login', 'code', $_POST['id']) == $_POST['code']) {
+		require_once $_SERVER['DOCUMENT_ROOT'] . "/require/basicAccountManage.php";
 
-	    updateLoginTime($_POST['id']);  // Update login time (in `login` table)
+		updateLoginTime($_POST['id']);  // Update login time (in `login` table)
 
-	    $_SESSION['id'] = $_POST['id']; // Login (session)
+		$_SESSION['id'] = $_POST['id']; // Login (session)
 
-	    header("Refresh:0");    // Refresh page
-    } else
-        $login_result = false;
+		header("Location: https://" . $_SERVER['HTTP_HOST'] . "/"); // Go to index page
+	} else
+		$login_result = false;
 }
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "require/htmlSnippets.php";
@@ -33,12 +33,16 @@ navigationBar();
 <html>
 <h2><u>MAO Account Login</u></h2>
 
-<h3>1) Get a New Login Code <i>(If Necessary)</i></h3>
+
 <form method="post" action="login.php">
-	<label for="id">ID:</label>
-	<input id="id" name="id" type="text" pattern="[0-9]{7}" required><br>
-	<br>
-	<input id="cycle_code" name="cycle_code" type="submit" value="Email Code">
+    <fieldset>
+        <legend><b>1) Get a New Login Code <i>(If Necessary)</i></b></legend>
+
+        <label for="id">ID:</label>
+        <input id="id" name="id" type="text" pattern="[0-9]{7}" required><br>
+        <br>
+        <input id="cycle_code" name="cycle_code" type="submit" value="Email Code">
+    </fieldset>
 </form>
 
 <?php
@@ -50,17 +54,18 @@ if (!is_null($cycle_and_email_result)) {
 }
 ?>
 
-<hr>
-
-<h3>2) Login!</h3>
 <form method="post" action="login.php">
-	<label for="id">ID:</label>
-    <input id="id" name="id" type="text" pattern="[0-9]{7}" required><br>
-    <br>
-    <label for="code">Login Code:</label>
-    <input id="code" name="code" type="password" pattern="[0-9a-f]{6}" required><br>
-    <br>
-    <input id="login" name="login" type="submit" value="Login">
+    <fieldset>
+        <legend><b>2) Login!</b></legend>
+
+        <label for="id">ID:</label>
+        <input id="id" name="id" type="text" pattern="[0-9]{7}" required><br>
+        <br>
+        <label for="code">Login Code:</label>
+        <input id="code" name="code" type="password" pattern="[0-9a-f]{6}" required><br>
+        <br>
+        <input id="login" name="login" type="submit" value="Login">
+    </fieldset>
 </form>
 </html>
 

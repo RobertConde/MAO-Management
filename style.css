@@ -116,7 +116,7 @@ fieldset {
 }
 
 .readonly {
-    background-color: #adb5bd;
+    background-color: #ced4dA;
 }
 
 input:read-only, input:disabled, select:disabled {

@@ -37,7 +37,7 @@ $id = $_SESSION['id'];
 if (isset($_GET['id']) && $_GET['id'] != $_SESSION['id']) {
 	checkPerms(10);
 
-	echo "SESSID: " . $_SESSION['id'] . "<br>";
+//	echo "SESSID: " . $_SESSION['id'] . "<br>";
 
 	if (checkCompareRank($_SESSION['id'], $_GET['id'], true))
 		$id = $_GET['id'];
@@ -59,7 +59,7 @@ if (getRank($_SESSION['id']) >= 1)
 	echo "<form method=\"get\">\n",
 	"<label for=\"id\"><i>Search ID:</i></label>\n",
 	"<input id=\"id\" name=\"id\" type=\"search\" pattern=\"[0-9]{7}\" required>\n",
-	"<input id=\"search\" type=\"submit\" value=\"View Account\">\n",
+	"<input id=\"search\" type=\"submit\" value=\"Search\">\n",
 	"</form>\n",
 	"<hr>\n";
 ?>
