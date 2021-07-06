@@ -10,7 +10,7 @@ function makeLink($name, $relative_path = "") : string
 }
 
 function navigationBar() {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "require/sql.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/sql.php";
 
 	$perm0_names = array("Login", "Logout" , "Register", "Update", "Payments", "Custom Report");
 	$perm0_urls = array("user/login.php", "user/logout.php", "user/register.php", "user/update.php", "user/payments.php", "reports/custom.php");
@@ -31,7 +31,7 @@ function surrTags($tag, $text, $tag_interior = '') : string
 {
 	// TODO: Reconsider placement (might need to move higher up in call list; ASK: "Should it be handled here?")
 	if (is_null($text))
-		$text = "<center><code style=\"color:#e11212;\"><i>null</i></code></center>";
+		$text = "<code style=\"color:#e11212; text-align: center\"><i>null</i></code>";
 
 	return "<$tag $tag_interior>$text</$tag>";
 }
@@ -95,14 +95,9 @@ function TR($row_array) : string
 //	return surrTags('tr', $row_data, "scope=\"row\"");
 //}
 
-function sql_getTable($query) : string
+function getTableFromResult($result) : string
 {
-//	echo $query;
-	require_once $_SERVER['DOCUMENT_ROOT'] . "require/sql.php";
-
-	$sql_conn = getDBConn();    // Get DB connection
-
-	if (!is_a($result = $sql_conn->query($query), 'mysqli_result'))
+	if (!is_a($result, 'mysqli_result'))
 		die("<p style=\"color:red;\">Get table function occurred an error upon execution of statement!</p>\n");
 
 	$table_rows = sql_TH($result->fetch_fields()) ;
@@ -113,11 +108,15 @@ function sql_getTable($query) : string
 }
 
 /* BEWARE OF POSSIBLE SQL INJECTION */
-function getTable($table, $sort = array('TRUE')) : string
+function getTableSQL($table_name, $sort = array('TRUE')) : string
 {
 	$order_by = implode($sort, ", ");
 
-	return sql_getTable("SELECT * FROM $table ORDER BY $order_by");
+	$sql_conn = getDBConn();
+
+	$result = $sql_conn->query("SELECT * FROM $table_name ORDER BY $order_by");
+
+	return getTableFromResult($result);
 }
 
 //function getStylizedTablePage($table) : string
@@ -127,7 +126,7 @@ function getTable($table, $sort = array('TRUE')) : string
 //	if (!is_a($result = $sql_conn->query("SELECT * FROM $table"), 'mysqli_result'))
 //		die("<p style=\"color:red;\">Get table function occurred an error upon execution of statement!</p>\n");
 //
-//	require_once $_SERVER['DOCUMENT_ROOT'] . "require/htmlSnippets.php";
+//	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/htmlSnippets.php";
 //	stylizedHeader();
 //
 //	$body_interior_pretable =

@@ -1,10 +1,10 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "require/htmlSnippets.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/require/htmlSnippets.php";
 stylesheet();
 navigationBar();
 ?>
 
-<html>
+<html lang="en">
 <h2><u>MAO Account Registration</u></h2>
 <form method="post" action="register.php">
     <fieldset>
@@ -69,7 +69,7 @@ navigationBar();
 
 <?php
 if (isset($_POST['register'])) { // If form is POSTed
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/basicAccountManage.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "//require/basicAccountManage.php";
 
     $registered = registerAccount(  // Register account
             $_POST['id'],
@@ -81,7 +81,7 @@ if (isset($_POST['register'])) { // If form is POSTed
             $_POST['division']);
 
     if ($registered) {
-	    echo "<p style=\"color:green;\">Successfully registered at around " . gmdate('m/d/Y H:i:s') . " UTC.</p>\n";
+	    echo "<p style=\"color:green;\">Successfully registered.</p>\n";
 
 	    if (cycleLoginCode($_POST['id']))
 		    echo("<p style=\"color:green;\">Successfully sent new login code to email!</p>\n");
@@ -89,5 +89,5 @@ if (isset($_POST['register'])) { // If form is POSTed
 	        echo("<p style=\"color:red;\">Failed to send new login code to email (retry on login)!</p>\n");
 
     } else
-	    echo("<p style=\"color:red;\">Failed to register at around " . gmdate('m/d/Y H:i:s') . " UTC!</p>\n");
+	    echo("<p style=\"color:red;\">Failed to register!</p>\n");
 }

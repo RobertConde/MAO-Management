@@ -7,14 +7,14 @@ $login_result = null;
 if (isset($_SESSION['id']))
 	header("Location: https://" . $_SERVER['HTTP_HOST'] . "/");
 else if (isset($_POST['cycle_code'])) {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/basicAccountManage.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "//require/basicAccountManage.php";
 
 	$cycle_and_email_result = cycleLoginCode($_POST['id']);
 } else if(isset($_POST['login'])) {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/sql.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "//require/sql.php";
 
 	if (getDetail('login', 'code', $_POST['id']) == $_POST['code']) {
-		require_once $_SERVER['DOCUMENT_ROOT'] . "/require/basicAccountManage.php";
+		require_once $_SERVER['DOCUMENT_ROOT'] . "//require/basicAccountManage.php";
 
 		updateLoginTime($_POST['id']);  // Update login time (in `login` table)
 
@@ -25,14 +25,13 @@ else if (isset($_POST['cycle_code'])) {
 		$login_result = false;
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "require/htmlSnippets.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/require/htmlSnippets.php";
 stylesheet();
 navigationBar();
 ?>
 
-<html>
+<html lang="en">
 <h2><u>MAO Account Login</u></h2>
-
 
 <form method="post" action="login.php">
     <fieldset>

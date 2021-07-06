@@ -1,11 +1,11 @@
 <?php
 session_start();
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "require/htmlSnippets.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/require/htmlSnippets.php";
 stylesheet();
 navigationBar();
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "require/checks.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/require/checks.php";
 checkPerms();
 
 // Update process
@@ -23,7 +23,7 @@ if (isset($_POST['update'])) {  // Process POST update
     if ($_SESSION['id'] != $_POST['id'] && !checkCompareRank($_SESSION['id'], $_POST['id']))   // Confirm rank is higher (so that people can't update through POST requests without being logged into an account of higher rank)
 	    die("<p style=\"color:red;\">You do not have the required permissions!</p>\n");
 
-	require_once $_SERVER['DOCUMENT_ROOT'] . "require/basicAccountManage.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/basicAccountManage.php";
 
 	$updated =  updateAccount($_POST['id'] , $_POST['fname'], $_POST['lname'], $_POST['grade'], $_POST['email'], $_POST['phone'], $_POST['division'], $_SESSION['id']);
 }
@@ -39,14 +39,14 @@ if (isset($_GET['id']) && $_GET['id'] != $_SESSION['id']) {
 	    die("<p style=\"color:red;\">You do not have the required permissions!</p>\n");
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "require/sql.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/require/sql.php";
 ?>
 
-<html>
+<html lang="en">
 <h2><u>MAO Account Update</u></h2>
 
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "require/sql.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/require/sql.php";
 if (getRank($_SESSION['id']) >= 1)
     echo "<form method=\"get\">\n",
          "<label for=\"id\"><i>Search ID:</i></label>\n",
@@ -140,6 +140,6 @@ if ($id != $_SESSION['id'])
 <?php
 if (isset($updated)) {
 	echo $updated ?
-		"<p style=\"color:green;\">Successfully updated account information (ID Updated = " . $_POST['id'] . ") at around " . gmdate('m/d/Y H:i:s') . " UTC.</p>\n" :
-		"<p style=\"color:red;\">Failed to update account information (ID = " . $_POST['id'] . ")  at around " . gmdate('m/d/Y H:i:s') . " UTC.</p>\n";
+		"<p style=\"color:green;\">Successfully updated account information (ID Updated = " . $_POST['id'] . ").</p>\n" :
+		"<p style=\"color:red;\">Failed to update account information (ID = " . $_POST['id'] . ").</p>\n";
 }

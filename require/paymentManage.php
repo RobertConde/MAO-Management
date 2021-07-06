@@ -3,7 +3,7 @@
 function isPaid($id, $payment_id) : bool
 {
 //	echo "CHECKiNG ID :" . $payment_id;
-	require_once $_SERVER['DOCUMENT_ROOT'] . "require/sql.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	// Check if already if already is paid
@@ -24,7 +24,7 @@ function isPaid($id, $payment_id) : bool
 
 function togglePayment($id, $payment_id) : bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "require/sql.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	// If not already set as 'paid', then insert transaction (indicates 'paid'); else (currently indicating 'paid'), delete transaction

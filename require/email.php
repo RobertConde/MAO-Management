@@ -4,13 +4,13 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
 function sendEmail($to, $subj, $msg) {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "PHPMailer-6.4.1/Exception.php";
-	require_once $_SERVER['DOCUMENT_ROOT'] . "PHPMailer-6.4.1/OAuth.php";
-	require_once $_SERVER['DOCUMENT_ROOT'] . "PHPMailer-6.4.1/PHPMailer.php";
-	require_once $_SERVER['DOCUMENT_ROOT'] . "PHPMailer-6.4.1/POP3.php";
-	require_once $_SERVER['DOCUMENT_ROOT'] . "PHPMailer-6.4.1/SMTP.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/PHPMailer-6.4.1/Exception.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/PHPMailer-6.4.1/OAuth.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/PHPMailer-6.4.1/PHPMailer.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/PHPMailer-6.4.1/POP3.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/PHPMailer-6.4.1/SMTP.php";
 
-	$email_config = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "config.ini", true)['email'];
+	$email_config = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/config.ini", true)['email'];
 
 	//Create a new PHPMailer instance
 	$mail = new PHPMailer();
@@ -18,10 +18,12 @@ function sendEmail($to, $subj, $msg) {
 	//Tell PHPMailer to use SMTP
 	$mail->isSMTP();
 
-	//Enable SMTP debugging
-	//SMTP::DEBUG_OFF = off (for production use)
-	//SMTP::DEBUG_CLIENT = client messages
-	//SMTP::DEBUG_SERVER = client and server messages
+	//SMTP debugging
+	/*
+        SMTP::DEBUG_OFF    => off (for production use)
+    	SMTP::DEBUG_CLIENT => client messages
+    	SMTP::DEBUG_SERVER => client and server messages
+	*/
 	$mail->SMTPDebug = SMTP::DEBUG_OFF;
 
 	//Set the hostname of the mail server
