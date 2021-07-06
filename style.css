@@ -122,3 +122,22 @@ fieldset {
 input:read-only, input:disabled, select:disabled {
     background: darkgray;
 }
+
+/* Source: https://stackoverflow.com/questions/4861224/how-to-use-css-to-surround-a-number-with-a-circle */
+/* Tag */
+.tag {
+    border-radius: 50%;
+
+    width: auto;
+    height: auto;
+    display: inline-block;
+    padding: 4px;
+
+    background: #eee;
+    border: 1px solid #666;
+
+    /* font: 16px Arial, sans-serif; */
+    font-size: small;
+    color: #666;
+    text-align: center;
+}

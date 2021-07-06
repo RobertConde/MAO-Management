@@ -2,7 +2,7 @@
 
 function registerAccount($id, $fname, $lname, $grade, $email, $phone, $division): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "require/sql.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	$register_stmt = $sql_conn->prepare(
@@ -19,7 +19,7 @@ function registerAccount($id, $fname, $lname, $grade, $email, $phone, $division)
 
 function updateCycleTime($id) : bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "require/sql.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	$update_time_stmt = $sql_conn->prepare("UPDATE login SET time_cycled = NOW() WHERE id = ?");
@@ -31,18 +31,18 @@ function updateCycleTime($id) : bool
 
 function sendLoginCodeEmail($id): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "require/sql.php";
-	require_once $_SERVER['DOCUMENT_ROOT'] . "require/email.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/sql.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/email.php";
 
 	return sendEmail(
 		getDetail('people', 'email', $id),
-		"Login Code (" . gmdate('m/d/Y H:i:s') . " UTC)",
+		"Login Code",
 		"<b>Login Code:</b> <code>" . getDetail('login', 'code', $id) . "</code>");
 }
 
 function cycleLoginCode($id) : bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "require/sql.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	$cycle_statement = $sql_conn->prepare("INSERT INTO login(id, code) VALUES (?, ?) ON DUPLICATE KEY UPDATE code = ?");
@@ -59,7 +59,7 @@ function cycleLoginCode($id) : bool
 
 function updateLoginTime($id) : bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "require/sql.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	$update_time_stmt = $sql_conn->prepare("UPDATE login SET time_last_login = NOW() WHERE id = ?");
@@ -71,7 +71,7 @@ function updateLoginTime($id) : bool
 
 function updateUpdateTime($id) : bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "require/sql.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	$update_time_stmt = $sql_conn->prepare("UPDATE people SET time_updated = NOW() WHERE id = ?");
@@ -83,18 +83,18 @@ function updateUpdateTime($id) : bool
 
 function sendUpdateEmail($id, $updater_id) : bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "require/sql.php";
-	require_once $_SERVER['DOCUMENT_ROOT'] . "require/email.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/sql.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/email.php";
 
 	return sendEmail(
 		getDetail('people', 'email', $id),
-		"Account Updated (" . gmdate('m/d/Y H:i:s') . " UTC)",
+		"Account Updated",
 		"<b>Updated By (ID):</b> <code>$updater_id</code>");
 }
 
 function updateAccount($id, $fname, $lname, $grade, $email, $phone, $division, $updater_id): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "require/sql.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/require/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	$update_stmt = $sql_conn->prepare("UPDATE people
