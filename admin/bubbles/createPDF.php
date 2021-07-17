@@ -1,0 +1,170 @@
+<?php
+session_start();
+
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
+stylesheet();
+
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/checks.php";
+checkPerms(OFFICER);
+
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
+
+$ref = "http://" . $_SERVER['HTTP_HOST'];
+if(isset($_GET['ref']))
+    $ref = $_GET['ref'];
+
+if (!(isset($_POST['selected']) && is_array($_POST['selected'])))
+    header("Location: " . $_GET['ref'] . "?return=false");
+
+$IDs = $_POST['selected'];
+
+$json_array = array();
+
+$json_array['test'] = $_POST['test'];
+$json_array['bubbles'] = array(
+	true,   // 1-4: FAMAT ID (unique for each school)
+	true,
+	true,
+	true,
+	true,   // 5-7: Unique Student ID (changes if they change school)
+	true,
+	true,
+	true,   // 8: Division
+	true);  // 9: Team
+
+$index = 0;
+$json_array['students'] = array();
+foreach ($IDs as $id) {
+	$student = array();
+
+	$famat_id = "";
+
+	$grade = (int) getAccountDetail('people', 'grade', $id);
+	if (6 <= $grade && $grade <= 8) {
+		$student['school'] = "Doral Academy Middle School";
+		$famat_id .= '5377';
+	} else if(9 <= $grade && $grade <= 12) {
+		$student['school'] = "Doral Academy High School";
+		$famat_id .= '5375';
+	} else {    // Invalid grade
+		$student['school'] = "";
+		$famat_id .= '537 ';
+	}
+
+	$student['name'] = getAccountDetail('people', 'fname', $id)
+		. " "
+		. getAccountDetail('people', 'lname', $id);
+
+	//TODO: implement unique student FAMAT id (3-digit #)
+	$famat_id .= '   ';
+
+	$division = getAccountDetail('people', 'division', $id);
+	if (1 <= $division && $division <= 6)
+		$famat_id .= $division;
+	else    // Invalid division
+		$famat_id .= ' ';
+
+	// TODO: Implement team selection
+	$famat_id .= ' ';   // Team digit
+
+	$student['famat_id'] = $famat_id;
+
+	array_push($json_array['students'], $student);
+}
+
+$json = json_encode($json_array);
+?>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js'></script>
+
+<script>
+    createPDF();
+
+	function createPDF() {
+		var doc = new jsPDF({
+			orientation: 'portrait',
+			unit: 'pt',
+			format: [611.77, 791.88]
+		})
+		doc.setFont("helvetica");
+		doc.setFontSize(12);
+		doc.deletePage(1);  // Start off with no pages
+
+		// TODO
+		var jsonText = '<?php echo $json; ?>';
+		console.log(jsonText);
+		var json = JSON.parse(jsonText);
+
+		var bubbles = json['bubbles'];   // TODO: which bubbles to fill in
+
+		var test = json['test'];
+
+		var background = new Image;
+		background.src = 'blankBubbleSheet.png';
+
+		let student;
+		var students = json['students'];
+		for (student of students) {
+			try {
+				doc.addPage();
+
+                var name = student['name'];
+				var school = student['school'];
+				var id = student['famat_id'];
+
+				doc.addImage(background, 'PNG', 0, 0, 611.77, 791.88);
+
+                drawPage(doc, name, id, school, test, bubbles);
+			} catch (error) {
+				console.log("Error (ID = " + id + "): " + error);
+			}
+		}
+
+		try {
+			doc.save(test + ".pdf");
+        } catch (error) {
+			console.log("Saving Error: " + error);
+		}
+
+		window.location.replace("<?php echo $ref; ?>" + "?return=true");
+	}
+
+    function drawPage(pdf, studentName, studentID, school, testName, bubbles) {
+	    drawName(pdf, studentName);
+	    drawSchool(pdf,school);
+	    drawTestName(pdf, testName);
+	    drawID(pdf, studentID, bubbles);
+    }
+
+    function drawName(pdf, name) {
+	    pdf.text(name, 168, 113);
+    }
+
+    function drawSchool(pdf, school) {
+	    pdf.text(school, 168, 133);
+    }
+
+    function drawTestName(pdf, testName) {
+	    pdf.text(testName, 168, 153);
+    }
+
+    function drawID(pdf, id, bubbles) {
+	    var startX = 106,
+            diffX = 17,
+            diffY = 15.34,
+            offsetY = 19.5,
+            offsetX = 4.7;
+	    
+	    var offSets = [0.1, 0, -0.6, -0.9, -0.5, -1, -1.8, -1.8, -1];
+
+	    for (var i = 0; i < id.length; i++){
+		    if(bubbles[i] && id.charAt(i) != ' ') {
+			    var currX = startX + diffX * i;
+			    pdf.text(id.charAt(i), currX, 211);
+
+			    var index = (parseInt(id.charAt(i)) - 0);
+			    pdf.circle(currX + offsetX + offSets[i], 211 + offsetY + diffY * index, 6.6, 'F');
+		    }
+	    }
+    }
+</script>

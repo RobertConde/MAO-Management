@@ -50,42 +50,10 @@
 }
 
 /* Source: https://www.w3schools.com/css/tryit.asp?filename=trycss_navbar_sticky */
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #ffffff;
-    position: -webkit-sticky; /* Safari */
-    position: sticky;
-    top: 0;
-}
-
-li {
-    float: left;
-}
-
-li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-li a:hover {
-    background-color: #111;
-}
-
-.active {
-    background-color: #4CAF50;
-}
-
 /* Navigation Bar Padding */
 .nav-bar {
+    padding: 0;
     text-align: center;
-    margin-top: 13px;
-    margin-bottom: 13px;
 }
 
 /* Tables */
@@ -115,12 +83,9 @@ fieldset {
     display: inline-block;
 }
 
-.readonly {
-    background-color: #ced4dA;
-}
-
-input:read-only, input:disabled, select:disabled {
-    background: darkgray;
+input:read-only, input:disabled, select:disabled textarea:disabled {
+    background: #c0c0c0;
+    opacity: 0.85;
 }
 
 /* Source: https://stackoverflow.com/questions/4861224/how-to-use-css-to-surround-a-number-with-a-circle */
@@ -140,4 +105,68 @@ input:read-only, input:disabled, select:disabled {
     font-size: small;
     color: #666;
     text-align: center;
+}
+
+/* Source: https://w3bits.com/rainbow-text/ */
+/* Rainbow */
+.rainbow {
+    background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: background-image .25s ease-in-out;
+}
+
+@keyframes rainbow {
+    0%{background-position:0 50%}
+    50%{background-position:100% 25%}
+    100%{background-position:0 50%}
+}
+
+/* Dropdown Button */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-button {
+    background-color: darkgray;
+    color: white;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 12px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown:hover .dropdown-content {display: block;}
+.dropdown:hover .dropdown-button {background-color: red;}
+.dropdown-content a:hover {background-color: lightgray;}
+.dropdown-content a:active {background-color: gray;}
+
+/* Select Invalid */
+select:invalid {
+    color: gray;
+}
+
+/* Printing */
+@media print {
+    .noprint {
+        display: none
+    }
 }

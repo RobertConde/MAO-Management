@@ -4,17 +4,15 @@ session_start();
 $cycle_and_email_result = null;
 $login_result = null;
 
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
+
 if (isset($_SESSION['id']))
-	header("Location: https://" . $_SERVER['HTTP_HOST'] . "/");
-else if (isset($_POST['cycle_code'])) {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "//require/basicAccountManage.php";
-
+	header("Location: https://" . $_SERVER['HTTP_HOST'] . "/student/updateInfo.php");
+else if (isset($_POST['cycle_code']))
 	$cycle_and_email_result = cycleLoginCode($_POST['id']);
-} else if(isset($_POST['login'])) {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "//require/sql.php";
-
-	if (getDetail('login', 'code', $_POST['id']) == $_POST['code']) {
-		require_once $_SERVER['DOCUMENT_ROOT'] . "//require/basicAccountManage.php";
+else if(isset($_POST['login'])) {
+	if (getAccountDetail('login', 'code', $_POST['id']) == $_POST['code']) {
+		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 
 		updateLoginTime($_POST['id']);  // Update login time (in `login` table)
 
@@ -25,13 +23,15 @@ else if (isset($_POST['cycle_code'])) {
 		$login_result = false;
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/require/htmlSnippets.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
 stylesheet();
 navigationBar();
 ?>
 
 <html lang="en">
-<h2><u>MAO Account Login</u></h2>
+<title>Login</title>
+
+<h2><u>Account Login</u></h2>
 
 <form method="post" action="login.php">
     <fieldset>

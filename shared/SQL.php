@@ -1,6 +1,7 @@
 <?php
 
-function getDBConn() {
+function getDBConn() : mysqli
+{
 	$sql_config = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/config.ini", true)['sql'];
 
 	$sql_conn = new mysqli($sql_config['hostname'], $sql_config['username'], $sql_config['password'], $sql_config['database']);
@@ -11,10 +12,10 @@ function getDBConn() {
 	return $sql_conn;
 }
 
-function getDetail($table, $col, $id) {
+function getDetail($table, $col, $unique_col, $unique_val) {
 	$sql_conn = getDBConn();    // Get DB connection
 
-	if ($result = $sql_conn->query("SELECT $col FROM $table WHERE id = $id\n")) {
+	if ($result = $sql_conn->query("SELECT $col FROM $table WHERE $unique_col = '$unique_val'")) {
 		if ($result->num_rows == 0)
 			return null;
 		else if ($result->num_rows == 1)
@@ -23,13 +24,4 @@ function getDetail($table, $col, $id) {
 			die("<p style=\"color:red;\">Get detail function fetched a non-singular result: num_rows = $result->num_rows.</p>\n");
 	} else
 		die("<p style=\"color:red;\">Get detail function occurred an error upon query!</p>\n");
-}
-
-function getRank($id) {
-	$perms = getDetail('people', 'perms', $id);
-
-	if ($perms < 1)
-		return -1;
-
-	return floor(log10($perms));
 }

@@ -1,11 +1,13 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/require/htmlSnippets.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
 stylesheet();
 navigationBar();
 ?>
 
 <html lang="en">
-<h2><u>MAO Account Registration</u></h2>
+<title>Register</title>
+
+<h2><u>Account Registration</u></h2>
 <form method="post" action="register.php">
     <fieldset>
         <legend><b>Account Information</b></legend>
@@ -69,7 +71,7 @@ navigationBar();
 
 <?php
 if (isset($_POST['register'])) { // If form is POSTed
-	require_once $_SERVER['DOCUMENT_ROOT'] . "//require/basicAccountManage.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 
     $registered = registerAccount(  // Register account
             $_POST['id'],
