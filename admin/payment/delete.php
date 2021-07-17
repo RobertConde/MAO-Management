@@ -35,7 +35,7 @@ if(isset($_GET['payment_id'])) {
 
 <hr>
 
-<form method="post" action="delete.php">
+<form method="post" action="delete">
     <fieldset>
         <legend><b>Payment Information</b></legend>
 

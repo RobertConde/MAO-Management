@@ -67,7 +67,7 @@ if ($id != $_SESSION['id'])
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 ?>
 
-<form method="post" action="updateInfo.php?id=<?php echo $id ?>">
+<form method="post" action="updateInfo?id=<?php echo $id ?>">
     <fieldset>
         <legend><b>Account Information</b></legend>
 

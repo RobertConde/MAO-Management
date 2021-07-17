@@ -41,7 +41,7 @@ if (isset($_GET['id'])) {
 
 <hr>
 
-<form method="post" action="delete.php">
+<form method="post" action="delete">
     <fieldset>
         <legend>Account Information</legend>
 

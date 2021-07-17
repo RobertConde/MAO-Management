@@ -11,7 +11,7 @@ checkPerms(OFFICER);
 $currentURL = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";  // TODO: Remove "?return=false&....."
 ?>
 
-<form method="post" action="createPDF.php?ref=<?php echo $currentURL; ?>">
+<form method="post" action="createPDF?ref=<?php echo $currentURL; ?>">
     <fieldset>
         <legend><b>Bubble Selection</b></legend>
 

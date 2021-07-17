@@ -7,7 +7,7 @@ $login_result = null;
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 
 if (isset($_SESSION['id']))
-	header("Location: https://" . $_SERVER['HTTP_HOST'] . "/student/updateInfo.php");
+	header("Location: https://" . $_SERVER['HTTP_HOST'] . "/student/updateInfo");
 else if (isset($_POST['cycle_code']))
 	$cycle_and_email_result = cycleLoginCode($_POST['id']);
 else if(isset($_POST['login'])) {
@@ -33,7 +33,7 @@ navigationBar();
 
 <h2><u>Account Login</u></h2>
 
-<form method="post" action="login.php">
+<form method="post" action="login">
     <fieldset>
         <legend><b>1) Get a New Login Code <i>(If Necessary)</i></b></legend>
 
@@ -53,7 +53,7 @@ if (!is_null($cycle_and_email_result)) {
 }
 ?>
 
-<form method="post" action="login.php">
+<form method="post" action="login">
     <fieldset>
         <legend><b>2) Login!</b></legend>
 

@@ -13,7 +13,7 @@ function navigationBar() {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
 
 	$perm0_names = array("Register", "Login" , "Logout", "Update Info", "Reports", "Transactions", "Payment Create", "Payment Update", "Payment Delete", "Account Delete", "Create Bubble Sheets");
-	$perm0_urls = array('account/register.php', 'account/login.php', 'account/logout.php', 'student/updateInfo.php', 'admin/report/custom.php', 'student/transactions.php', 'admin/payment/create.php', 'admin/payment/update.php', 'admin/payment/delete.php', 'admin/account/delete.php', 'admin/bubbles/selectStudents.php');
+	$perm0_urls = array('account/register', 'account/login', 'account/logout', 'student/updateInfo', 'admin/report/custom', 'student/transactions', 'admin/payment/create', 'admin/payment/update', 'admin/payment/delete', 'admin/account/delete', 'admin/bubbles/selectStudents');
 
 	$links = "";
 	for ($ind = 0; $ind < count($perm0_names); ++$ind)

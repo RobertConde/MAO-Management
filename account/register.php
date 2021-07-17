@@ -8,7 +8,7 @@ navigationBar();
 <title>Register</title>
 
 <h2><u>Account Registration</u></h2>
-<form method="post" action="register.php">
+<form method="post" action="register">
     <fieldset>
         <legend><b>Account Information</b></legend>
 
