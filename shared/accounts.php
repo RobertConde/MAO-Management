@@ -75,6 +75,9 @@ function updateUpdateTime($id): bool
 	return $update_time_stmt->execute();
 }
 
+/**
+ * @throws \PHPMailer\PHPMailer\Exception
+ */
 function sendUpdateEmail($id, $updater_id): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/email.php";
@@ -86,27 +89,57 @@ function sendUpdateEmail($id, $updater_id): bool
 		"<b>Account ID#:</b> <code>$id</code><br><b>Updated By (ID):</b> <code>$updater_id</code>");
 }
 
-function updateAccount($id, $fname, $lname, $grade, $email, $phone, $division, $updater_id): bool
+/**
+ * @throws \PHPMailer\PHPMailer\Exception
+ */
+function updateAccount_Student($id, $fname, $minitial, $lname, $email, $phone, $division, $grade,
+                               $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8,
+                               $updater_id): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	$update_stmt = $sql_conn->prepare("UPDATE people
-		SET fname = ?, lname = ?, grade = ?, email = ?, phone = ?, division = ?
+		SET fname = ?, minitial = ?,  lname = ?, email = ?, phone = ?, division = ?, grade = ?,
+		    p1 = ?, p2 = ?, p3 = ?, p4 = ?, p5 = ?, p6 = ?, p7 = ?, p8 = ?
 		WHERE id = ?");
 
-	$update_stmt->bind_param('ssissis', $fname, $lname, $grade, $email, $phone, $division, $id);
+	$update_stmt->bind_param('sssssiissssssssi', $fname, $minitial, $lname, $email, $phone, $division, $grade,
+		$p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $id);
 
 	return updateUpdateTime($id) && $update_stmt->execute() && sendUpdateEmail($id, $updater_id);
 }
 
-function getAccountDetail($table, $col, $id) {
+/**
+ * @throws \PHPMailer\PHPMailer\Exception
+ */
+function updateAccount_Admin($id, $perms, $mu_student_id, $member_famat, $member_nation, $medical, $insurance, $school_insurance, $updater_id): bool
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	$sql_conn = getDBConn();    // Get DB connection
+
+	$update_stmt = $sql_conn->prepare("UPDATE people
+		SET perms = ?, mu_student_id = ?, member_famat = ?, member_nation = ?, medical = ?, insurance = ?, school_insurance = ?
+		WHERE id = ?");
+
+	// No one can demote an admin
+	if (getAccountDetail('people', 'perms', $id) == 100)
+		$perms = 100;
+
+	$update_stmt->bind_param('isiiiiis', $perms, $mu_student_id, $member_famat, $member_nation, $medical, $insurance, $school_insurance, $id);
+
+	return updateUpdateTime($id) && $update_stmt->execute() && sendUpdateEmail($id, $updater_id);
+}
+
+function getAccountDetail($table, $col, $id)
+{
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
 
 	return getDetail($table, $col, 'id', $id);
 }
 
-function getRank($id) {
+function getRank($id)
+{
 	$perms = getAccountDetail('people', 'perms', $id);
 
 	if ($perms < 1)

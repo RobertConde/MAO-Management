@@ -35,7 +35,8 @@ function toggleTransaction($id, $payment_id): bool
 		$insert_transaction_statement->bind_param('ss', $id, $payment_id);
 
 		if (!$insert_transaction_statement->execute())
-			die("Error occurred inserting transaction: $insert_transaction_statement->error.");
+			return false;
+//			die("Error occurred inserting transaction: $insert_transaction_statement->error.");
 	} else {
 //		echo "222";
 		$delete_transaction_statement = $sql_conn->prepare("DELETE FROM transactions WHERE id = ? AND payment_id = ?");
@@ -43,7 +44,8 @@ function toggleTransaction($id, $payment_id): bool
 		$delete_transaction_statement->bind_param('ss', $id, $payment_id);
 
 		if (!$delete_transaction_statement->execute())
-			die("Error occurred deleting transaction: $delete_transaction_statement->error.");
+			return false;
+//			die("Error occurred deleting transaction: $delete_transaction_statement->error.");
 	}
 
 	return true;

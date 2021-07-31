@@ -7,4 +7,9 @@ Options -Indexes
 
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^([^\.]+)$ $1.php [NC,L]
+RewriteRule ^([^.]+)$ $1.php [NC,L]
+
+<Files "config.ini">
+  Order Allow,Deny
+  Deny from all
+</Files>

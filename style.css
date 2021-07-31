@@ -117,9 +117,15 @@ input:read-only, input:disabled, select:disabled textarea:disabled {
 }
 
 @keyframes rainbow {
-    0%{background-position:0 50%}
-    50%{background-position:100% 25%}
-    100%{background-position:0 50%}
+    0% {
+        background-position: 0 50%
+    }
+    50% {
+        background-position: 100% 25%
+    }
+    100% {
+        background-position: 0 50%
+    }
 }
 
 /* Dropdown Button */
@@ -143,7 +149,7 @@ input:read-only, input:disabled, select:disabled textarea:disabled {
     right: 0;
     background-color: #f9f9f9;
     min-width: 160px;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
     z-index: 1;
 }
 
@@ -154,10 +160,21 @@ input:read-only, input:disabled, select:disabled textarea:disabled {
     display: block;
 }
 
-.dropdown:hover .dropdown-content {display: block;}
-.dropdown:hover .dropdown-button {background-color: red;}
-.dropdown-content a:hover {background-color: lightgray;}
-.dropdown-content a:active {background-color: gray;}
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropdown-button {
+    background-color: red;
+}
+
+.dropdown-content a:hover {
+    background-color: lightgray;
+}
+
+.dropdown-content a:active {
+    background-color: gray;
+}
 
 /* Select Invalid */
 select:invalid {
@@ -169,4 +186,16 @@ select:invalid {
     .noprint {
         display: none
     }
+}
+
+/* Source: https://www.granneman.com/webdev/coding/css/centertables */
+/* Center Table */
+table.center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 000webhost Watermark (Remove) */
+img[src*="https://cdn.000webhost.com/000webhost/logo/footer-powered-by-000webhost-white2.png"] {
+    display: none;
 }

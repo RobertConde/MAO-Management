@@ -26,25 +26,26 @@ if (isset($_POST['transaction'])) {  // Process POST update
 
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
 
-	$updated = toggleTransaction($_POST['id'] , $_POST['transaction']);
+	$updated = toggleTransaction($_POST['id'], $_POST['transaction']);
 }
 
 // View form (using correct ID)
 $id = $_SESSION['id'];
-if (isset($_GET['id']) && $_GET['id'] != $_SESSION['id']) {
-	checkPerms(OFFICER);
+if (isset($_GET['id'])) {
+	$rankComp = checkCompareRank($_SESSION['id'], $_GET['id'], true);
 
-	if (checkCompareRank($_SESSION['id'], $_GET['id'], true))
-		$id = $_GET['id'];
-	else
-		die("<p style=\"color:red;\">You do not have the required permissions!</p>\n");
+	if (!is_null($rankComp)) {
+		if ($rankComp)
+			$id = $_GET['id'];
+		else
+			die("<p style=\"color:red;\">You do not have the required permissions!</p>\n");
+	}
 }
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
 ?>
 
-<html lang="en">
-<title>Transactions</title>
+<title>DB | Transactions</title>
 
 <h2><u>Account Transactions</u></h2>
 
@@ -53,7 +54,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
 if (getRank($_SESSION['id']) >= 1)
 	echo "<form method=\"get\">\n",
 	"<label for=\"id\"><i>Search ID:</i></label>\n",
-	"<input id=\"id\" name=\"id\" type=\"search\" pattern=\"[0-9]{7}\" required>\n",
+	"<input id=\"id\" name=\"id\" type=\"search\" pattern=\"[0-9]{7}\">\n",
 	"<input id=\"search\" type=\"submit\" value=\"Search\">\n",
 	"</form>\n",
 	"<hr>\n";
@@ -99,7 +100,8 @@ if ($id != $_SESSION['id'])
             </option>
             <option value="12" <?php echo getAccountDetail('people', 'grade', $id) == 12 ? "selected" : "" ?>>12th Grade
             </option>
-            <option value="0" <?php echo getAccountDetail('people', 'grade', $id) == 0 ? "selected" : "" ?>>Not a Student
+            <option value="0" <?php echo getAccountDetail('people', 'grade', $id) == 0 ? "selected" : "" ?>>Not a
+                Student
             </option>
         </select>
     </fieldset>
@@ -116,30 +118,28 @@ if (isset($updated)) {
 
 $sql_conn = getDBConn();
 if (getRank($_SESSION['id']) > 0) {
-    //TODO: Better tables; no function will do! Function should ONLY be for custom reports!
-    if (!is_a($payment_stmt = $sql_conn->query("SELECT pd.payment_id, pd.cost, pd.info, tr.time_paid FROM payment_details pd LEFT OUTER JOIN transactions tr ON pd.payment_id = tr.payment_id AND id = $id ORDER BY ISNULL(tr.time_paid), tr.time_paid, pd.payment_id;"), 'mysqli_result'))
-        die("<p style=\"color:red;\">Get table function occurred an error upon execution of statement!</p>\n");
+	//TODO: Better tables; no function will do! Function should ONLY be for custom reports!
+	if (!is_a($payment_stmt = $sql_conn->query("SELECT pd.payment_id, pd.cost, pd.info, tr.time_paid FROM payment_details pd LEFT OUTER JOIN transactions tr ON pd.payment_id = tr.payment_id AND id = $id ORDER BY ISNULL(tr.time_paid), tr.time_paid, pd.payment_id;"), 'mysqli_result'))
+		die("<p style=\"color:red;\">Get table function occurred an error upon execution of statement!</p>\n");
 
-    require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
 
-    $table_rows = sql_TH(array_merge($payment_stmt->fetch_fields(), array('paid')));
-    while (!is_null($row_array = $payment_stmt->fetch_row())) {
-        $table_rows .= TR(array_merge($row_array,
-                array(
-                    "$row_array[0]
+	$table_rows = sql_TH(array_merge($payment_stmt->fetch_fields(), array('paid')));
+	while (!is_null($row_array = $payment_stmt->fetch_row())) {
+		$table_rows .= TR(array_merge($row_array,
+				array(
+					"$row_array[0]
                         <form id='$row_array[0]' method='post'>
                             <input id='id' name='id' type='hidden' value='$id'>
                             <input id='transaction' name='transaction' type='hidden' value='$row_array[0]'>
                             <input id='onchange' name='onchange' type='checkbox' onchange='document.getElementById(\"$row_array[0]\").submit()' " . (isPaid($id, $row_array[0]) ? "checked" : "") . ">
                         </form>"))) . "\n";
-    }
+	}
 
-    echo surrTags('table', $table_rows);
+	echo surrTags('table', $table_rows);
 } else {
 	$result = $sql_conn->query("SELECT pd.payment_id, pd.info, tr.time_paid FROM payment_details pd LEFT OUTER JOIN transactions tr ON pd.payment_id = tr.payment_id AND id = $id ORDER BY ISNULL(tr.time_paid), tr.time_paid, pd.payment_id;");
 
 	echo getTableFromResult($result) . "\n";
 }
-
 ?>
-</html>

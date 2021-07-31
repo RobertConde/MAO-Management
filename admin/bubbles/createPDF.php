@@ -10,15 +10,25 @@ checkPerms(OFFICER);
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 
 $ref = "http://" . $_SERVER['HTTP_HOST'];
-if(isset($_GET['ref']))
-    $ref = $_GET['ref'];
+if(isset($_GET['ref'])) {
+	$ref = $_GET['ref'];
+
+	if (strpos($_GET['ref'], '?') == false)
+		$ref .= "?return=";
+	else
+		$ref .= "&return=";
+}
 
 if (!(isset($_POST['selected']) && is_array($_POST['selected'])))
-    header("Location: " . $_GET['ref'] . "?return=false");
+    header("Location: " . $ref . "false");
+$ref .= "true";
 
 $IDs = $_POST['selected'];
 
 $json_array = array();
+
+if (!isset($_POST['test']))
+    die("bad");
 
 $json_array['test'] = $_POST['test'];
 $json_array['bubbles'] = array(
@@ -55,8 +65,10 @@ foreach ($IDs as $id) {
 		. " "
 		. getAccountDetail('people', 'lname', $id);
 
-	//TODO: implement unique student FAMAT id (3-digit #)
-	$famat_id .= '   ';
+    $mu_student_id = getAccountDetail('people', 'mu_student_id', $id);
+    if (preg_match('/[0-9\s]{3}/', $mu_student_id) == 0)
+        $mu_student_id = '   ';
+	$famat_id .= $mu_student_id;
 
 	$division = getAccountDetail('people', 'division', $id);
 	if (1 <= $division && $division <= 6)
@@ -126,7 +138,7 @@ $json = json_encode($json_array);
 			console.log("Saving Error: " + error);
 		}
 
-		window.location.replace("<?php echo $ref; ?>" + "?return=true");
+		window.location.replace("<?php echo $ref; ?>");
 	}
 
     function drawPage(pdf, studentName, studentID, school, testName, bubbles) {
@@ -158,11 +170,11 @@ $json = json_encode($json_array);
 	    var offSets = [0.1, 0, -0.6, -0.9, -0.5, -1, -1.8, -1.8, -1];
 
 	    for (var i = 0; i < id.length; i++){
-		    if(bubbles[i] && id.charAt(i) != ' ') {
+		    if(bubbles[i] && id.charAt(i) !== ' ') {
 			    var currX = startX + diffX * i;
 			    pdf.text(id.charAt(i), currX, 211);
 
-			    var index = (parseInt(id.charAt(i)) - 0);
+			    var index = parseInt(id.charAt(i));
 			    pdf.circle(currX + offsetX + offSets[i], 211 + offsetY + diffY * index, 6.6, 'F');
 		    }
 	    }

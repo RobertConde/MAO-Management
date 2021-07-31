@@ -1,19 +1,62 @@
 <?php
 
-function stylesheet() {
+function stylesheet()
+{
 	echo "<link rel=\"stylesheet\" href=\"https://" . $_SERVER['HTTP_HOST'] . "/style.css\">\n";
 }
 
-function makeLink($name, $relative_path = "") : string
+function makeLink($name, $relative_path = ""): string
 {
 	return "<a href=\"https://" . $_SERVER['HTTP_HOST'] . "/$relative_path\">$name</a>";
 }
 
-function navigationBar() {
+function currentURL($request = true): string
+{
+	$currentURL = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+	if (!$request && strpos($currentURL, '?') != false)
+		return substr($currentURL, 0, strpos($currentURL, '?'));
+
+	return $currentURL;
+}
+
+function redirect($url)
+{
+	header("location: $url");
+}
+
+function navigationBar()
+{
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
 
-	$perm0_names = array("Register", "Login" , "Logout", "Update Info", "Reports", "Transactions", "Payment Create", "Payment Update", "Payment Delete", "Account Delete", "Create Bubble Sheets");
-	$perm0_urls = array('account/register', 'account/login', 'account/logout', 'student/updateInfo', 'admin/report/custom', 'student/transactions', 'admin/payment/create', 'admin/payment/update', 'admin/payment/delete', 'admin/account/delete', 'admin/bubbles/selectStudents');
+	$perm0_names = array(
+		'Register',
+		'Login',
+		'Logout',
+		'Update Info',
+		'|',
+		'Delete Account',
+		'|',
+		'Payments',
+		'Transactions',
+		'Manage Competitions',
+		'Competition Tracker',
+		'Create Bubble Sheets',
+		'Custom Report');
+	$perm0_urls = array(
+		'account/register',
+		'account/login',
+		'account/logout',
+		'student/updateInfo',
+		'',
+		'admin/accounts/delete',
+		'',
+		'admin/payments/payments',
+		'student/transactions',
+		'admin/competitions/manage',
+		'admin/competitions/tracker',
+		'admin/bubbles/selectStudents',
+		'admin/reports/custom');
 
 	$links = "";
 	for ($ind = 0; $ind < count($perm0_names); ++$ind)
@@ -25,7 +68,7 @@ function navigationBar() {
 }
 
 // $tag is without carets or '/'
-function surrTags($tag, $text, $tag_interior = '') : string
+function surrTags($tag, $text, $tag_interior = ''): string
 {
 	// TODO: Reconsider placement (might need to move higher up in call list; ASK: "Should it be handled here?")
 	if (is_null($text))
@@ -34,7 +77,7 @@ function surrTags($tag, $text, $tag_interior = '') : string
 	return "<$tag $tag_interior>$text</$tag>";
 }
 
-function sql_TH($sql_fields_array) : string
+function sql_TH($sql_fields_array): string
 {
 	$table_header_data = "";
 	foreach ($sql_fields_array as $header_elem)
@@ -43,7 +86,7 @@ function sql_TH($sql_fields_array) : string
 	return surrTags('tr', $table_header_data);
 }
 
-function TR($row_array) : string
+function TR($row_array): string
 {
 	$row_data = "";
 	foreach ($row_array as $row_elem)
@@ -52,12 +95,12 @@ function TR($row_array) : string
 	return surrTags('tr', $row_data);
 }
 
-function getTableFromResult($result) : string
+function getTableFromResult($result): string
 {
 	if (!is_a($result, 'mysqli_result'))
 		die("<p style=\"color:red;\">Get table function occurred an error upon execution of statement!</p>\n");
 
-	$table_rows = sql_TH($result->fetch_fields()) ;
+	$table_rows = sql_TH($result->fetch_fields());
 	while (!is_null($row_array = $result->fetch_row()))
 		$table_rows .= TR($row_array) . "\n";
 
@@ -65,11 +108,18 @@ function getTableFromResult($result) : string
 }
 
 /* BEWARE OF POSSIBLE SQL INJECTION */
-function getTableSQL($table_name, $order_by = "1") : string
+function getTable($table_name, $order_by = "1"): string
 {
 	$sql_conn = getDBConn();
 
 	$result = $sql_conn->query("SELECT * FROM $table_name ORDER BY $order_by");
 
 	return getTableFromResult($result);
+}
+
+function getDBName():string
+{
+	$sql_config = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/config.ini", true)['sql'];
+
+	return $sql_config['database'];
 }

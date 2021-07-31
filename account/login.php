@@ -10,7 +10,7 @@ if (isset($_SESSION['id']))
 	header("Location: https://" . $_SERVER['HTTP_HOST'] . "/student/updateInfo");
 else if (isset($_POST['cycle_code']))
 	$cycle_and_email_result = cycleLoginCode($_POST['id']);
-else if(isset($_POST['login'])) {
+else if (isset($_POST['login'])) {
 	if (getAccountDetail('login', 'code', $_POST['id']) == $_POST['code']) {
 		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 
@@ -28,12 +28,10 @@ stylesheet();
 navigationBar();
 ?>
 
-<html lang="en">
-<title>Login</title>
+<title>DB | Login</title>
 
 <h2><u>Account Login</u></h2>
-
-<form method="post" action="login">
+<form method="post">
     <fieldset>
         <legend><b>1) Get a New Login Code <i>(If Necessary)</i></b></legend>
 
@@ -53,7 +51,7 @@ if (!is_null($cycle_and_email_result)) {
 }
 ?>
 
-<form method="post" action="login">
+<form method="post">
     <fieldset>
         <legend><b>2) Login!</b></legend>
 
@@ -66,7 +64,6 @@ if (!is_null($cycle_and_email_result)) {
         <input id="login" name="login" type="submit" value="Login">
     </fieldset>
 </form>
-</html>
 
 <?php
 if (!is_null($login_result)) {

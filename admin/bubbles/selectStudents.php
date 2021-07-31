@@ -7,11 +7,9 @@ navigationBar();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/checks.php";
 checkPerms(OFFICER);
-
-$currentURL = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";  // TODO: Remove "?return=false&....."
 ?>
 
-<form method="post" action="createPDF?ref=<?php echo $currentURL; ?>">
+<form method="post" action="createPDF.php?ref=<?php echo currentURL(false); ?>">
     <fieldset>
         <legend><b>Bubble Selection</b></legend>
 
@@ -35,7 +33,7 @@ while (!is_null($row_array = $students_result->fetch_assoc())) {
 			array("<input name=\"selected[]\" type=\"checkbox\" value=\"" . $row_array['id'] . "\">")));
 }
 
-echo surrTags('table', $table_rows), "<br>",
+echo surrTags('table', $table_rows),
         "<br>",
         "<input type='submit' value='Create'>",
     "</fieldset>",
@@ -47,3 +45,5 @@ if (isset($_GET['return'])) {
 	else if ($_GET['return'] == 'false')
 		echo "<p style=\"color:red;\">Failed to create bubble sheets!</p>\n";
 }
+?>
+        <a href="https://raw.githubusercontent.com/AnirudhRahul/FAMATBubbler/master/LICENSE.MD" class="rainbow">♥️ Credit Where Credit Is Due ♥️</a>
