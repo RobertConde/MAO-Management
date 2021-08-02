@@ -9,6 +9,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/checks.php";
 checkPerms(OFFICER);
 ?>
 
+<title>DB | Bubble Sheets</title>
+
 <form method="post" action="createPDF.php?ref=<?php echo currentURL(false); ?>">
     <fieldset>
         <legend><b>Bubble Selection</b></legend>
