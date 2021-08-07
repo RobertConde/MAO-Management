@@ -51,7 +51,7 @@ function deleteCompetition($competition_id): bool
 
 	// Competition Selections
 	$delete_selections_stmt = $sql_conn->prepare(
-		"DELETE FROM competition_selections
+		"DELETE FROM competition_approvals
 			   WHERE competition_id = ?");
 
 	$delete_selections_stmt->bind_param('s', $competition_id);

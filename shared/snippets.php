@@ -34,6 +34,7 @@ function navigationBar()
 		'Login',
 		'Logout',
 		'Update Info',
+		'Comp. Selections',
 		'|',
 		'Delete Account',
 		'|',
@@ -48,6 +49,7 @@ function navigationBar()
 		'account/login',
 		'account/logout',
 		'student/updateInfo',
+		'student/comp-selections',
 		'',
 		'admin/accounts/delete',
 		'',
@@ -86,11 +88,15 @@ function sql_TH($sql_fields_array): string
 	return surrTags('tr', $table_header_data);
 }
 
-function TR($row_array): string
+function TR($row_array, $center = false): string
 {
 	$row_data = "";
-	foreach ($row_array as $row_elem)
-		$row_data .= surrTags('td', $row_elem);
+	foreach ($row_array as $row_elem) {
+		if ($center)
+			$row_data .= surrTags('td', $row_elem, "style=\"text-align: center;\"");
+		else
+			$row_data .= surrTags('td', $row_elem);
+	}
 
 	return surrTags('tr', $row_data);
 }

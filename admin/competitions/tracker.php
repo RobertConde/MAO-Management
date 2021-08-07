@@ -20,13 +20,12 @@ if (isset($_POST['id']))
 	$post_id = $_POST['id'];
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
-/* TODO: Error handling (x3) */
+/* TODO: Error handling (x4) */
 if (isset($_POST['selected']) || isset($_POST['paid']) || isset($_POST['forms'])) {
-
 	if (isset($_POST['selected'])) {
 		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/competitions.php";
 
-		toggleSelected($post_id, $comp_id);
+		toggleApproved($post_id, $comp_id);
 	} else if (isset($_POST['paid'])) {
 		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
 
@@ -71,21 +70,22 @@ navigationBar();
     </fieldset>
 </form>
 
-<form method="post" action="../bubbles/createPDF.php?ref=<?php echo currentURL(true) ?>" style="text-align: center; margin: 6px;" <?php if (!$comp_id_valid) echo 'hidden' ?>>
+<form method="post" action="../bubbles/createPDF.php?ref=<?php echo currentURL(true) ?>"
+      style="text-align: center; margin: 6px;" <?php if (!$comp_id_valid) echo 'hidden' ?>>
     <fieldset style="padding: 6px;">
         <legend><i>Actions</i></legend>
 
-        <?php
-        if ($comp_id_valid) {
-	        echo '<input name="test" type="hidden" value="' . $comp_id . '">';
+		<?php
+		if ($comp_id_valid) {
+			echo '<input name="test" type="hidden" value="' . $comp_id . '">';
 
-	        $selected_query = "SELECT cs.id FROM competition_selections cs JOIN people p ON cs.id = p.id WHERE cs.competition_id = '$comp_id' ORDER BY p.lname, p.fname";
+			$selected_query = "SELECT cs.id FROM competition_approvals cs JOIN people p ON cs.id = p.id WHERE cs.competition_id = '$comp_id' ORDER BY p.lname, p.fname";
 
-	        $selected_result = $sql_conn->query($selected_query);
+			$selected_result = $sql_conn->query($selected_query);
 
-	        while (!is_null($row = $selected_result->fetch_assoc()))
-		        echo '<input name="selected[]" type="hidden" value="' . $row['id'] . '">';
-        }
+			while (!is_null($row = $selected_result->fetch_assoc()))
+				echo '<input name="selected[]" type="hidden" value="' . $row['id'] . '">';
+		}
 		?>
         <input type="submit" value="Create Bubble Sheets">
     </fieldset>
@@ -100,13 +100,12 @@ if ($comp_id_valid) {
 	    p.lname,
 	    p.fname,
 	    p.division,
-	    EXISTS (SELECT * FROM competition_selections cs WHERE cs.competition_id = '$comp_id' AND cs.id=p.id) AS selected,
+        EXISTS (SELECT * FROM competition_selections cs WHERE cs.competition_id = '$comp_id' AND cs.id=p.id) AS selected,
+	    EXISTS (SELECT * FROM competition_approvals cs WHERE cs.competition_id = '$comp_id' AND cs.id=p.id) AS approved,
 	    EXISTS (SELECT * FROM transactions t WHERE t.payment_id = '$payment_id' AND t.id=p.id) AS paid,
 	    EXISTS (SELECT * FROM competition_forms t WHERE t.competition_id = '$comp_id' AND t.id=p.id) AS forms
 	FROM people p
 	ORDER BY lname, fname, division, id;";
-
-//	echo $sql_query;
 
 	$sql_result = $sql_conn->query($sql_query);
 
@@ -115,7 +114,7 @@ if ($comp_id_valid) {
 	$header_interior = "";
 	$header_obj_array = $sql_result->fetch_fields();
 	foreach ($header_obj_array as $obj) {
-		$header_interior .= surrTags('th', $obj->name);
+		$header_interior .= surrTags('th', $obj->name, "style=\"text-align: center;\"");
 	}
 	$table_interior .= surrTags('tr', $header_interior);
 
@@ -126,23 +125,23 @@ if ($comp_id_valid) {
 		$row_interior = "";
 		for ($i = 0; $i < $len; ++$i) {
 			$elem = $sql_row[$i];
-			if ($i < $len - 3)
-				$row_interior .= surrTags('td', $elem);
+			if ($i < $len - 4)
+				$row_interior .= surrTags('td', $elem,
+					"style='text-align: center;'");
+			else if ($i == $len - 4)
+				$row_interior .= surrTags('td', '', "style='background-color:" . ($elem == '1' ? 'green' : 'red') . ";'");
 			else
 				$row_interior .= surrTags('td',
-					"<form method='post'>" .
+					"<form method='post' class='center'>" .
 					"<input name='id' type='hidden' value='$curr_id'>" .
 					"<input name='" . $header_obj_array[$i]->name . "' type='hidden'>" .
 					"<input type='checkbox' " . ($elem == '1' ? 'checked' : 'unchecked') . " onchange='this.form.submit()'>" .
 					"</form>");
 		}
 
-		$table_interior .= surrTags('tr', $row_interior);
+		$table_interior .= surrTags('tr', $row_interior) . "\n";
 	}
 
 	echo surrTags('table', $table_interior, "class=\"center\"");
 }
-
-//echo surrTags('center', $order_by == "" ? getTable('people') : getTable($_GET['table'], $order_by));;
 ?>
-

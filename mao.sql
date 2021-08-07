@@ -165,7 +165,7 @@ ALTER TABLE `competition_forms`
 --
 -- Indexes for table `competition_selections`
 --
-ALTER TABLE `competition_selections`
+ALTER TABLE competition_approvals
   ADD PRIMARY KEY (`unique_id`);
 
 --
@@ -211,7 +211,7 @@ ALTER TABLE `competition_forms`
 --
 -- AUTO_INCREMENT for table `competition_selections`
 --
-ALTER TABLE `competition_selections`
+ALTER TABLE competition_approvals
   MODIFY `unique_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --

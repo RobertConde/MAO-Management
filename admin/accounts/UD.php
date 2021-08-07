@@ -31,7 +31,7 @@ function deleteAccount($id): bool
 
 	// Competition Selections
 	$delete_comp_selections_stmt = $sql_conn->prepare(
-		"DELETE FROM competition_selections
+		"DELETE FROM competition_approvals
 			   WHERE id = ?");
 
 	$delete_comp_selections_stmt->bind_param('s', $id);

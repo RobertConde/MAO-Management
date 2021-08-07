@@ -11,41 +11,46 @@ checkPerms(OFFICER);
 
 <title>DB | Bubble Sheets</title>
 
+<body style="text-align: center;">
+
+<h2 style="margin: 6px;"><u>Bubbles Selection</u></h2>
+
+
 <form method="post" action="createPDF.php?ref=<?php echo currentURL(false); ?>">
     <fieldset>
-        <legend><b>Bubble Selection</b></legend>
-
-        <label for="test">Test Name: </label>
+        <label for="test"><b>Test Name:</b></label>
         <input name="test" id="test" type="text"><br>
         <br>
 
-<?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
-$sql_conn = getDBConn();
+		<?php
+		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+		$sql_conn = getDBConn();
 
-$students_result = $sql_conn->query("SELECT id, CONCAT(fname, ' ', lname) AS name, grade, division FROM people WHERE division != 0;");
-if (!is_a($students_result, 'mysqli_result'))
-	die("<p style=\"color:red;\">Get table function occurred an error upon execution of statement!</p>\n");
+		$students_result = $sql_conn->query("SELECT id, CONCAT(fname, ' ', lname) AS name, grade, division FROM people WHERE division != 0;");
+		if (!is_a($students_result, 'mysqli_result'))
+			die("<p style=\"color:red;\">Get table function occurred an error upon execution of statement!</p>\n");
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
+		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
 
-$table_rows = sql_TH(array_merge($students_result->fetch_fields(), array('select')));
-while (!is_null($row_array = $students_result->fetch_assoc())) {
-	$table_rows .= TR(array_merge($row_array,
-			array("<input name=\"selected[]\" type=\"checkbox\" value=\"" . $row_array['id'] . "\">")));
-}
+		$table_rows = sql_TH(array_merge($students_result->fetch_fields(), array('select')));
+		while (!is_null($row_array = $students_result->fetch_assoc())) {
+			$table_rows .= TR(array_merge($row_array,
+				array("<input name=\"selected[]\" type=\"checkbox\" value=\"" . $row_array['id'] . "\">")),
+				true);
+		}
 
-echo surrTags('table', $table_rows),
-        "<br>",
-        "<input type='submit' value='Create'>",
-    "</fieldset>",
-"</form>";
+		echo surrTags('table', $table_rows),
+		"<br>",
+		"<input type='submit' value='Create'>",
+		"</fieldset>",
+		"</form>";
 
-if (isset($_GET['return'])) {
-	if ($_GET['return'] == 'true')
-	    echo "<p style=\"color:green;\">Successfully created bubble sheets.</p>\n";
-	else if ($_GET['return'] == 'false')
-		echo "<p style=\"color:red;\">Failed to create bubble sheets!</p>\n";
-}
-?>
-        <a href="https://raw.githubusercontent.com/AnirudhRahul/FAMATBubbler/master/LICENSE.MD" class="rainbow">♥️ Credit Where Credit Is Due ♥️</a>
+		if (isset($_GET['return'])) {
+			if ($_GET['return'] == 'true')
+				echo "<p style=\"color:green;\">Successfully created bubble sheets.</p>\n";
+			else if ($_GET['return'] == 'false')
+				echo "<p style=\"color:red;\">Failed to create bubble sheets!</p>\n";
+		}
+		?>
+        <a href="https://raw.githubusercontent.com/AnirudhRahul/FAMATBubbler/master/LICENSE.MD" class="rainbow">♥️
+            Credit Where Credit Is Due ♥️</a>

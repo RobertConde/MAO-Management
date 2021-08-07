@@ -15,7 +15,7 @@ checkPerms(STUDENT);
 // Update student process
 $updated_student = null;
 if (isset($_POST['update_student'])) {  // Process POST update
-	if ($_SESSION['id'] != $_POST['id'] && !checkCompareRank($_SESSION['id'], $_POST['id']))   // Confirm rank is higher (so that people can't update through POST requests without being logged into an account of higher rank)
+	if ($_POST['id'] != $_SESSION['id'] && !checkCompareRank($_SESSION['id'], $_POST['id']))   // Confirm rank is higher (so that people can't update through POST requests without being logged into an account of higher rank)
 		die("<p style=\"color:red;\">You do not have the required permissions!</p>\n");
 
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
@@ -28,7 +28,7 @@ if (isset($_POST['update_student'])) {  // Process POST update
 // Update admin process
 $updated_admin = null;
 if (isset($_POST['update_admin'])) {  // Process POST update
-	if ($_SESSION['id'] != $_POST['id'] && !checkCompareRank($_SESSION['id'], $_POST['id']))   // Confirm rank is higher (so that people can't update through POST requests without being logged into an account of higher rank)
+	if ($_POST['id'] != $_SESSION['id'] && !checkCompareRank($_SESSION['id'], $_POST['id']))   // Confirm rank is higher (so that people can't update through POST requests without being logged into an account of higher rank)
 		die("<p style=\"color:red;\">You do not have the required permissions!</p>\n");
 
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";

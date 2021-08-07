@@ -83,7 +83,7 @@ fieldset {
     display: inline-block;
 }
 
-input:read-only, input:disabled, select:disabled textarea:disabled {
+input:disabled, select:disabled, textarea:disabled {
     background: #c0c0c0;
     opacity: 0.85;
 }
@@ -198,4 +198,13 @@ table.center {
 /* 000webhost Watermark (Remove) */
 img[src*="https://cdn.000webhost.com/000webhost/logo/footer-powered-by-000webhost-white2.png"] {
     display: none;
+}
+
+/* Form Things */
+form {
+    margin-block-end: 0;
+}
+
+form.center, input.center {
+    text-align: center;
 }
