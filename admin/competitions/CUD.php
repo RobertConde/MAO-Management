@@ -58,6 +58,15 @@ function deleteCompetition($competition_id): bool
 
 	$result_selections_details = $delete_selections_stmt->execute();
 
+	// Competition Approvals
+	$delete_approvals_stmt = $sql_conn->prepare(
+		"DELETE FROM competition_approvals
+			   WHERE competition_id = ?");
+
+	$delete_approvals_stmt->bind_param('s', $competition_id);
+
+	$result_approvals_details = $delete_approvals_stmt->execute();
+
 	// Competition Forms
 	$delete_forms_stmt = $sql_conn->prepare(
 		"DELETE FROM competition_forms
@@ -67,5 +76,5 @@ function deleteCompetition($competition_id): bool
 
 	$result_forms_details = $delete_forms_stmt->execute();
 
-	return ($result_competitions && $result_selections_details && $result_forms_details);
+	return ($result_competitions && $result_selections_details && $result_approvals_details && $result_forms_details);
 }
