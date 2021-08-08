@@ -4,7 +4,7 @@ session_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
 stylesheet();
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/checks.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(OFFICER);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
@@ -49,7 +49,7 @@ foreach ($IDs as $id) {
 
 	$famat_id = "";
 
-	$grade = (int) getAccountDetail('people', 'grade', $id);
+	$grade = getGrade($id);
 	if (6 <= $grade && $grade <= 8) {
 		$student['school'] = "Doral Academy Middle School";
 		$famat_id .= '5377';
@@ -61,16 +61,16 @@ foreach ($IDs as $id) {
 		$famat_id .= '537 ';
 	}
 
-	$student['name'] = getAccountDetail('people', 'fname', $id)
+	$student['name'] = getAccountDetail('people', 'first_name', $id)
 		. " "
-		. getAccountDetail('people', 'lname', $id);
+		. getAccountDetail('people', 'last_name', $id);
 
-    $mu_student_id = getAccountDetail('people', 'mu_student_id', $id);
+    $mu_student_id = getAccountDetail('competitor_info', 'mu_student_id', $id);
     if (preg_match('/[0-9\s]{3}/', $mu_student_id) == 0)
         $mu_student_id = '   ';
 	$famat_id .= $mu_student_id;
 
-	$division = getAccountDetail('people', 'division', $id);
+	$division = getAccountDetail('competitor_info', 'division', $id);
 	if (1 <= $division && $division <= 6)
 		$famat_id .= $division;
 	else    // Invalid division

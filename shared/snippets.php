@@ -116,6 +116,7 @@ function getTableFromResult($result): string
 /* BEWARE OF POSSIBLE SQL INJECTION */
 function getTable($table_name, $order_by = "1"): string
 {
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
 	$sql_conn = getDBConn();
 
 	$result = $sql_conn->query("SELECT * FROM $table_name ORDER BY $order_by");
@@ -123,9 +124,31 @@ function getTable($table_name, $order_by = "1"): string
 	return getTableFromResult($result);
 }
 
-function getDBName():string
+function getDBName(): string
 {
 	$sql_config = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/config.ini", true)['sql'];
 
 	return $sql_config['database'];
+}
+
+function getPersonSelect()
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	$sql_conn = getDBConn();
+
+	$result = $sql_conn->query("SELECT id, last_name, first_name FROM people ORDER BY last_name, first_name, id;");
+
+	echo '<form method="get" style="text-align: center">',
+	'<label for="id"><i>Person:</i></label>',
+	'<select name="id" onchange="this.form.submit()">',
+	'<option selected hidden disabled></option>';
+	while (($row_array = $result->fetch_assoc()) != null) {
+		echo '<option value="' . $row_array['id'] . '">'
+			. $row_array['last_name'] . ', '
+			. $row_array['first_name']
+			. ' [' . $row_array['id'] . ']'
+			. '</option>';
+	}
+	echo '</select>',
+	'</form>';
 }

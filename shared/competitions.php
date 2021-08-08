@@ -70,7 +70,7 @@ function isApproved($id, $comp_id): bool
 	return ($num_rows > 0);
 }
 
-function toggleApproved($id, $comp_id):bool
+function toggleApproved($id, $comp_id): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
 	$sql_conn = getDBConn();    // Get DB connection

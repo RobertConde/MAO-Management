@@ -5,67 +5,39 @@ navigationBar();
 ?>
     <title>DB | Register</title>
 
-    <h2><u>Account Registration</u></h2>
+    <body style="line-height: 150%; text-align: center;">
 
-    <form method="post">
-        <fieldset>
-            <legend><b>Account Information</b></legend>
+    <h2 style="margin: 6px;"><u>Account Registration</u></h2>
+
+    <form method="post" style="justify-content: center; margin: 6px;">
+        <fieldset style="text-align: left;">
+            <legend style="text-align: center;"><b>Personal Information</b></legend>
 
             <label for="id">ID:</label>
-            <input id="id" name="id" type="text" pattern="[0-9]{7}" required><br>
-            <br>
-            <label for="fname">First Name:</label>
-            <input id="fname" name="fname" type="text" required><br>
-            <br>
-            <label for="lname">Last Name:</label>
-            <input id="lname" name="lname" type="text" required><br>
-            <br>
-            <label for="grade">Grade:</label>
-            <select id="grade" name="grade" required>
-                <option disabled selected></option>
-                <option value="6">6th Grade</option>
-                <option value="7">7th Grade</option>
-                <option value="8">8th Grade</option>
-                <option value="9">9th Grade</option>
-                <option value="10">10th Grade</option>
-                <option value="11">11th Grade</option>
-                <option value="12">12th Grade</option>
-                <option value="0">Not a Student</option>
-            </select><br>
-            <br>
-            <label for="email">Email
-                <div class="tooltip"><i class="fa fa-question-circle"></i>
-                    <span class="tooltiptext">Will be used to send you <i>login codes</i> for your account!</span>
-                </div>
-                :
-            </label>
+            <input id="id" name="id" type="text" pattern="[0-9]{7}" size="7" required><br>
+
+            <label for="first_name">First Name:</label>
+            <input id="first_name" name="first_name" type="text" size="10" required><br>
+
+            <label for="middle_initial">Middle Initial:</label>
+            <input id="middle_initial" name="middle_initial" type="text" pattern="[A-Z]{1}" size="1"><br>
+
+            <label for="last_name">Last Name:</label>
+            <input id="last_name" name="last_name" type="text" size="10" required><br>
+
+            <label for="graduation_year">Grad. Year:</label>
+            <input id="graduation_year" name="graduation_year" type="number" style="width: 4em;" required><br>
+
+            <label for="email">Email:</label>
             <input id="email" name="email" type="email" required><br>
+
+            <label for="phone">Phone #:</label>
+            <input id="phone" name="phone" type="tel" pattern="[0-9]{10}" size="10" required><br>
+
+            <label for="address">Address:</label>
+            <input id="address" name="address" type="text" size="25" required><br>
             <br>
-            <label for="phone">Phone Number
-                <div class="tooltip"><i class="fa fa-question-circle"></i>
-                    <span class="tooltiptext">Must be a 10-digit US phone number. Only type the digits!</span>
-                </div>
-                :
-            </label>
-            <input id="phone" name="phone" type="tel" pattern="[0-9]{10}" required><br>
-            <br>
-            <label for="division">Division
-                <div class="tooltip"><i class="fa fa-question-circle"></i>
-                    <span class="tooltiptext">Select the division you <i>will</i> compete the most this competition cycle.</span>
-                </div>
-                :
-            </label>
-            <select id="division" name="division" required>
-                <option disabled selected></option>
-                <option value="1">Algebra I</option>
-                <option value="2">Geometry</option>
-                <option value="3">Algebra II</option>
-                <option value="4">Precalculus</option>
-                <option value="5">Calculus</option>
-                <option value="6">Statistics</option>
-                <option value="0">Not a Student</option>
-            </select><br>
-            <br>
+
             <input id="register" name="register" type="submit" value="Register">
         </fieldset>
     </form>
@@ -76,12 +48,13 @@ if (isset($_POST['register'])) { // If form is POSTed
 
 	$registered = registerAccount(  // Register account
 		$_POST['id'],
-		$_POST['fname'],
-		$_POST['lname'],
-		$_POST['grade'],
+		$_POST['first_name'],
+		$_POST['middle_initial'],
+		$_POST['last_name'],
+		$_POST['graduation_year'],
 		$_POST['email'],
 		$_POST['phone'],
-		$_POST['division']);
+		$_POST['address']);
 
 	if ($registered) {
 		echo "<p style=\"color:green;\">Successfully registered.</p>\n";

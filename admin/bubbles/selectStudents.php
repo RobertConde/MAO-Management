@@ -5,7 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
 stylesheet();
 navigationBar();
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/checks.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(OFFICER);
 ?>
 
@@ -18,7 +18,7 @@ checkPerms(OFFICER);
 
 <form method="post" action="createPDF.php?ref=<?php echo currentURL(false); ?>">
     <fieldset>
-        <label for="test"><b>Test Name:</b></label>
+        <label for="test">Test Name:</label>
         <input name="test" id="test" type="text"><br>
         <br>
 
@@ -26,16 +26,21 @@ checkPerms(OFFICER);
 		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
 		$sql_conn = getDBConn();
 
-		$students_result = $sql_conn->query("SELECT id, CONCAT(fname, ' ', lname) AS name, grade, division FROM people WHERE division != 0;");
+		$students_result = $sql_conn->query(
+			"SELECT p.id, CONCAT(p.first_name, ' ', p.last_name) AS name, ci.division
+            FROM people p
+            JOIN competitor_info ci ON p.id = ci.id 
+            WHERE ci.division != 0;");
 		if (!is_a($students_result, 'mysqli_result'))
 			die("<p style=\"color:red;\">Get table function occurred an error upon execution of statement!</p>\n");
 
-		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
+		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 
-		$table_rows = sql_TH(array_merge($students_result->fetch_fields(), array('select')));
+		$table_rows = sql_TH(array_merge($students_result->fetch_fields(), array('grade', 'select')));
 		while (!is_null($row_array = $students_result->fetch_assoc())) {
 			$table_rows .= TR(array_merge($row_array,
-				array("<input name=\"selected[]\" type=\"checkbox\" value=\"" . $row_array['id'] . "\">")),
+				array(getGrade($row_array['id']),
+					"<input name=\"selected[]\" type=\"checkbox\" value=\"" . $row_array['id'] . "\">")),
 				true);
 		}
 

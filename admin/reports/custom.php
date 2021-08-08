@@ -5,7 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
 stylesheet();
 navigationBar();
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/checks.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(OFFICER);
 
 $table = "";
@@ -46,7 +46,7 @@ if (isset($_GET['order_by']))
             <input id="order_by" name="order_by" type="text" placeholder="SQL Order By Expression" style="margin: 6px;"
                    value="<?php echo $order_by; ?>">
             <div class="tooltip"><i class="fa fa-question-circle"></i>
-                <span class="tooltiptext">Beware of SQL Injection!</span>
+                <span class="tooltip-text">Beware of SQL Injection!</span>
             </div>
             <br>
 

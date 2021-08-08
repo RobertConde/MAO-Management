@@ -107,9 +107,9 @@ CREATE TABLE `payment_details` (
 
 CREATE TABLE `people` (
   `id` varchar(7) NOT NULL,
-  `fname` text NOT NULL,
+  `first_name` text NOT NULL,
   `minitial` varchar(1) NOT NULL DEFAULT '',
-  `lname` text NOT NULL,
+  `last_name` text NOT NULL,
   `email` text NOT NULL,
   `phone` text NOT NULL,
   `division` int(11) NOT NULL,
@@ -122,7 +122,7 @@ CREATE TABLE `people` (
   `p6` varchar(128) NOT NULL DEFAULT '',
   `p7` varchar(128) NOT NULL DEFAULT '',
   `p8` varchar(128) NOT NULL DEFAULT '',
-  `perms` int(11) NOT NULL DEFAULT 1,
+  `permissions` int(11) NOT NULL DEFAULT 1,
   `mu_student_id` varchar(3) NOT NULL DEFAULT '   ',
   `member_famat` tinyint(1) NOT NULL DEFAULT 0,
   `member_nation` tinyint(1) NOT NULL DEFAULT 0,

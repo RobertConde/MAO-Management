@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/checks.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(OFFICER);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
@@ -21,22 +21,24 @@ if (isset($_POST['id']))
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
 /* TODO: Error handling (x4) */
-if (isset($_POST['selected']) || isset($_POST['paid']) || isset($_POST['forms'])) {
-	if (isset($_POST['selected'])) {
-		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/competitions.php";
+if (isset($_POST['approved'])) {
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/competitions.php";
 
-		toggleApproved($post_id, $comp_id);
-	} else if (isset($_POST['paid'])) {
-		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
-
-		toggleTransaction($post_id, $payment_id);
-	} else if (isset($_POST['forms'])) {
-		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/competitions.php";
-
-		toggleFormStatus($post_id, $comp_id);
-	}
-
+	toggleApproved($post_id, $comp_id);
 	redirect(currentURL());
+
+} else if (isset($_POST['paid'])) {
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
+
+	toggleTransaction($post_id, $payment_id);
+	redirect(currentURL());
+
+} else if (isset($_POST['forms'])) {
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/competitions.php";
+
+	toggleFormStatus($post_id, $comp_id);
+	redirect(currentURL());
+
 }
 
 stylesheet();
@@ -70,8 +72,8 @@ navigationBar();
     </fieldset>
 </form>
 
-<form method="post" action="../bubbles/createPDF.php?ref=<?php echo currentURL(true) ?>"
-      style="text-align: center; margin: 6px;" <?php if (!$comp_id_valid) echo 'hidden' ?>>
+<form method="post" action="../bubbles/createPDF.php?ref=<?php echo currentURL(); ?>"
+      style="text-align: center; margin: 6px;" <?php if (!$comp_id_valid) echo 'hidden'; ?>>
     <fieldset style="padding: 6px;">
         <legend><i>Actions</i></legend>
 
@@ -79,7 +81,7 @@ navigationBar();
 		if ($comp_id_valid) {
 			echo '<input name="test" type="hidden" value="' . $comp_id . '">';
 
-			$selected_query = "SELECT cs.id FROM competition_approvals cs JOIN people p ON cs.id = p.id WHERE cs.competition_id = '$comp_id' ORDER BY p.lname, p.fname";
+			$selected_query = "SELECT cs.id FROM competition_approvals cs JOIN people p ON cs.id = p.id WHERE cs.competition_id = '$comp_id' ORDER BY p.last_name, p.first_name";
 
 			$selected_result = $sql_conn->query($selected_query);
 
@@ -97,15 +99,17 @@ if ($comp_id_valid) {
 	/* BEWARE OF SQL INJECTION */
 	$sql_query = "SELECT
 		p.id,
-	    p.lname,
-	    p.fname,
-	    p.division,
+	    p.last_name,
+	    p.first_name,
+	    ci.division,
         EXISTS (SELECT * FROM competition_selections cs WHERE cs.competition_id = '$comp_id' AND cs.id=p.id) AS selected,
 	    EXISTS (SELECT * FROM competition_approvals cs WHERE cs.competition_id = '$comp_id' AND cs.id=p.id) AS approved,
 	    EXISTS (SELECT * FROM transactions t WHERE t.payment_id = '$payment_id' AND t.id=p.id) AS paid,
 	    EXISTS (SELECT * FROM competition_forms t WHERE t.competition_id = '$comp_id' AND t.id=p.id) AS forms
 	FROM people p
-	ORDER BY lname, fname, division, id;";
+    JOIN competitor_info ci
+    ON p.id = ci.id
+	ORDER BY last_name, first_name, division, id;";
 
 	$sql_result = $sql_conn->query($sql_query);
 

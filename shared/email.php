@@ -6,15 +6,8 @@ use PHPMailer\PHPMailer\SMTP;
 /**
  * @throws \PHPMailer\PHPMailer\Exception
  */
-/**
- */
-/**
- * @throws \PHPMailer\PHPMailer\Exception
- */
-/**
- * @throws \PHPMailer\PHPMailer\Exception
- */
-function sendEmail($to, $subj, $msg) {
+function sendEmail($to, $subj, $msg): bool
+{
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/PHPMailer-6.4.1/Exception.php";
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/PHPMailer-6.4.1/OAuth.php";
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/PHPMailer-6.4.1/PHPMailer.php";
@@ -71,6 +64,10 @@ function sendEmail($to, $subj, $msg) {
 	//convert HTML into a basic plain-text alternative body
 	$mail->msgHTML($msg);
 
-	//send the message
-	return $mail->send();   //$mail->ErrorInfo
+	//Send the message
+	$sent = $mail->send();
+	if (!$sent)
+		echo($mail->ErrorInfo);
+
+	return $sent;
 }

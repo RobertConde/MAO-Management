@@ -5,7 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
 stylesheet();
 navigationBar();
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/checks.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(STUDENT);
 
 ////DEBUG
@@ -44,58 +44,55 @@ if (isset($_GET['id'])) {
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
 ?>
 
-<title>DB | Selections</title>
+    <title>DB | Selections</title>
 
-<body style="text-align: center;">
+    <body style="text-align: center;">
 
 <h2 style="margin: 6px;"><u>Competition Selections</u></h2>
 
 <form style="margin: 6px;">
     <fieldset>
-        <legend><i>Account Information<i>&nbsp
-                    <div class="tooltip"><i class="fa fa-question-circle"></i>
-                        <span class="tooltiptext">Edit this information in update info.</span>
-                    </div>
-        </legend>
+        <legend><i>Account Information</i></legend>
 
-        <label for="fname"><i>First Name</i>:</label>
-        <input id="fname" name="fname" type="text"
-               value="<?php echo getAccountDetail('people', 'fname', $id) ?>"
+        <label for="first_name">First Name:</label>
+        <input id="first_name" name="first_name" type="text" size="10"
+               value="<?php echo getAccountDetail('people', 'first_name', $id); ?>"
                disabled><br>
         <br>
 
-        <label for="lname"><i>Last Name</i>:</label>
-        <input id="lname" name="lname" type="text"
-               value="<?php echo getAccountDetail('people', 'lname', $id) ?>"
+        <label for="last_name">Last Name:</label>
+        <input id="last_name" name="last_name" type="text" size="10"
+               value="<?php echo getAccountDetail('people', 'last_name', $id); ?>"
                disabled><br>
         <br>
 
         <label for="mu_student_id">Mu Student ID:</label>
         <input id="mu_student_id" name="mu_student_id" type="text" pattern="[0-9\s]{3}" size="3" disabled
-               value="<?php echo getAccountDetail('people', 'mu_student_id', $id) ?>"><br>
+               value="<?php echo getAccountDetail('competitor_info', 'mu_student_id', $id); ?>"><br>
         <br>
 
         <label for="division">Division:</label>
         <select id="division" name="division" disabled>
-            <option value="1" <?php echo getAccountDetail('people', 'division', $id) == 1 ? "selected" : "" ?>>
+            <option value="1" <?php echo getAccountDetail('competitor_info', 'division', $id) == 1 ? "selected" : ""; ?>>
                 Algebra I
             </option>
-            <option value="2" <?php echo getAccountDetail('people', 'division', $id) == 2 ? "selected" : "" ?>>
+            <option value="2" <?php echo getAccountDetail('competitor_info', 'division', $id) == 2 ? "selected" : ""; ?>>
                 Geometry
             </option>
-            <option value="3" <?php echo getAccountDetail('people', 'division', $id) == 3 ? "selected" : "" ?>>
+            <option value="3" <?php echo getAccountDetail('competitor_info', 'division', $id) == 3 ? "selected" : ""; ?>>
                 Algebra II
             </option>
-            <option value="4" <?php echo getAccountDetail('people', 'division', $id) == 4 ? "selected" : "" ?>>
+            <option value="4" <?php echo getAccountDetail('competitor_info', 'division', $id) == 4 ? "selected" : ""; ?>>
                 Precalculus
             </option>
-            <option value="5" <?php echo getAccountDetail('people', 'division', $id) == 5 ? "selected" : "" ?>>
+            <option value="5" <?php echo getAccountDetail('competitor_info', 'division', $id) == 5 ? "selected" : ""; ?>>
                 Calculus
             </option>
-            <option value="6" <?php echo getAccountDetail('people', 'division', $id) == 6 ? "selected" : "" ?>>
+            <option value="6" <?php echo getAccountDetail('competitor_info', 'division', $id) == 6 ? "selected" : ""; ?>>
                 Statistics
             </option>
-            <option value="0" <?php echo getAccountDetail('people', 'division', $id) == 0 ? "selected" : "" ?>>Not a
+            <option value="0" <?php echo getAccountDetail('competitor_info', 'division', $id) == 0 ? "selected" : ""; ?>>
+                Not a
                 Student
             </option>
         </select>

@@ -14,8 +14,6 @@ else if (isset($_POST['login'])) {
 	if (getAccountDetail('login', 'code', $_POST['id']) == $_POST['code']) {
 		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 
-		updateLoginTime($_POST['id']);  // Update login time (in `login` table)
-
 		$_SESSION['id'] = $_POST['id']; // Login (session)
 
 		header("Location: https://" . $_SERVER['HTTP_HOST'] . "/"); // Go to index page
@@ -30,14 +28,17 @@ navigationBar();
 
 <title>DB | Login</title>
 
-<h2><u>Account Login</u></h2>
-<form method="post">
-    <fieldset>
-        <legend><b>1) Get a New Login Code <i>(If Necessary)</i></b></legend>
+<body style="line-height: 150%; text-align: center;">
+
+<h2 style="margin: 6px;"><u>Account Login</u></h2>
+<form method="post" style="text-align: center; margin: 6px;">
+    <fieldset style="text-align: left;">
+        <legend style="text-align: center;"><b>Get a Login Code</b></legend>
 
         <label for="id">ID:</label>
-        <input id="id" name="id" type="text" pattern="[0-9]{7}" required><br>
+        <input id="id" name="id" type="text" pattern="[0-9]{7}" size="7" required><br>
         <br>
+
         <input id="cycle_code" name="cycle_code" type="submit" value="Email Code">
     </fieldset>
 </form>
@@ -51,16 +52,17 @@ if (!is_null($cycle_and_email_result)) {
 }
 ?>
 
-<form method="post">
-    <fieldset>
-        <legend><b>2) Login!</b></legend>
+<form method="post" style="text-align: center; margin: 6px;">
+    <fieldset style="text-align: left;">
+        <legend style="text-align: center;"><b>Login!</b></legend>
 
         <label for="id">ID:</label>
-        <input id="id" name="id" type="text" pattern="[0-9]{7}" required><br>
+        <input id="id" name="id" type="text" pattern="[0-9]{7}" size="7" required><br>
+
+        <label for="code">Code:</label>
+        <input id="code" name="code" type="password" pattern="[0-9a-f]{6}" size="6" required><br>
         <br>
-        <label for="code">Login Code:</label>
-        <input id="code" name="code" type="password" pattern="[0-9a-f]{6}" required><br>
-        <br>
+
         <input id="login" name="login" type="submit" value="Login">
     </fieldset>
 </form>

@@ -5,7 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
 stylesheet();
 navigationBar();
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/checks.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(OFFICER);
 
 $post_id_is_real = isset($_POST['competition_id']) && !is_null(getDetail('competitions', 'competition_id', 'competition_id', $_POST['competition_id']));
@@ -91,7 +91,7 @@ if (isset($_GET['competition_id'])) {
 
             <label for="competition_id">Competition ID:</label>
             <input id="competition_id" name="competition_id" type="text" required
-                   value="<?php echo $competition_id ?>"
+                   value="<?php echo $competition_id; ?>"
 				<?php if (!is_null($competition_id)) echo 'disabled'; ?>
             >
 			<?php
@@ -122,12 +122,12 @@ if (isset($_GET['competition_id'])) {
             <!--            <label for="payment_id">Payment ID:</label>-->
             <!--            $<input id="payment_id" name="payment_id" type="number" step="0.01" required-->
             <!--                    value="-->
-			<?php //if (!is_null($competition_id)) echo sprintf('%01.2f', getDetail('competitions', 'payment_id', 'competition_id', $competition_id)) ?><!--"><br>-->
+			<?php //if (!is_null($competition_id)) echo sprintf('%01.2f', getDetail('competitions', 'payment_id', 'competition_id', $competition_id)); ?><!--"><br>-->
             <!--            <br>-->
             <label for="info">Information:</label>
             <br>
             <textarea id="info" name="info" rows="10" cols="50"
-                      required><?php if (!is_null($competition_id)) echo getDetail('competitions', 'competition_description', 'competition_id', $competition_id) ?></textarea><br>
+                      required><?php if (!is_null($competition_id)) echo getDetail('competitions', 'competition_description', 'competition_id', $competition_id); ?></textarea><br>
             <br>
             <input id="create" name="create" type="submit" value="Create"
                    style="color: green; float: left;" <?php if (!is_null($competition_id)) echo 'disabled'; ?>>

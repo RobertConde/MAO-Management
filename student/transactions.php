@@ -5,7 +5,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
 stylesheet();
 navigationBar();
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/checks.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(STUDENT);
 
 //DEBUG
@@ -52,60 +52,58 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
 <h2 style="margin: 6px;"><u>Transactions</u></h2>
 
 <?php
-if ($id != $_SESSION['id'])
-	echo "<p style=\"color:violet;\"><i><b>Note:</b> You are updating an account that isn't yours, and has a permission rank below you!</i></p>\n";
+if (getRank($_SESSION['id']) > 0) {
+    getPersonSelect();
+
+	if ($id != $_SESSION['id'])
+		echo "<p style=\"color:violet;\"><i><b>Note:</b> You are updating an account that isn't yours, and has a permission rank below you!</i></p>\n";
+}
+
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
 ?>
 
-<form>
+<form style="margin: 6px;">
     <fieldset>
         <legend><i>Account Information</i>&nbsp
-                    <div class="tooltip"><i class="fa fa-question-circle"></i>
-                        <span class="tooltiptext">Edit this information in update info.</span>
-                    </div>
+            <div class="tooltip"><i class="fa fa-question-circle"></i>
+                <span class="tooltip-text">Edit this information in update info.</span>
+            </div>
         </legend>
 
-		<?php
-		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+        <label for="id">ID:</label>
+        <input id="id" name="id" type="search" pattern="[0-9]{7}" size="7" value="<?php echo $id; ?>" disabled><br>
+        <br>
 
-		echo "<label for='id'><i>ID:</i></label>\n";
-		if (getRank($_SESSION['id']) >= 1)
-			echo "<input id='id' name='id' type='search' pattern='[0-9]{7}' size='7' value='$id'>\n",
-			"<input id='search' type='submit' value='Search'>\n";
-		else
-			echo "<input id='id' name='id' type='search' pattern='[0-9]{7}' size='7' value='$id' disabled>\n";
-		?>
-
-        <br>
-        <br>
-        <label for="fname"><i>First Name</i>:</label>
-        <input id="fname" name="fname" type="text"
-               value="<?php echo getAccountDetail('people', 'fname', $id) ?>"
-               disabled><br>
-        <br>
-        <label for="lname"><i>Last Name</i>:</label>
-        <input id="lname" name="lname" type="text"
-               value="<?php echo getAccountDetail('people', 'lname', $id) ?>"
+        <label for="first_name">First Name:</label>
+        <input id="first_name" name="first_name" type="text" size="10"
+               value="<?php echo getAccountDetail('people', 'first_name', $id); ?>"
                disabled><br>
         <br>
 
-        <label for="grade"><i>Grade</i>:</label>
+        <label for="last_name">Last Name:</label>
+        <input id="last_name" name="last_name" type="text" size="10"
+               value="<?php echo getAccountDetail('people', 'last_name', $id); ?>"
+               disabled><br>
+        <br>
+
+        <label for="grade">Grade:</label>
         <select id="grade" name="grade" disabled> <!-- TODO: Form colors (uniformity) -->
             <option disabled></option>
-            <option value="6" <?php echo getAccountDetail('people', 'grade', $id) == 6 ? "selected" : "" ?>>6th Grade
+            <option value="6" <?php echo getGrade($id) == 6 ? "selected" : ""; ?>>6th Grade
             </option>
-            <option value="7" <?php echo getAccountDetail('people', 'grade', $id) == 7 ? "selected" : "" ?>>7th Grade
+            <option value="7" <?php echo getGrade($id) == 7 ? "selected" : ""; ?>>7th Grade
             </option>
-            <option value="8" <?php echo getAccountDetail('people', 'grade', $id) == 8 ? "selected" : "" ?>>8th Grade
+            <option value="8" <?php echo getGrade($id) == 8 ? "selected" : ""; ?>>8th Grade
             </option>
-            <option value="9" <?php echo getAccountDetail('people', 'grade', $id) == 9 ? "selected" : "" ?>>9th Grade
+            <option value="9" <?php echo getGrade($id) == 9 ? "selected" : ""; ?>>9th Grade
             </option>
-            <option value="10" <?php echo getAccountDetail('people', 'grade', $id) == 10 ? "selected" : "" ?>>10th Grade
+            <option value="10" <?php echo getGrade($id) == 10 ? "selected" : ""; ?>>10th Grade
             </option>
-            <option value="11" <?php echo getAccountDetail('people', 'grade', $id) == 11 ? "selected" : "" ?>>11th Grade
+            <option value="11" <?php echo getGrade($id) == 11 ? "selected" : ""; ?>>11th Grade
             </option>
-            <option value="12" <?php echo getAccountDetail('people', 'grade', $id) == 12 ? "selected" : "" ?>>12th Grade
+            <option value="12" <?php echo getGrade($id) == 12 ? "selected" : ""; ?>>12th Grade
             </option>
-            <option value="0" <?php echo getAccountDetail('people', 'grade', $id) == 0 ? "selected" : "" ?>>Not a
+            <option value="0" <?php echo getGrade($id) == 0 ? "selected" : ""; ?>>Not a
                 Student
             </option>
         </select>
