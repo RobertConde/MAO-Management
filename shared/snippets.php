@@ -140,7 +140,7 @@ function getPersonSelect()
 
 	echo '<form method="get" style="text-align: center">',
 	'<label for="id"><i>Person:</i></label>',
-	'<select name="id" onchange="this.form.submit()">',
+	'<select id="id" name="id" onchange="this.form.submit()">',
 	'<option selected hidden disabled></option>';
 	while (($row_array = $result->fetch_assoc()) != null) {
 		echo '<option value="' . $row_array['id'] . '">'
