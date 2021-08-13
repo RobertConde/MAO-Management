@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.5
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Aug 06, 2021 at 02:30 AM
--- Server version: 10.3.16-MariaDB
--- PHP Version: 7.3.23
+-- Host: 127.0.0.1
+-- Generation Time: Aug 14, 2021 at 01:03 AM
+-- Server version: 10.4.19-MariaDB
+-- PHP Version: 7.4.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -19,8 +18,21 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `id17038408_mao`
+-- Database: `mao_new`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accounts`
+--
+
+CREATE TABLE `accounts` (
+  `id` varchar(7) NOT NULL,
+  `moodle` text NOT NULL DEFAULT '',
+  `alcumus` text NOT NULL DEFAULT '',
+  `webwork` text NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -33,6 +45,18 @@ CREATE TABLE `competitions` (
   `competition_name` text NOT NULL DEFAULT '',
   `competition_description` text NOT NULL,
   `payment_id` varchar(128) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `competition_approvals`
+--
+
+CREATE TABLE `competition_approvals` (
+  `unique_id` int(11) NOT NULL,
+  `competition_id` varchar(128) NOT NULL,
+  `id` varchar(7) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -57,6 +81,23 @@ CREATE TABLE `competition_selections` (
   `unique_id` int(11) NOT NULL,
   `competition_id` varchar(128) NOT NULL,
   `id` varchar(7) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `competitor_info`
+--
+
+CREATE TABLE `competitor_info` (
+  `id` varchar(7) NOT NULL,
+  `division` int(11) NOT NULL DEFAULT 0,
+  `mu_student_id` varchar(3) NOT NULL DEFAULT '   ',
+  `is_famat_member` tinyint(1) NOT NULL DEFAULT 0,
+  `is_national_member` tinyint(1) NOT NULL DEFAULT 0,
+  `has_medical` tinyint(1) NOT NULL DEFAULT 0,
+  `has_insurance` tinyint(1) NOT NULL DEFAULT 0,
+  `has_school_insurance` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -90,6 +131,21 @@ CREATE TABLE `login` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `parents`
+--
+
+CREATE TABLE `parents` (
+  `id` varchar(7) NOT NULL,
+  `name` text NOT NULL DEFAULT '',
+  `email` text NOT NULL DEFAULT '',
+  `phone` varchar(10) NOT NULL DEFAULT '',
+  `alternate_phone` varchar(10) NOT NULL DEFAULT '',
+  `alternate_ride_home` text NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `payment_details`
 --
 
@@ -107,13 +163,24 @@ CREATE TABLE `payment_details` (
 
 CREATE TABLE `people` (
   `id` varchar(7) NOT NULL,
+  `permissions` int(11) NOT NULL DEFAULT 1,
   `first_name` text NOT NULL,
-  `minitial` varchar(1) NOT NULL DEFAULT '',
+  `middle_initial` varchar(1) NOT NULL,
   `last_name` text NOT NULL,
+  `graduation_year` int(11) DEFAULT NULL,
   `email` text NOT NULL,
   `phone` text NOT NULL,
-  `division` int(11) NOT NULL,
-  `grade` int(11) NOT NULL,
+  `address` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `schedules`
+--
+
+CREATE TABLE `schedules` (
+  `id` varchar(7) NOT NULL,
   `p1` varchar(128) NOT NULL DEFAULT '',
   `p2` varchar(128) NOT NULL DEFAULT '',
   `p3` varchar(128) NOT NULL DEFAULT '',
@@ -122,15 +189,14 @@ CREATE TABLE `people` (
   `p6` varchar(128) NOT NULL DEFAULT '',
   `p7` varchar(128) NOT NULL DEFAULT '',
   `p8` varchar(128) NOT NULL DEFAULT '',
-  `permissions` int(11) NOT NULL DEFAULT 1,
-  `mu_student_id` varchar(3) NOT NULL DEFAULT '   ',
-  `member_famat` tinyint(1) NOT NULL DEFAULT 0,
-  `member_nation` tinyint(1) NOT NULL DEFAULT 0,
-  `medical` tinyint(1) NOT NULL DEFAULT 0,
-  `insurance` tinyint(1) NOT NULL DEFAULT 0,
-  `school_insurance` tinyint(1) NOT NULL DEFAULT 0,
-  `time_registered` timestamp NOT NULL DEFAULT current_timestamp(),
-  `time_updated` timestamp NULL DEFAULT NULL
+  `is_p1_koski` tinyint(1) NOT NULL DEFAULT 0,
+  `is_p2_koski` tinyint(1) NOT NULL DEFAULT 0,
+  `is_p3_koski` tinyint(1) NOT NULL DEFAULT 0,
+  `is_p4_koski` tinyint(1) NOT NULL DEFAULT 0,
+  `is_p5_koski` tinyint(1) NOT NULL DEFAULT 0,
+  `is_p6_koski` tinyint(1) NOT NULL DEFAULT 0,
+  `is_p7_koski` tinyint(1) NOT NULL DEFAULT 0,
+  `is_p8_koski` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -151,10 +217,22 @@ CREATE TABLE `transactions` (
 --
 
 --
+-- Indexes for table `accounts`
+--
+ALTER TABLE `accounts`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `competitions`
 --
 ALTER TABLE `competitions`
   ADD PRIMARY KEY (`competition_id`);
+
+--
+-- Indexes for table `competition_approvals`
+--
+ALTER TABLE `competition_approvals`
+  ADD PRIMARY KEY (`unique_id`);
 
 --
 -- Indexes for table `competition_forms`
@@ -165,8 +243,14 @@ ALTER TABLE `competition_forms`
 --
 -- Indexes for table `competition_selections`
 --
-ALTER TABLE competition_approvals
+ALTER TABLE `competition_selections`
   ADD PRIMARY KEY (`unique_id`);
+
+--
+-- Indexes for table `competitor_info`
+--
+ALTER TABLE `competitor_info`
+  ADD UNIQUE KEY `id` (`id`);
 
 --
 -- Indexes for table `events`
@@ -181,6 +265,12 @@ ALTER TABLE `login`
   ADD UNIQUE KEY `id` (`id`);
 
 --
+-- Indexes for table `parents`
+--
+ALTER TABLE `parents`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `payment_details`
 --
 ALTER TABLE `payment_details`
@@ -190,6 +280,12 @@ ALTER TABLE `payment_details`
 -- Indexes for table `people`
 --
 ALTER TABLE `people`
+  ADD UNIQUE KEY `id` (`id`);
+
+--
+-- Indexes for table `schedules`
+--
+ALTER TABLE `schedules`
   ADD UNIQUE KEY `id` (`id`);
 
 --
@@ -203,6 +299,12 @@ ALTER TABLE `transactions`
 --
 
 --
+-- AUTO_INCREMENT for table `competition_approvals`
+--
+ALTER TABLE `competition_approvals`
+  MODIFY `unique_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `competition_forms`
 --
 ALTER TABLE `competition_forms`
@@ -211,7 +313,7 @@ ALTER TABLE `competition_forms`
 --
 -- AUTO_INCREMENT for table `competition_selections`
 --
-ALTER TABLE competition_approvals
+ALTER TABLE `competition_selections`
   MODIFY `unique_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
