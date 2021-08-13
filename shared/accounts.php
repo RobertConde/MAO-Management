@@ -58,19 +58,22 @@ function cycleLoginCode($id): bool
 	return $cycle_statement->execute() && sendLoginCodeEmail($id);
 }
 
-/**
- * @throws \PHPMailer\PHPMailer\Exception
- */
-function sendUpdateEmail($id, $updater_id): bool
-{
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/email.php";
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
+// --Commented out by Inspection START (8/13/2021 7:20 PM):
+///**
+// * @throws \PHPMailer\PHPMailer\Exception
+// */
+//function sendUpdateEmail($id, $updater_id): bool
+//{
+//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/email.php";
+//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
+//
+//	return sendEmail(
+//		getAccountDetail('people', 'email', $id),
+//		"MAO - Account Updated",
+//		"<b>Account ID#:</b> <code>$id</code><br><b>Updated By (ID):</b> <code>$updater_id</code>");
+//}
+// --Commented out by Inspection STOP (8/13/2021 7:20 PM)
 
-	return sendEmail(
-		getAccountDetail('people', 'email', $id),
-		"MAO - Account Updated",
-		"<b>Account ID#:</b> <code>$id</code><br><b>Updated By (ID):</b> <code>$updater_id</code>");
-}
 
 
 function updatePerson($id, $first_name, $middle_initial, $last_name, $graduation_year, $email, $phone, $address): bool
@@ -145,7 +148,7 @@ function updateParent($id, $name, $email, $phone, $alternate_phone, $alternate_r
 	return $update_parents_stmt->execute();
 }
 
-function updateCompetitorInfo_Student($id, $division)
+function updateCompetitorInfo_Student($id, $division): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
 	$sql_conn = getDBConn();
