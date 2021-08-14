@@ -69,7 +69,7 @@ if (getRank($_SESSION['id']) > 0) {
     getPersonSelect();
 
 	if ($id != $_SESSION['id'])
-		echo "<p style=\"color:violet;\"><i><b>Note:</b> You are updating an account that isn't yours, and has a permission rank below you!</i></p>\n";
+		echo "<p style='text-align: center; color:violet;'><i><b>Note:</b> You are updating an account that isn't yours, and has a permission rank below you!</i></p>\n";
 }
 ?>
 
