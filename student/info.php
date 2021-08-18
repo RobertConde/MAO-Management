@@ -1,9 +1,10 @@
 <?php
-session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
+startSession();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
-stylesheet();
 navigationBar();
+stylesheet();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(STUDENT);
@@ -12,11 +13,8 @@ checkPerms(STUDENT);
 <title>DB | Update Account</title>
 
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
-
 if (isset($_POST['id']) && checkCompareRank($_SESSION['id'], $_POST['id'], true)) {
 	if (isset($_POST['update_person'])) {
-		echo "ENTERING";
 		$updated_person = updatePerson(
 			$_POST['id'],
 			$_POST['first_name'], $_POST['middle_initial'], $_POST['last_name'], $_POST['graduation_year'],
@@ -61,21 +59,19 @@ if (isset($_GET['id'])) {
 
 <h2 style="text-align: center; margin: 6px;"><u>Update Account Information</u></h2>
 
-<body style="line-height: 150%;">
-
 <?php
 
 if (getRank($_SESSION['id']) > 0) {
-    getPersonSelect();
+	getPersonSelect();
 
 	if ($id != $_SESSION['id'])
 		echo "<p style='text-align: center; color:violet;'><i><b>Note:</b> You are updating an account that isn't yours, and has a permission rank below you!</i></p>\n";
 }
 ?>
 
-<div style="display: flex; justify-content: center; margin: 6px;">
-    <div style="margin: 6px;">
-        <form method="post" action="updateInfo.php?id=<?php echo $id; ?>">
+<div style="display: flex; justify-content: center; margin: 6px; text-align: left;">
+    <div style="margin: 6px; padding-right: 6px;">
+        <form method="post" action="info.php?id=<?php echo $id; ?>" class="filled border">
             <fieldset>
                 <legend><b>Personal Information</b></legend>
 
@@ -114,16 +110,15 @@ if (getRank($_SESSION['id']) > 0) {
 
                 <input name="update_person" type="submit" value="Update" style="margin-top: 6px">
             </fieldset>
-        </form>
+        </form><br>
 
         <br>
 
-        <form method="post" action="updateInfo.php?id=<?php echo $id; ?>">
+        <form method="post" action="info.php?id=<?php echo $id; ?>" class="filled border">
             <fieldset>
                 <legend><b>School Schedule</b>
-                    <div class="tooltip"><i class="fa fa-question-circle"></i>
-                        <span class="tooltip-text">Include room # and course name. Check the box if it is a Koski period.</span>
-                    </div>
+                    <i class="fa fa-question-circle"
+                       title="Check the box if it is a Koski period. Include room # and course name."></i>
                 </legend>
 
                 <input name="id" type="hidden" value="<?php echo $id; ?>">
@@ -178,11 +173,11 @@ if (getRank($_SESSION['id']) > 0) {
 
                 <input name="update_schedule" type="submit" value="Update" style="margin-top: 6px">
             </fieldset>
-        </form>
+        </form><br>
 
         <br>
 
-        <form method="post" action="updateInfo.php?id=<?php echo $id; ?>">
+        <form method="post" action="info.php?id=<?php echo $id; ?>" class="filled border">
             <fieldset>
                 <legend><b>Account Usernames</b></legend>
 
@@ -206,8 +201,8 @@ if (getRank($_SESSION['id']) > 0) {
     </div>
 
     <div style="margin: 6px;">
-        <form method="post" action="updateInfo.php?id=<?php echo $id; ?>">
-            <fieldset>
+        <form method="post" action="info.php?id=<?php echo $id; ?>" class="filled border">
+            <fieldset style="display: block;">
                 <legend><b>Parent/Ride Home Information</b></legend>
 
                 <input name="id" type="hidden" value="<?php echo $id; ?>">
@@ -235,21 +230,19 @@ if (getRank($_SESSION['id']) > 0) {
                 <input name="update_parent" type="submit" value="Update" style="margin-top: 6px">
 
             </fieldset>
-        </form>
+        </form><br>
 
         <br>
 
-        <form method="post" action="updateInfo.php?id=<?php echo $id; ?>">
+        <form method="post" action="info.php?id=<?php echo $id; ?>" class="filled border">
             <fieldset>
                 <legend><b>Competitor Information</b></legend>
 
                 <input name="id" type="hidden" value="<?php echo $id; ?>">
 
                 <label for="division">Division
-                    <div class="tooltip"><i class="fa fa-question-circle"></i>
-                        <span class="tooltip-text">Select the division you <i>will</i> compete the most this competition cycle.</span>
-                    </div>
-                    :
+                    <i class="fa fa-question-circle"
+                       title="Select the division you will compete the most this competition cycle."></i>:
                 </label>
                 <select id="division" name="division" required>
                     <option value="0" disabled selected></option>

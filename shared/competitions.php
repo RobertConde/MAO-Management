@@ -2,7 +2,7 @@
 
 function isSelected($id, $comp_id): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 //	echo "ID:$id;COMP_ID:$comp_id<br>";
 
@@ -25,7 +25,7 @@ function isSelected($id, $comp_id): bool
 function toggleSelection($id, $comp_id):bool
 {
 //	echo "ID:$id;COMP_ID:$comp_id<br>";
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	if (!isSelected($id, $comp_id)) {
@@ -52,7 +52,7 @@ function toggleSelection($id, $comp_id):bool
 
 function isApproved($id, $comp_id): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
 	// Check if is already approved
@@ -72,7 +72,7 @@ function isApproved($id, $comp_id): bool
 
 function toggleApproved($id, $comp_id): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	if (!isApproved($id, $comp_id)) {
@@ -96,7 +96,7 @@ function toggleApproved($id, $comp_id): bool
 
 function isCompetitionPaid($id, $comp_id): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
 	// Find payment_id for competition
@@ -121,7 +121,7 @@ function isCompetitionPaid($id, $comp_id): bool
 
 function areFormsCollected($id, $comp_id): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
 	// Check if already turned in
@@ -141,7 +141,7 @@ function areFormsCollected($id, $comp_id): bool
 
 function toggleFormStatus($id, $comp_id):bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	if (!areFormsCollected($id, $comp_id)) {

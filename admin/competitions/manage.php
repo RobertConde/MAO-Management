@@ -1,9 +1,10 @@
 <?php
-session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
+startSession();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
-stylesheet();
 navigationBar();
+stylesheet();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(OFFICER);
@@ -37,7 +38,6 @@ if (isset($_POST['create'])) {
 	$deleted = deleteCompetition($_POST['competition_id']); // Delete competition
 }
 
-
 $competition_id = null;
 $payment_id = null;
 if (isset($_GET['competition_id'])) {
@@ -56,10 +56,9 @@ if (isset($_GET['competition_id'])) {
 
     <title>DB | Competitions</title>
 
-    <body style="text-align: center;">
     <h2 style="margin: 6px;"><u>Competitions</u></h2>
 
-    <form method="get" style="margin: 6px;">
+    <form method="get" style="margin: 6px;" class="filled border">
         <fieldset>
             <legend><b>Competition</b></legend>
 
@@ -84,21 +83,21 @@ if (isset($_GET['competition_id'])) {
             <button onclick="location.href='<?php echo currentURL(false); ?>'" type="button">Deselect</button>
         </fieldset>
     </form>
+    <br>
 
-    <form method="post">
+    <form method="post" class="filled border">
         <fieldset>
             <!--            TODO: Add tooltip! (why???; idk...)-->
 
             <label for="competition_id">Competition ID:</label>
             <input id="competition_id" name="competition_id" type="text" required
                    value="<?php echo $competition_id; ?>"
-				<?php if (!is_null($competition_id)) echo 'disabled'; ?>
-            >
+				<?php if (!is_null($competition_id)) echo 'disabled'; ?>>
 			<?php
 			if (!is_null($competition_id))
 				echo "<input name=\"competition_id\" type=\"hidden\" value=\"$competition_id\">";
 			?><br>
-            <br>
+
             <label for="payment_id">Payment ID:</label>
             <select id="payment_id" name="payment_id" style="margin-bottom: 6px;">
                 <option selected></option>
@@ -116,16 +115,8 @@ if (isset($_GET['competition_id'])) {
 				}
 				?>
             </select><br>
-            <br>
 
-
-            <!--            <label for="payment_id">Payment ID:</label>-->
-            <!--            $<input id="payment_id" name="payment_id" type="number" step="0.01" required-->
-            <!--                    value="-->
-			<?php //if (!is_null($competition_id)) echo sprintf('%01.2f', getDetail('competitions', 'payment_id', 'competition_id', $competition_id)); ?><!--"><br>-->
-            <!--            <br>-->
-            <label for="info">Information:</label>
-            <br>
+            <label for="info" style="margin-top: 0px; margin-bottom: 0px;"><u>Information</u></label><br>
             <textarea id="info" name="info" rows="10" cols="50"
                       required><?php if (!is_null($competition_id)) echo getDetail('competitions', 'competition_description', 'competition_id', $competition_id); ?></textarea><br>
             <br>
@@ -137,8 +128,6 @@ if (isset($_GET['competition_id'])) {
                    style="color: red; float: right;" <?php if (is_null($competition_id)) echo 'disabled'; ?>>
         </fieldset>
     </form>
-    </body>
-
 
 <?php
 if (!is_null($created)) {

@@ -6,12 +6,13 @@ const ADMIN = 100;
 function checkPerms($permmin): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
+	startSession();
 
 	if (!isset($_SESSION['id'])) {
-		die("<p style=\"color:red;\"><b>Redirecting:</b> <i>You are not logged in!</i></p>\n" .
-			"<meta http-equiv=\"refresh\" content=\"2; url=https://" . $_SERVER['HTTP_HOST'] . "/\" />");
+		die("<p style='color:red;'><b>Redirecting:</b> <i>You are not logged in [Session Status: " . session_status() . "] !</i></p>\n" .
+			"<meta http-equiv='refresh' content='2; url=https://" . $_SERVER['HTTP_HOST'] . "/' />");
 	} elseif (getAccountDetail('people', 'permissions', $_SESSION['id']) < $permmin)
-		die("<p style=\"color:red;\"><b>You do not have the required permissions!</b></p>\n");
+		die("<p style='color:red;'><b>You do not have the required permissions!</b></p>\n");
 
 	return true;
 }
@@ -28,7 +29,7 @@ function checkCompareRank($greater_id, $lower_id, $equal = false): ?bool
 
 	if (is_null($greater_permissions) || is_null($lower_permissions))
 		return null;
-//		die("<p style=\"color:red;\">Account with ID = $lower_id does not exist!</p>\n");
+//		die("<p style='color:red;'>Account with ID = $lower_id does not exist!</p>\n");
 
 	return (bool) (($greater_rank > $lower_rank) ^ ($equal && $greater_rank == $lower_rank));
 }

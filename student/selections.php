@@ -1,9 +1,10 @@
 <?php
-session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
+startSession();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
-stylesheet();
 navigationBar();
+stylesheet();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(STUDENT);
@@ -41,16 +42,14 @@ if (isset($_GET['id'])) {
 	}
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 ?>
 
     <title>DB | Selections</title>
 
-    <body style="text-align: center;">
+    <h2 style="margin: 6px;"><u>Competition Selections</u></h2>
 
-<h2 style="margin: 6px;"><u>Competition Selections</u></h2>
-
-<form style="margin: 6px;">
+<form style="margin: 6px; display: inline-block;" class="filled border">
     <fieldset>
         <legend><i>Account Information</i></legend>
 
@@ -58,18 +57,15 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
         <input id="first_name" name="first_name" type="text" size="10"
                value="<?php echo getAccountDetail('people', 'first_name', $id); ?>"
                disabled><br>
-        <br>
 
         <label for="last_name">Last Name:</label>
         <input id="last_name" name="last_name" type="text" size="10"
                value="<?php echo getAccountDetail('people', 'last_name', $id); ?>"
                disabled><br>
-        <br>
 
         <label for="mu_student_id">Mu Student ID:</label>
         <input id="mu_student_id" name="mu_student_id" type="text" pattern="[0-9\s]{3}" size="3" disabled
                value="<?php echo getAccountDetail('competitor_info', 'mu_student_id', $id); ?>"><br>
-        <br>
 
         <label for="division">Division:</label>
         <select id="division" name="division" disabled>

@@ -1,10 +1,15 @@
 <?php
-session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
+startSession();
+
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
+navigationBar();
+stylesheet();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(OFFICER);
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 
 $comp_id = null;
 $payment_id = null;
@@ -19,7 +24,9 @@ $post_id = null;
 if (isset($_POST['id']))
 	$post_id = $_POST['id'];
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
+startSession();
+
 /* TODO: Error handling (x4) */
 if (isset($_POST['approved'])) {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/competitions.php";
@@ -40,16 +47,13 @@ if (isset($_POST['approved'])) {
 	redirect(currentURL());
 
 }
-
-stylesheet();
-navigationBar();
 ?>
 
 <title>DB | Tracker</title>
 
 <h2 style="text-align: center; margin: 6px;"><u>Competition Tracker</u></h2>
 
-<form method="get" style="text-align: center; margin: 6px;">
+<form method="get" style="text-align: center; margin: 6px;" class="filled border">
     <fieldset>
         <legend><b>Competition</b></legend>
 
@@ -71,9 +75,11 @@ navigationBar();
         </select>
     </fieldset>
 </form>
+<br>
 
 <form method="post" action="../bubbles/createPDF.php?ref=<?php echo currentURL(); ?>"
-      style="text-align: center; margin: 6px;" <?php if (!$comp_id_valid) echo 'hidden'; ?>>
+      style="text-align: center; margin: 6px;" <?php if (!$comp_id_valid) echo 'hidden'; ?>
+      class="filled border">
     <fieldset style="padding: 6px;">
         <legend><i>Actions</i></legend>
 

@@ -1,9 +1,10 @@
 <?php
-session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
+startSession();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
-stylesheet();
 navigationBar();
+stylesheet();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(STUDENT);
@@ -42,49 +43,42 @@ if (isset($_GET['id'])) {
 	}
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 ?>
 
 <title>DB | Transactions</title>
-
-<body style="text-align: center;">
 
 <h2 style="margin: 6px;"><u>Transactions</u></h2>
 
 <?php
 if (getRank($_SESSION['id']) > 0) {
-    getPersonSelect();
+	getPersonSelect();
 
 	if ($id != $_SESSION['id'])
 		echo "<p style=\"color:violet;\"><i><b>Note:</b> You are updating an account that isn't yours, and has a permission rank below you!</i></p>\n";
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 ?>
 
-<form style="margin: 6px;">
+<form style="margin: 6px; display: inline-block;" class="filled border">
     <fieldset>
-        <legend><i>Account Information</i>&nbsp
-            <div class="tooltip"><i class="fa fa-question-circle"></i>
-                <span class="tooltip-text">Edit this information in update info.</span>
-            </div>
+        <legend><i>Account Information</i>
+            <i class="fa fa-question-circle" title="Edit this information in update info."></i>
         </legend>
 
         <label for="id">ID:</label>
         <input id="id" name="id" type="search" pattern="[0-9]{7}" size="7" value="<?php echo $id; ?>" disabled><br>
-        <br>
 
         <label for="first_name">First Name:</label>
         <input id="first_name" name="first_name" type="text" size="10"
                value="<?php echo getAccountDetail('people', 'first_name', $id); ?>"
                disabled><br>
-        <br>
 
         <label for="last_name">Last Name:</label>
         <input id="last_name" name="last_name" type="text" size="10"
                value="<?php echo getAccountDetail('people', 'last_name', $id); ?>"
                disabled><br>
-        <br>
 
         <label for="grade">Grade:</label>
         <select id="grade" name="grade" disabled> <!-- TODO: Form colors (uniformity) -->

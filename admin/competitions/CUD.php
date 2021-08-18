@@ -2,7 +2,7 @@
 
 function createCompetition($competition_id, $payment_id, $competition_description): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	$create_competition_stmt = $sql_conn->prepare(
@@ -19,7 +19,7 @@ function createCompetition($competition_id, $payment_id, $competition_descriptio
 
 function updateCompetition($competition_id, $payment_id, $competition_description): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	$update_competition_stmt = $sql_conn->prepare(
@@ -37,7 +37,7 @@ function updateCompetition($competition_id, $payment_id, $competition_descriptio
 // Deletes corresponding competitions and transactions
 function deleteCompetition($competition_id): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	// Competition

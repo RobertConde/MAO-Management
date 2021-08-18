@@ -2,7 +2,7 @@
 
 function createPayment($payment_id, $cost, $info): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	$create_payment_stmt = $sql_conn->prepare(
@@ -16,7 +16,7 @@ function createPayment($payment_id, $cost, $info): bool
 
 function updatePayment($payment_id, $cost, $info): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	$update_payment_stmt = $sql_conn->prepare(
@@ -31,7 +31,7 @@ function updatePayment($payment_id, $cost, $info): bool
 // Deletes corresponding payment_details and transactions
 function deletePayment($payment_id): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	// Payment Details

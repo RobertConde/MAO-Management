@@ -2,12 +2,17 @@
 
 function stylesheet()
 {
-	echo "<link rel=\"stylesheet\" href=\"https://" . $_SERVER['HTTP_HOST'] . "/style.css\">\n";
+	echo "<link rel='stylesheet' href='https://" . $_SERVER['HTTP_HOST'] . "/style.css'>";
 }
 
-function makeLink($name, $relative_path = ""): string
+function relativeURL($relative_path = ''): string
 {
-	return "<a href=\"https://" . $_SERVER['HTTP_HOST'] . "/$relative_path\">$name</a>";
+	return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/$relative_path";
+}
+
+function makeLink($name, $relative_path = ''): string
+{
+	return "<a href='https://" . relativeURL($relative_path) . "'>$name</a>";
 }
 
 function currentURL($request = true): string
@@ -27,54 +32,59 @@ function redirect($url)
 
 function navigationBar()
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
-
-	$perm0_names = array(
-		'Register',
-		'Login',
-		'Logout',
-		'Update Info',
-		'Comp. Selections',
-		'|',
-		'Delete Account',
-		'|',
-		'Payments',
-		'Transactions',
-		'Manage Competitions',
-		'Competition Tracker',
-		'Create Bubble Sheets',
-		'Custom Report');
-	$perm0_urls = array(
-		'account/register',
-		'account/login',
-		'account/logout',
-		'student/updateInfo',
-		'student/comp-selections',
-		'',
-		'admin/accounts/delete',
-		'',
-		'admin/payments/payments',
-		'student/transactions',
-		'admin/competitions/manage',
-		'admin/competitions/tracker',
-		'admin/bubbles/selectStudents',
-		'admin/reports/custom');
-
-	$links = "";
-	for ($ind = 0; $ind < count($perm0_names); ++$ind)
-		$links .= makeLink($perm0_names[$ind], $perm0_urls[$ind]) . "\n";
-
-	/* OTHER PERMISSIONS */
-
-	echo surrTags('div', surrTags('ul', $links), "class=\"nav-bar noprint\"") . "\n";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets/navbar.html";
 }
+
+//function navigationBar()
+//{
+//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+//
+//	$perm0_names = array(
+//		'Register',
+//		'Login',
+//		'Logout',
+//		'Update Info',
+//		'Comp. Selections',
+//		'|',
+//		'Delete Account',
+//		'|',
+//		'Payments',
+//		'Transactions',
+//		'Manage Competitions',
+//		'Competition Tracker',
+//		'Create Bubble Sheets',
+//		'Custom Report');
+//	$perm0_urls = array(
+//		'account/register',
+//		'account/login',
+//		'account/logout',
+//		'student/info',
+//		'student/comp-selections',
+//		'',
+//		'admin/accounts/delete',
+//		'',
+//		'admin/payments/payments',
+//		'student/transactions',
+//		'admin/competitions/manage',
+//		'admin/competitions/tracker',
+//		'admin/bubbles/selectStudents',
+//		'admin/reports/custom');
+//
+//	$links = "";
+//	for ($ind = 0; $ind < count($perm0_names); ++$ind)
+//		$links .= makeLink($perm0_names[$ind], $perm0_urls[$ind]) . "\n";
+//
+//	/* OTHER PERMISSIONS */
+//
+//	echo surrTags('div', surrTags('ul', $links), "class='nav-bar noprint'") . "\n";
+//}
 
 // $tag is without carets or '/'
 function surrTags($tag, $text, $tag_interior = ''): string
 {
 	// TODO: Reconsider placement (might need to move higher up in call list; ASK: "Should it be handled here?")
 	if (is_null($text))
-		$text = "<code style=\"color:#e11212; text-align: center\"><i>null</i></code>";
+		$text = "<code style='color:#e11212; text-align: center'><i>null</i></code>";
 
 	return "<$tag $tag_interior>$text</$tag>";
 }
@@ -83,7 +93,10 @@ function sql_TH($sql_fields_array): string
 {
 	$table_header_data = "";
 	foreach ($sql_fields_array as $header_elem)
-		$table_header_data .= surrTags('th', surrTags('center', is_string($header_elem) ? $header_elem : $header_elem->name));
+		$table_header_data .= surrTags(
+			'th',
+			is_string($header_elem) ? $header_elem : $header_elem->name,
+			"style='text-align: center;'");
 
 	return surrTags('tr', $table_header_data);
 }
@@ -93,7 +106,7 @@ function TR($row_array, $center = false): string
 	$row_data = "";
 	foreach ($row_array as $row_elem) {
 		if ($center)
-			$row_data .= surrTags('td', $row_elem, "style=\"text-align: center;\"");
+			$row_data .= surrTags('td', $row_elem, "style='text-align: center;'");
 		else
 			$row_data .= surrTags('td', $row_elem);
 	}
@@ -104,7 +117,7 @@ function TR($row_array, $center = false): string
 function getTableFromResult($result): string
 {
 	if (!is_a($result, 'mysqli_result'))
-		die("<p style=\"color:red;\">Get table function occurred an error upon execution of statement!</p>\n");
+		die("<p style='color:red;'>Get table function occurred an error upon execution of statement!</p>\n");
 
 	$table_rows = sql_TH($result->fetch_fields());
 	while (!is_null($row_array = $result->fetch_row()))
@@ -116,7 +129,7 @@ function getTableFromResult($result): string
 /* BEWARE OF POSSIBLE SQL INJECTION */
 function getTable($table_name, $order_by = "1"): string
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
 	$result = $sql_conn->query("SELECT * FROM $table_name ORDER BY $order_by");
@@ -133,13 +146,13 @@ function getDBName(): string
 
 function getPersonSelect()
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
 	$result = $sql_conn->query("SELECT id, last_name, first_name FROM people ORDER BY last_name, first_name, id;");
 
 	echo '<form method="get" style="text-align: center">',
-	'<label for="id"><i>Person:</i></label>',
+	'<label for="id"><i>Person</i>:</label>',
 	'<select id="id" name="id" onchange="this.form.submit()">',
 	'<option selected hidden disabled></option>';
 	while (($row_array = $result->fetch_assoc()) != null) {
@@ -150,5 +163,5 @@ function getPersonSelect()
 			. '</option>';
 	}
 	echo '</select>',
-	'</form>';
+	'</form><br>';
 }

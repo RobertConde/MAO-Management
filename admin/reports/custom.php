@@ -1,9 +1,10 @@
 <?php
-session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
+startSession();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
-stylesheet();
 navigationBar();
+stylesheet();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(OFFICER);
@@ -19,9 +20,9 @@ if (isset($_GET['order_by']))
 
     <title>DB | Custom Report</title>
 
-    <h2 style="text-align: center; margin: 6px;"><u>Custom Report</u></h2>
+    <h2 style="margin: 6px;"><u>Custom Report</u></h2>
 
-    <form id="table-form" method="get" style="text-align: center; margin: 6px;">
+    <form id="table-form" method="get" style="margin: 6px;" class="filled border">
         <fieldset>
             <legend><b>Report Parameters</b></legend>
 
@@ -45,9 +46,6 @@ if (isset($_GET['order_by']))
 
             <input id="order_by" name="order_by" type="text" placeholder="SQL Order By Expression" style="margin: 6px;"
                    value="<?php echo $order_by; ?>">
-            <div class="tooltip"><i class="fa fa-question-circle"></i>
-                <span class="tooltip-text">Beware of SQL Injection!</span>
-            </div>
             <br>
 
             <input type="submit" value="Get!">

@@ -1,19 +1,16 @@
 <?php
-session_start();
-
 $cycle_and_email_result = null;
 $login_result = null;
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
+startSession();
 
 if (isset($_SESSION['id']))
-	header("Location: https://" . $_SERVER['HTTP_HOST'] . "/student/updateInfo");
+	header("Location: https://" . $_SERVER['HTTP_HOST'] . "/student/info");
 else if (isset($_POST['cycle_code']))
 	$cycle_and_email_result = cycleLoginCode($_POST['id']);
 else if (isset($_POST['login'])) {
 	if (getAccountDetail('login', 'code', $_POST['id']) == $_POST['code']) {
-		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
-
 		$_SESSION['id'] = $_POST['id']; // Login (session)
 
 		header("Location: https://" . $_SERVER['HTTP_HOST'] . "/"); // Go to index page
@@ -21,17 +18,19 @@ else if (isset($_POST['login'])) {
 		$login_result = false;
 }
 
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
+startSession();
+
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
-stylesheet();
 navigationBar();
+stylesheet();
 ?>
 
 <title>DB | Login</title>
 
-<body style="line-height: 150%; text-align: center;">
-
 <h2 style="margin: 6px;"><u>Account Login</u></h2>
-<form method="post" style="text-align: center; margin: 6px;">
+
+<form method="post" style="text-align: center; margin: 6px;" class="filled border">
     <fieldset style="text-align: left;">
         <legend style="text-align: center;"><b>Get a Login Code</b></legend>
 
@@ -41,7 +40,7 @@ navigationBar();
 
         <input id="cycle_code" name="cycle_code" type="submit" value="Email Code">
     </fieldset>
-</form>
+</form><br>
 
 <?php
 if (!is_null($cycle_and_email_result)) {
@@ -52,7 +51,7 @@ if (!is_null($cycle_and_email_result)) {
 }
 ?>
 
-<form method="post" style="text-align: center; margin: 6px;">
+<form method="post" style="text-align: center; margin: 6px;" class="filled border">
     <fieldset style="text-align: left;">
         <legend style="text-align: center;"><b>Login!</b></legend>
 

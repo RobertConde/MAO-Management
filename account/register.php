@@ -1,15 +1,16 @@
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
+startSession();
+
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
-stylesheet();
 navigationBar();
+stylesheet();
 ?>
     <title>DB | Register</title>
 
-    <body style="line-height: 150%; text-align: center;">
-
     <h2 style="margin: 6px;"><u>Account Registration</u></h2>
 
-    <form method="post" style="justify-content: center; margin: 6px;">
+    <form method="post" style="justify-content: center; margin: 6px;" class="filled border">
         <fieldset style="text-align: left;">
             <legend style="text-align: center;"><b>Personal Information</b></legend>
 
@@ -57,13 +58,19 @@ if (isset($_POST['register'])) { // If form is POSTed
 		$_POST['address']);
 
 	if ($registered) {
-		echo "<p style=\"color:green;\">Successfully registered.</p>\n";
+		echo "<p style='color:green;'>Successfully registered.</p>\n";
 
-		if (cycleLoginCode($_POST['id']))
-			echo("<p style=\"color:green;\">Successfully sent new login code to email!</p>\n");
-		else
-			echo("<p style=\"color:red;\">Failed to send new login code to email (retry on login)!</p>\n");
+		try {
+			if (cycleLoginCode($_POST['id']))
+				echo("<p style='color:green;'>Successfully sent new login code to email!</p>\n");
+			else
+				echo("<p style='color:red;'>Failed to send new login code to email (retry on login)!</p>\n");
+		} catch (\PHPMailer\PHPMailer\Exception $e) {
+		    $error_message = $e->errorMessage();
+
+			echo("<p style='color:red;'>PHPMailer exception: '$error_message'!</p>\n");
+		}
 
 	} else
-		echo("<p style=\"color:red;\">Failed to register!</p>\n");
+		echo("<p style='color:red;'>Failed to register!</p>\n");
 }

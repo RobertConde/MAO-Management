@@ -1,5 +1,5 @@
 /* Source: https://www.w3schools.com/icons/tryit.asp?filename=tryicons_fa-question-circle */
-@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
+@import "shared/snippets/font-awesome-4.7.0/css/font-awesome.min.css";
 
 /* Source: https://www.w3schools.com/howto/howto_css_tooltip.asp */
 /* Tooltip container */
@@ -63,10 +63,11 @@ table {
     width: auto;
 }
 
-td, th {
+th, td {
     border: 1px solid #000000;
-    text-align: left;
-    padding: 8px;
+    text-align: center;
+    padding: 2px 3px 2px 3px !important;
+    white-space: nowrap;
 }
 
 th {
@@ -79,10 +80,6 @@ tr:nth-child(odd) {
 }
 
 /* Forms */
-fieldset {
-    display: inline-block;
-}
-
 input:disabled, select:disabled, textarea:disabled {
     background: #c0c0c0;
     opacity: 0.85;
@@ -190,7 +187,7 @@ select:invalid {
 
 /* Source: https://www.granneman.com/webdev/coding/css/centertables */
 /* Center Table */
-table.center {
+table {
     margin-left: auto;
     margin-right: auto;
 }
@@ -211,11 +208,12 @@ form.center, input.center {
 
 /* Columns */
 /* Source: https://www.w3schools.com/howto/howto_css_two_columns.asp */
+/* Create two equal columns that floats next to each other */
+
 * {
     box-sizing: border-box;
 }
 
-/* Create two equal columns that floats next to each other */
 .column {
     float: left;
     width: 50%;
@@ -235,4 +233,42 @@ form.center, input.center {
     .column {
         width: 100%;
     }
+}
+
+/* Navbar Adjust */
+body {
+    padding-top: 55px;
+}
+
+/* Bootstrap Fixes */
+legend {
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+form {
+    padding: 4px;
+}
+
+.filled {
+    /*background: rgb(248, 248, 248);*/
+    background: rgb(251, 251, 251);
+}
+
+.border {
+    border: 1px solid rgb(231, 231, 231);
+    border-radius: 3%;
+}
+
+hr {
+    margin: 6px;
+}
+
+form {
+    display: inline-block;
+}
+
+/* Universal Body Centering */
+body {
+    text-align: center;
 }

@@ -1,8 +1,13 @@
 <?php
 
+function startSession() {
+	if (session_status() != PHP_SESSION_ACTIVE)
+		session_start();
+}
+
 function registerAccount($id, $first_name, $middle_initial, $last_name, $graduation_year, $email, $phone, $address): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	// People
@@ -46,7 +51,7 @@ function sendLoginCodeEmail($id): bool
  */
 function cycleLoginCode($id): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();    // Get DB connection
 
 	$cycle_statement = $sql_conn->prepare("INSERT INTO login(id, code) VALUES (?, ?) ON DUPLICATE KEY UPDATE code = ?");
@@ -74,11 +79,9 @@ function cycleLoginCode($id): bool
 //}
 // --Commented out by Inspection STOP (8/13/2021 7:20 PM)
 
-
-
 function updatePerson($id, $first_name, $middle_initial, $last_name, $graduation_year, $email, $phone, $address): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
 	$update_people_stmt = $sql_conn->prepare("UPDATE people
@@ -90,7 +93,6 @@ function updatePerson($id, $first_name, $middle_initial, $last_name, $graduation
 		$email, $phone, $address,
 		$id);
 
-
 	$update_people_stmt->execute();
 	echo $update_people_stmt->error;
 	return false;
@@ -99,7 +101,7 @@ function updatePerson($id, $first_name, $middle_initial, $last_name, $graduation
 function updateSchedule($id, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8,
                         $is_p1_koski, $is_p2_koski, $is_p3_koski, $is_p4_koski, $is_p5_koski, $is_p6_koski, $is_p7_koski, $is_p8_koski): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
 	$update_schedule_stmt = $sql_conn->prepare("UPDATE schedules
@@ -118,7 +120,7 @@ function updateSchedule($id, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8,
 
 function updateAccounts($id, $moodle, $alcumus, $webwork): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
 	$update_accounts_stmt = $sql_conn->prepare("UPDATE accounts
@@ -134,7 +136,7 @@ function updateAccounts($id, $moodle, $alcumus, $webwork): bool
 
 function updateParent($id, $name, $email, $phone, $alternate_phone, $alternate_ride_home): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
 	$update_parents_stmt = $sql_conn->prepare("UPDATE parents
@@ -150,7 +152,7 @@ function updateParent($id, $name, $email, $phone, $alternate_phone, $alternate_r
 
 function updateCompetitorInfo_Student($id, $division): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
 	$update_competitor_stmt = $sql_conn->prepare("UPDATE competitor_info
@@ -167,7 +169,7 @@ function updateCompetitorInfo_Student($id, $division): bool
 function updateCompetitorInfo_Admin($id, $division, $mu_student_id, $is_famat_member, $is_national_member,
                                     $has_medical, $has_insurance, $has_school_insurance): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
 	$update_competitor_stmt = $sql_conn->prepare("UPDATE competitor_info
@@ -190,7 +192,7 @@ function updateCompetitorInfo_Admin($id, $division, $mu_student_id, $is_famat_me
 // */
 //function updateAccount_People($id, $first_name, $middle_initial, $last_name, $graduation_year, $email, $phone, $address, $updater_id): bool
 //{
-//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 //	$sql_conn = getDBConn();    // Get DB connection
 //
 //	$update_stmt = $sql_conn->prepare("UPDATE people
@@ -209,7 +211,7 @@ function updateCompetitorInfo_Admin($id, $division, $mu_student_id, $is_famat_me
 // */
 //function updateAccount_Admin($id, $permissions, $mu_student_id, $member_famat, $member_nation, $medical, $insurance, $school_insurance, $updater_id): bool
 //{
-//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 //	$sql_conn = getDBConn();    // Get DB connection
 //
 //	$update_stmt = $sql_conn->prepare("UPDATE people
@@ -227,7 +229,7 @@ function updateCompetitorInfo_Admin($id, $division, $mu_student_id, $is_famat_me
 
 function getAccountDetail($table, $col, $id)
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 
 	return getDetail($table, $col, 'id', $id);
 }
@@ -248,7 +250,12 @@ function getGrade($id): int
 
 	// TODO: Rethink end of school year
 	$now = new DateTime('now');
-	$end_of_school_year = date_create("$graduation_year-7-1");
+	$graduation_date = DateTime::createFromFormat('m/d/Y', "7/1/$graduation_year");
 
-	return 12 - (int) date_diff($now, $end_of_school_year)->format('y');
+	$grade = 12 - (int)date_diff($now, $graduation_date)->format('%y');
+
+	if ($graduation_date > $now && (6 <= $grade && $grade <= 12))
+		return $grade;
+
+	return 0;
 }

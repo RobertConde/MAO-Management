@@ -1,14 +1,14 @@
 <?php
-session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
+startSession();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
 stylesheet();
-navigationBar();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(OFFICER);
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/SQL.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 
 $deleted = null;
 if (isset($_POST['delete']) && !is_null(getDetail('people', 'id', 'id', $_POST['id']))) { // If form is POSTed
@@ -33,9 +33,7 @@ if (isset($_GET['id'])) {
 
     <title>DB | Delete Account</title>
 
-    <body style="text-align: center;">
-
-<h2 style="margin: 6px;"><u>Delete Account</u></h2>
+    <h2 style="margin: 6px;"><u>Delete Account</u></h2>
 
 <?php
 getPersonSelect();
