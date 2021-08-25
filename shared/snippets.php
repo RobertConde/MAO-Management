@@ -27,7 +27,7 @@ function currentURL($request = true): string
 
 function redirect($url)
 {
-	header("location: $url");
+	echo "<script> window.location.replace('$url') </script>";
 }
 
 function navigationBar()

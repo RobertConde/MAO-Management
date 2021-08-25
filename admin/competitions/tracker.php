@@ -3,8 +3,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 startSession();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
-navigationBar();
 stylesheet();
+navigationBar();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(OFFICER);
@@ -155,3 +155,4 @@ if ($comp_id_valid) {
 	echo surrTags('table', $table_interior, "class=\"center\"");
 }
 ?>
+

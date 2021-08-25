@@ -1,10 +1,12 @@
+<?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shared/snippets.php';
+
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shared/permissions.php';
+?>
+
 <meta charset="utf-8">
 <meta content="IE=edge" http-equiv="X-UA-Compatible">
 <meta content="width=device-width, initial-scale=1" name="viewport">
-
-<?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/shared/permissions.php';
-?>
 
 <!-- Bootstrap -->
 <link crossorigin="anonymous" target="_self"
@@ -22,10 +24,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/shared/permissions.php';
 <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
-
-<?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/shared/snippets.php';
-?>
 
 <div>
     <!-- Static navbar -->
@@ -98,7 +96,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/shared/snippets.php';
 
                             <li class="dropdown-header">Reports <i>(WIP!)</i></li>
 
-                            <li><a target="_self" href="<?php echo relativeURL('admin/reports/custom'); ?>" target="_blank">Custom Reports</a>
+                            <li><a target="_self" href="<?php echo relativeURL('admin/reports/custom'); ?>"
+                                   target="_blank">Custom Reports</a>
                             </li>
                         </ul>
                     </li>
