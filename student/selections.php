@@ -23,10 +23,10 @@ checkPerms(STUDENT);
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/competitions.php";
 
 $updated = null;
-if (isset($_POST['competition_id'])) {  // Process POST update
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/competitions.php";
+if (isset($_POST['comp_name'])) {    // Process POST update
+	$updated = toggleSelection($_POST['comp_name'], $_SESSION['id']);
 
-	$updated = toggleSelection($_SESSION['id'], $_POST['competition_id']);
+    redirect(currentURL());
 }
 
 // View form (using correct ID)
@@ -49,51 +49,50 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 
     <h2 style="margin: 6px;"><u>Competition Selections</u></h2>
 
-<form style="margin: 6px; display: inline-block;" class="filled border">
-    <fieldset>
-        <legend><i>Account Information</i></legend>
+    <form style="margin: 6px; display: inline-block;" class="filled border">
+        <fieldset>
+            <legend><i>Account Information</i></legend>
 
-        <label for="first_name">First Name:</label>
-        <input id="first_name" name="first_name" type="text" size="10"
-               value="<?php echo getAccountDetail('people', 'first_name', $id); ?>"
-               disabled><br>
+            <label for="first_name">First Name:</label>
+            <input id="first_name" name="first_name" type="text" size="10"
+                   value="<?php echo getAccountDetail('people', 'first_name', $id); ?>"
+                   disabled><br>
 
-        <label for="last_name">Last Name:</label>
-        <input id="last_name" name="last_name" type="text" size="10"
-               value="<?php echo getAccountDetail('people', 'last_name', $id); ?>"
-               disabled><br>
+            <label for="last_name">Last Name:</label>
+            <input id="last_name" name="last_name" type="text" size="10"
+                   value="<?php echo getAccountDetail('people', 'last_name', $id); ?>"
+                   disabled><br>
 
-        <label for="mu_student_id">Mu Student ID:</label>
-        <input id="mu_student_id" name="mu_student_id" type="text" pattern="[0-9\s]{3}" size="3" disabled
-               value="<?php echo getAccountDetail('competitor_info', 'mu_student_id', $id); ?>"><br>
+            <label for="mu_student_id">Mu Student ID:</label>
+            <input id="mu_student_id" name="mu_student_id" type="text" pattern="[0-9\s]{3}" size="3" disabled
+                   value="<?php echo getAccountDetail('competitor_info', 'mu_student_id', $id); ?>"><br>
 
-        <label for="division">Division:</label>
-        <select id="division" name="division" disabled>
-            <option value="1" <?php echo getAccountDetail('competitor_info', 'division', $id) == 1 ? "selected" : ""; ?>>
-                Algebra I
-            </option>
-            <option value="2" <?php echo getAccountDetail('competitor_info', 'division', $id) == 2 ? "selected" : ""; ?>>
-                Geometry
-            </option>
-            <option value="3" <?php echo getAccountDetail('competitor_info', 'division', $id) == 3 ? "selected" : ""; ?>>
-                Algebra II
-            </option>
-            <option value="4" <?php echo getAccountDetail('competitor_info', 'division', $id) == 4 ? "selected" : ""; ?>>
-                Precalculus
-            </option>
-            <option value="5" <?php echo getAccountDetail('competitor_info', 'division', $id) == 5 ? "selected" : ""; ?>>
-                Calculus
-            </option>
-            <option value="6" <?php echo getAccountDetail('competitor_info', 'division', $id) == 6 ? "selected" : ""; ?>>
-                Statistics
-            </option>
-            <option value="0" <?php echo getAccountDetail('competitor_info', 'division', $id) == 0 ? "selected" : ""; ?>>
-                Not a
-                Student
-            </option>
-        </select>
-    </fieldset>
-</form>
+            <label for="division">Division:</label>
+            <select id="division" name="division" disabled>
+                <option value="1" <?php echo getAccountDetail('competitor_info', 'division', $id) == 1 ? "selected" : ""; ?>>
+                    Algebra I
+                </option>
+                <option value="2" <?php echo getAccountDetail('competitor_info', 'division', $id) == 2 ? "selected" : ""; ?>>
+                    Geometry
+                </option>
+                <option value="3" <?php echo getAccountDetail('competitor_info', 'division', $id) == 3 ? "selected" : ""; ?>>
+                    Algebra II
+                </option>
+                <option value="4" <?php echo getAccountDetail('competitor_info', 'division', $id) == 4 ? "selected" : ""; ?>>
+                    Precalculus
+                </option>
+                <option value="5" <?php echo getAccountDetail('competitor_info', 'division', $id) == 5 ? "selected" : ""; ?>>
+                    Calculus
+                </option>
+                <option value="6" <?php echo getAccountDetail('competitor_info', 'division', $id) == 6 ? "selected" : ""; ?>>
+                    Statistics
+                </option>
+                <option value="0" <?php echo getAccountDetail('competitor_info', 'division', $id) == 0 ? "selected" : ""; ?>>
+                    Not a Student
+                </option>
+            </select>
+        </fieldset>
+    </form>
 
 <?php
 // Report if update was successful
@@ -105,18 +104,20 @@ if (isset($updated)) {
 
 //TODO: Better tables; no function will do! Function should ONLY be for custom reports!
 $sql_conn = getDBConn();
-if (!is_a($payment_stmt = $sql_conn->query("SELECT c.competition_id, c.competition_description FROM competitions c LEFT OUTER JOIN competition_selections cs ON c.competition_id = cs.competition_id AND cs.id = $id ORDER BY c.competition_id;"), 'mysqli_result'))
+if (!is_a($comps_stmt = $sql_conn->query("SELECT c.competition_name AS comp_name, c.competition_description AS comp_desc FROM competitions c LEFT OUTER JOIN competition_selections cs ON c.competition_name = cs.competition_name AND cs.id = $id ORDER BY c.competition_name;"), 'mysqli_result'))
 	die("<p style='color:red;'>Get table function occurred an error upon execution of statement!</p>\n");
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/competitions.php";
+// TODO: Ugh, I hate how this works. "Efficient", but a waste.
+$table_rows = sql_TH(array_merge($comps_stmt->fetch_fields(), array('selected')));
+while (!is_null($row = $comps_stmt->fetch_assoc())) {
+	$comp_name = $row['comp_name'];
+	$comp_desc = $row['comp_desc'];
 
-$table_rows = sql_TH(array_merge($payment_stmt->fetch_fields(), array('selected')));
-while (!is_null($row_array = $payment_stmt->fetch_row())) {
-	$table_rows .= TR(array_merge($row_array,
+	$table_rows .= TR(array_merge($row,
 			array(
-				"<form id='$row_array[0]' method='post' class='center'>
-                        <input id='competition' name='competition_id' type='hidden' value='$row_array[0]'>
-                        <input id='onchange' name='onchange' type='checkbox' onchange=\"document.getElementById('$row_array[0]').submit()\" " . (isSelected($id, $row_array[0]) ? "checked" : "") . ">
+				"<form method='post' class='center'>
+                        <input name='comp_name' type='hidden' value='$comp_name'>
+                        <input type='checkbox' onchange='this.form.submit()' " . (isSelected($comp_name, $id) ? 'checked' : '') . ">
                     </form>"))) . "\n";
 }
 echo surrTags('table', $table_rows, "class='center' style='margin-top: 6px; margin-bottom: 6px;'");

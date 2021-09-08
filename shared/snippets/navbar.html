@@ -2,6 +2,8 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . '/shared/snippets.php';
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/shared/permissions.php';
+
+stylesheet();
 ?>
 
 <meta charset="utf-8">
@@ -25,7 +27,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/shared/permissions.php';
 <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
 
-<div>
+<div class="no-print">
     <!-- Static navbar -->
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
@@ -38,8 +40,14 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/shared/permissions.php';
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" target="_self" href="<?php echo relativeURL(); ?>">MAO Management</a>
+                <a class="navbar-brand" target="_self" href="<?php echo relativeURL(); ?>">
+                    MAO Management
+<!--                    <img src="--><?php //echo relativeURL('shared/snippets/koski-baby.png') ?><!--" style="display: inline; width: 32px;">-->
+                </a>
+<!--                 <a class="navbar-brand" href="http://disputebills.com"><img style=" width: 64px;" src="https://res.cloudinary.com/disputebills/image/upload/v1462474206/blue-mark_cnzgry.png" alt="Dispute Bills"> -->
+<!--                 </a> -->
             </div>
+
 
             <div class="navbar-collapse collapse" id="navbar">
                 <ul class="nav navbar-nav">
@@ -86,7 +94,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/shared/permissions.php';
                             <li><a target="_self" href="<?php echo relativeURL('admin/competitions/manage'); ?>"
                                    target="_blank">Manage Competitions</a></li>
 
-                            <li><a target="_self" href="<?php echo relativeURL('admin/competitions/tracker'); ?>"
+                            <li><a target="_self" href="<?php echo relativeURL('admin/competitions/newTracker'); ?>"
                                    target="_blank">Competition Tracker</a></li>
 
                             <li><a target="_self" href="<?php echo relativeURL('admin/bubbles/selectStudents'); ?>"

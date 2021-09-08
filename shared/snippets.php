@@ -10,9 +10,9 @@ function relativeURL($relative_path = ''): string
 	return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/$relative_path";
 }
 
-function makeLink($name, $relative_path = ''): string
+function makeLink($name, $relative_path = '', $target = '_self'): string
 {
-	return "<a href='https://" . relativeURL($relative_path) . "'>$name</a>";
+	return "<a href='" . relativeURL($relative_path) . "' target='$target'>$name</a>";
 }
 
 function currentURL($request = true): string
@@ -34,50 +34,6 @@ function navigationBar()
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets/navbar.html";
 }
-
-//function navigationBar()
-//{
-//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-//
-//	$perm0_names = array(
-//		'Register',
-//		'Login',
-//		'Logout',
-//		'Update Info',
-//		'Comp. Selections',
-//		'|',
-//		'Delete Account',
-//		'|',
-//		'Payments',
-//		'Transactions',
-//		'Manage Competitions',
-//		'Competition Tracker',
-//		'Create Bubble Sheets',
-//		'Custom Report');
-//	$perm0_urls = array(
-//		'account/register',
-//		'account/login',
-//		'account/logout',
-//		'student/info',
-//		'student/comp-selections',
-//		'',
-//		'admin/accounts/delete',
-//		'',
-//		'admin/payments/payments',
-//		'student/transactions',
-//		'admin/competitions/manage',
-//		'admin/competitions/tracker',
-//		'admin/bubbles/selectStudents',
-//		'admin/reports/custom');
-//
-//	$links = "";
-//	for ($ind = 0; $ind < count($perm0_names); ++$ind)
-//		$links .= makeLink($perm0_names[$ind], $perm0_urls[$ind]) . "\n";
-//
-//	/* OTHER PERMISSIONS */
-//
-//	echo surrTags('div', surrTags('ul', $links), "class='nav-bar noprint'") . "\n";
-//}
 
 // $tag is without carets or '/'
 function surrTags($tag, $text, $tag_interior = ''): string
@@ -144,24 +100,34 @@ function getDBName(): string
 	return $sql_config['database'];
 }
 
-function getPersonSelect()
+function personSelectForm($method = 'GET') {
+	echo "<form method='$method' id='person-select'></form>";
+}
+
+function personSelect($button_text = 'Go')
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-	$sql_conn = getDBConn();
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets/personSelect.html";
+}
 
-	$result = $sql_conn->query("SELECT id, last_name, first_name FROM people ORDER BY last_name, first_name, id;");
+function getSelectID($method = 'GET')
+{
+	$select_id = null;
 
-	echo '<form method="get" style="text-align: center">',
-	'<label for="id"><i>Person</i>:</label>',
-	'<select id="id" name="id" onchange="this.form.submit()">',
-	'<option selected hidden disabled></option>';
-	while (($row_array = $result->fetch_assoc()) != null) {
-		echo '<option value="' . $row_array['id'] . '">'
-			. $row_array['last_name'] . ', '
-			. $row_array['first_name']
-			. ' [' . $row_array['id'] . ']'
-			. '</option>';
+	$temp = null;
+	if (strtoupper($method) == 'GET' && isset($_GET['select-id']))
+		$temp = $_GET['select-id'];
+	else if(strtoupper($method) == 'POST' && isset($_POST['select-id']))
+		$temp = $_POST['select-id'];
+	
+	if (!is_null($temp)) {
+		if (preg_match('/^[0-9]{7}/', $temp))
+			$select_id = $temp;
+		else {
+			$ind = strpos($temp, '[') + 1;
+
+			$select_id = substr($temp, $ind, 7);
+		}
 	}
-	echo '</select>',
-	'</form><br>';
+
+	return $select_id;
 }

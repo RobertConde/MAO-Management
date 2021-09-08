@@ -11,11 +11,11 @@ checkPerms(OFFICER);
 
 $comp_id = null;
 $payment_id = null;
-if (isset($_GET['comp']) && $_GET['comp'] != '') {
-	$comp_id = $_GET['comp'];
-	$payment_id = getDetail('competitions', 'payment_id', 'competition_id', $comp_id);
+if (isset($_GET['comp_name']) && $_GET['comp_name'] != '') {
+	$comp_id = $_GET['comp_name'];
+	$payment_id = getDetail('competitions', 'payment_id', 'competition_name', $comp_id);
 }
-$comp_id_valid = (!is_null($comp_id) && getDetail('competitions', 'competition_id', 'competition_id', $comp_id) == $comp_id);
+$comp_id_valid = (!is_null($comp_id) && getDetail('competitions', 'competition_name', 'competition_name', $comp_id) == $comp_id);
 
 ?>
 
@@ -27,19 +27,19 @@ $comp_id_valid = (!is_null($comp_id) && getDetail('competitions', 'competition_i
         <fieldset>
             <legend><b>Report Parameters</b></legend>
 
-            <select id="comps" name="comp" style="margin: 6px;">
+            <select id="comps" name="comp_name" style="margin: 6px;">
                 <option value="" disabled hidden selected>Choose a Competition...</option>
 				<?php
 				$sql_conn = getDBConn();
 
-				$comps_query = "SELECT competition_id FROM competitions;";
+				$comps_query = "SELECT competition_name FROM competitions;";
 
 				$comps_result = $sql_conn->query($comps_query);
 
 				while (!is_null($row = $comps_result->fetch_assoc())) {
-					echo "<option value=\"" . $row['competition_id'] . "\" "
-						. ($comp_id == $row['competition_id'] ? 'selected' : '')
-						. ">" . $row['competition_id'] . "</option>";
+					echo "<option value=\"" . $row['competition_name'] . "\" "
+						. ($comp_id == $row['competition_name'] ? 'selected' : '')
+						. ">" . $row['competition_name'] . "</option>";
 				}
 				?>
             </select>
@@ -61,7 +61,7 @@ else {
         p.first_name,
         ci.division,
         EXISTS (SELECT * FROM transactions t WHERE t.payment_id = '$payment_id' AND t.id = p.id) AS paid,
-        EXISTS (SELECT * FROM competition_forms t WHERE t.competition_id = '$comp_id' AND t.id = p.id) AS forms,
+        EXISTS (SELECT * FROM competition_forms t WHERE t.competition_name = '$comp_id' AND t.id = p.id) AS forms,
         '$checkbox' AS '1',
         '$checkbox' AS '2',
         '$checkbox' AS '3',
@@ -75,7 +75,7 @@ else {
     FROM people p
     JOIN competitor_info ci
     ON p.id = ci.id
-    WHERE EXISTS (SELECT * FROM competition_approvals cs WHERE cs.competition_id = '$comp_id' AND cs.id = p.id) 
+    WHERE EXISTS (SELECT * FROM competition_approvals cs WHERE cs.competition_name = '$comp_id' AND cs.id = p.id) 
     ORDER BY last_name, first_name, division, id;";
 
     $checkoff_info_result = $sql_conn->query($checkoff_info);

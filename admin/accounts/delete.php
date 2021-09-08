@@ -3,6 +3,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 startSession();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
+navigationBar();
 stylesheet();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
@@ -19,14 +20,15 @@ if (isset($_POST['delete']) && !is_null(getDetail('people', 'id', 'id', $_POST['
 }
 
 $id = null;
-if (isset($_GET['id'])) {
-	$rankComp = checkCompareRank($_SESSION['id'], $_GET['id'], true);
+if (isset($_GET['select-id'])) {
+    $select_id = getSelectID('GET');
 
+	$rankComp = checkCompareRank($_SESSION['id'], $select_id, true);
 	if (!is_null($rankComp)) {
 		if ($rankComp)
-			$id = $_GET['id'];
+			$id = $select_id;
 		else
-			die("<p style=\"color:red;\">You do not have the required permissions!</p>\n");
+			die("<p style='color:red;'>You do not have the required permissions!</p>");
 	}
 }
 ?>
@@ -36,12 +38,14 @@ if (isset($_GET['id'])) {
     <h2 style="margin: 6px;"><u>Delete Account</u></h2>
 
 <?php
-getPersonSelect();
+personSelectForm('GET');
+personSelect();
 ?>
+<br>
 
 <form method="post" style="margin: 6px;">
-    <fieldset>
-        <legend><i>Account Information</i></legend>
+    <fieldset class="filled border">
+        <legend>Account Information</legend>
 
         <label for="id">ID:</label>
         <input id="id" type="text" pattern="[0-9]{7}" size="7" required

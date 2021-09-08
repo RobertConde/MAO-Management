@@ -29,8 +29,6 @@ function checkCompareRank($greater_id, $lower_id, $equal = false): ?bool
 
 	if (is_null($greater_permissions) || is_null($lower_permissions))
 		return null;
-//		die("<p style='color:red;'>Account with ID = $lower_id does not exist!</p>\n");
 
 	return (bool) (($greater_rank > $lower_rank) ^ ($equal && $greater_rank == $lower_rank));
 }
-

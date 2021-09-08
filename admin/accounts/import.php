@@ -5,7 +5,7 @@ checkPerms(ADMIN);
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 
 $row = 1;
-if (($handle = fopen($_SERVER['DOCUMENT_ROOT'] . "RESOURCES/import.csv", "r")) !== FALSE) {
+if (($handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/RESOURCES/import.csv", "r")) !== FALSE) {
 	echo "<table>";
 
 	fgetcsv($handle); // Skip header;

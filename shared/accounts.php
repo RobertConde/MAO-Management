@@ -8,7 +8,7 @@ function startSession() {
 function registerAccount($id, $first_name, $middle_initial, $last_name, $graduation_year, $email, $phone, $address): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-	$sql_conn = getDBConn();    // Get DB connection
+	$sql_conn = getDBConn();
 
 	// People
 	$people_stmt = $sql_conn->prepare(
@@ -52,7 +52,7 @@ function sendLoginCodeEmail($id): bool
 function cycleLoginCode($id): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-	$sql_conn = getDBConn();    // Get DB connection
+	$sql_conn = getDBConn();
 
 	$cycle_statement = $sql_conn->prepare("INSERT INTO login(id, code) VALUES (?, ?) ON DUPLICATE KEY UPDATE code = ?");
 
@@ -193,7 +193,7 @@ function updateCompetitorInfo_Admin($id, $division, $mu_student_id, $is_famat_me
 //function updateAccount_People($id, $first_name, $middle_initial, $last_name, $graduation_year, $email, $phone, $address, $updater_id): bool
 //{
 //	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-//	$sql_conn = getDBConn();    // Get DB connection
+//	$sql_conn = getDBConn();
 //
 //	$update_stmt = $sql_conn->prepare("UPDATE people
 //		SET first_name = ?, minitial = ?,  last_name = ?, email = ?, phone = ?, division = ?, grade = ?,
@@ -212,7 +212,7 @@ function updateCompetitorInfo_Admin($id, $division, $mu_student_id, $is_famat_me
 //function updateAccount_Admin($id, $permissions, $mu_student_id, $member_famat, $member_nation, $medical, $insurance, $school_insurance, $updater_id): bool
 //{
 //	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-//	$sql_conn = getDBConn();    // Get DB connection
+//	$sql_conn = getDBConn();
 //
 //	$update_stmt = $sql_conn->prepare("UPDATE people
 //		SET permissions = ?, mu_student_id = ?, member_famat = ?, member_nation = ?, medical = ?, insurance = ?, school_insurance = ?
@@ -246,16 +246,18 @@ function getRank($id)
 
 function getGrade($id): int
 {
-	$graduation_year = getAccountDetail('people', 'graduation_year', $id);
+	if (!is_null($id)) {
+		$graduation_year = getAccountDetail('people', 'graduation_year', $id);
 
-	// TODO: Rethink end of school year
-	$now = new DateTime('now');
-	$graduation_date = DateTime::createFromFormat('m/d/Y', "7/1/$graduation_year");
+		// TODO: Rethink end of school year
+		$now = new DateTime('now');
+		$graduation_date = DateTime::createFromFormat('m/d/Y', "7/1/$graduation_year");
 
-	$grade = 12 - (int)date_diff($now, $graduation_date)->format('%y');
+		$grade = 12 - (int)date_diff($now, $graduation_date)->format('%y');
 
-	if ($graduation_date > $now && (6 <= $grade && $grade <= 12))
-		return $grade;
+		if ($graduation_date > $now && (6 <= $grade && $grade <= 12))
+			return $grade;
+	}
 
 	return 0;
 }

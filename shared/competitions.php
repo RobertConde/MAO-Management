@@ -1,19 +1,19 @@
 <?php
 
-function isSelected($id, $comp_id): bool
+function isSelected($comp, $id): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
-//	echo "ID:$id;COMP_ID:$comp_id<br>";
 
 	// Check if is already selected
-	$find_selection_stmt = $sql_conn->prepare("SELECT COUNT(*) FROM competition_selections WHERE id = ? AND competition_id = ?");
+	$find_selection_stmt = $sql_conn->prepare(
+		"SELECT COUNT(*) FROM competition_selections
+					WHERE id = ? AND competition_name = ?");
 
-	$find_selection_stmt->bind_param('ss', $id, $comp_id);
+	$find_selection_stmt->bind_param('ss', $id, $comp);
 
 	if (!$find_selection_stmt->execute())
 		return false;
-//		die("Error occurred checking if competition selection was made: $find_selection_stmt->error.");
 
 	$find_selection_stmt->bind_result($num_rows);
 
@@ -22,143 +22,201 @@ function isSelected($id, $comp_id): bool
 	return ($num_rows > 0);
 }
 
-function toggleSelection($id, $comp_id):bool
+function toggleSelection($comp, $id): bool
 {
-//	echo "ID:$id;COMP_ID:$comp_id<br>";
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-	$sql_conn = getDBConn();    // Get DB connection
+	$sql_conn = getDBConn();    
 
-	if (!isSelected($id, $comp_id)) {
-		$insert_selection_stmt = $sql_conn->prepare("INSERT INTO competition_selections(id, competition_id) VALUES (?, ?)");
+	if (!isSelected($comp, $id)) {
+		$insert_selection_stmt = $sql_conn->prepare("INSERT INTO competition_selections(id, competition_name) VALUES (?, ?)");
 
-		$insert_selection_stmt->bind_param('ss', $id, $comp_id);
+		$insert_selection_stmt->bind_param('ss', $id, $comp);
 
 		if (!$insert_selection_stmt->execute())
 			return false;
-//			die("Error occurred inserting competition selection: $insert_transaction_stmt->error.");
 	} else {
-//		echo "222";
-		$delete_selection_stmt = $sql_conn->prepare("DELETE FROM competition_selections WHERE id = ? AND competition_id = ?");
+		$delete_selection_stmt = $sql_conn->prepare(
+			"DELETE FROM competition_selections
+						WHERE id = ? AND competition_name = ?");
 
-		$delete_selection_stmt->bind_param('ss', $id, $comp_id);
+		$delete_selection_stmt->bind_param('ss', $id, $comp);
 
 		if (!$delete_selection_stmt->execute())
 			return false;
-//			die("Error occurred deleting competition selection: $delete_transaction_stmt->error.");
 	}
 
 	return true;
 }
 
-function isApproved($id, $comp_id): bool
+function inComp($comp, $id): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
-	// Check if is already approved
-	$find_approval_stmt = $sql_conn->prepare("SELECT COUNT(*) FROM competition_approvals WHERE id = ? AND competition_id = ?");
+	$in_comp_stmt = $sql_conn->prepare(
+		"SELECT COUNT(id) FROM competition_data
+					WHERE id = ? AND competition_name = ?");
+	$in_comp_stmt->bind_param('ss', $id, $comp);
+	$in_comp_stmt->bind_result($in_comp);
+	$in_comp_stmt->execute();
 
-	$find_approval_stmt->bind_param('ss', $id, $comp_id);
-
-	if (!$find_approval_stmt->execute())
-		return false;
-
-	$find_approval_stmt->bind_result($num_rows);
-
-	$find_approval_stmt->fetch();
-
-	return ($num_rows > 0);
+	$in_comp_stmt->fetch();
+	return $in_comp;
 }
 
-function toggleApproved($id, $comp_id): bool
+function addToComp($comp, $id): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-	$sql_conn = getDBConn();    // Get DB connection
+	$sql_conn = getDBConn();
 
-	if (!isApproved($id, $comp_id)) {
-		$insert_approval_stmt = $sql_conn->prepare("INSERT INTO competition_approvals(id, competition_id) VALUES (?, ?)");
+	if (!inComp($comp, $id)) {
+		$add_person_stmt = $sql_conn->prepare("INSERT INTO competition_data (competition_name, id) VALUES (? , ?)");
+		$add_person_stmt->bind_param('ss', $comp, $id);
 
-		$insert_approval_stmt->bind_param('ss', $id, $comp_id);
-
-		if (!$insert_approval_stmt->execute())
-			return false;
-	} else {
-		$delete_approval_stmt = $sql_conn->prepare("DELETE FROM competition_approvals WHERE id = ? AND competition_id = ?");
-
-		$delete_approval_stmt->bind_param('ss', $id, $comp_id);
-
-		if (!$delete_approval_stmt->execute())
-			return false;
+		return $add_person_stmt->execute();
 	}
 
-	return true;
+	return false;
 }
 
-function isCompetitionPaid($id, $comp_id): bool
+function removeFromComp($comp, $id): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
-	// Find payment_id for competition
-	$find_payment_stmt = $sql_conn->prepare("SELECT payment_id FROM competitions WHERE competition_id = ?");
+	$delete_data_stmt = $sql_conn->prepare(
+		"DELETE FROM competition_data
+					WHERE id = ? AND competition_name = ?");
+	$delete_data_stmt->bind_param('ss', $id, $comp);
 
-	$find_payment_stmt->bind_param('s', $comp_id);
-
-	if (!$find_payment_stmt->execute())
-		return false;
-
-	$find_payment_stmt->bind_result($payment_id);
-
-	$find_payment_stmt->fetch();
-
-	if (is_null($payment_id))
-		return true;
-
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
-
-	return isPaid($id, $payment_id);
+	return $delete_data_stmt->execute();
 }
 
-function areFormsCollected($id, $comp_id): bool
+function updateCompData($comp, $id, $approved, $forms, $bus, $room): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
-	// Check if already turned in
-	$find_form_stmt = $sql_conn->prepare("SELECT COUNT(*) FROM competition_forms WHERE id = ? AND competition_id = ?");
+	$update_data_stmt = $sql_conn->prepare(
+		"UPDATE competition_data
+					SET forms = ?, bus = ?, room = ?
+					WHERE id = ? AND competition_name = ?");
+	$update_data_stmt->bind_param('iisss', $forms, $bus, $room, $id, $comp);
 
-	$find_form_stmt->bind_param('ss', $id, $comp_id);
-
-	if (!$find_form_stmt->execute())
-		return false;
-
-	$find_form_stmt->bind_result($num_rows);
-
-	$find_form_stmt->fetch();
-
-	return ($num_rows > 0);
+	return $update_data_stmt->execute();
 }
 
-function toggleFormStatus($id, $comp_id):bool
-{
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-	$sql_conn = getDBConn();    // Get DB connection
 
-	if (!areFormsCollected($id, $comp_id)) {
-		$set_form_status_true_stmt = $sql_conn->prepare("INSERT INTO competition_forms(id, competition_id) VALUES (?, ?)");
 
-		$set_form_status_true_stmt->bind_param('ss', $id, $comp_id);
+//function isApproved($id, $comp_id): bool
+//{
+//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+//	$sql_conn = getDBConn();
+//
+//	// Check if is already approved
+//	$find_approval_stmt = $sql_conn->prepare("SELECT COUNT(*) FROM competition_approvals WHERE id = ? AND competition_name = ?");
+//
+//	$find_approval_stmt->bind_param('ss', $id, $comp_id);
+//
+//	if (!$find_approval_stmt->execute())
+//		return false;
+//
+//	$find_approval_stmt->bind_result($num_rows);
+//
+//	$find_approval_stmt->fetch();
+//
+//	return ($num_rows > 0);
+//}
 
-		if (!$set_form_status_true_stmt->execute())
-			return false;
-	} else {
-		$delete_form_status_stmt = $sql_conn->prepare("DELETE FROM competition_forms WHERE id = ? AND competition_id = ?");
+//function toggleApproved($id, $comp_id): bool
+//{
+//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+//	$sql_conn = getDBConn();
+//
+//	if (!isApproved($id, $comp_id)) {
+//		$insert_approval_stmt = $sql_conn->prepare("INSERT INTO competition_approvals(id, competition_name) VALUES (?, ?)");
+//
+//		$insert_approval_stmt->bind_param('ss', $id, $comp_id);
+//
+//		if (!$insert_approval_stmt->execute())
+//			return false;
+//	} else {
+//		$delete_approval_stmt = $sql_conn->prepare("DELETE FROM competition_approvals WHERE id = ? AND competition_name = ?");
+//
+//		$delete_approval_stmt->bind_param('ss', $id, $comp_id);
+//
+//		if (!$delete_approval_stmt->execute())
+//			return false;
+//	}
+//
+//	return true;
+//}
 
-		$delete_form_status_stmt->bind_param('ss', $id, $comp_id);
+//function isCompetitionPaid($id, $comp_id): bool
+//{
+//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+//	$sql_conn = getDBConn();
+//
+//	// Find payment_id for competition
+//	$find_payment_stmt = $sql_conn->prepare("SELECT payment_id FROM competitions WHERE competition_name = ?");
+//
+//	$find_payment_stmt->bind_param('s', $comp_id);
+//
+//	if (!$find_payment_stmt->execute())
+//		return false;
+//
+//	$find_payment_stmt->bind_result($payment_id);
+//
+//	$find_payment_stmt->fetch();
+//
+//	if (is_null($payment_id))
+//		return true;
+//
+//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
+//
+//	return isPaid($id, $payment_id);
+//}
 
-		if (!$delete_form_status_stmt->execute())
-			return false;
-	}
+//function areFormsCollected($id, $comp_id): bool
+//{
+//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+//	$sql_conn = getDBConn();
+//
+//	// Check if already turned in
+//	$find_form_stmt = $sql_conn->prepare("SELECT COUNT(*) FROM competition_forms WHERE id = ? AND competition_name = ?");
+//
+//	$find_form_stmt->bind_param('ss', $id, $comp_id);
+//
+//	if (!$find_form_stmt->execute())
+//		return false;
+//
+//	$find_form_stmt->bind_result($num_rows);
+//
+//	$find_form_stmt->fetch();
+//
+//	return ($num_rows > 0);
+//}
 
-	return true;
-}
+//function toggleFormStatus($id, $comp_id): bool
+//{
+//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+//	$sql_conn = getDBConn();
+//
+//	if (!areFormsCollected($id, $comp_id)) {
+//		$set_form_status_true_stmt = $sql_conn->prepare("INSERT INTO competition_forms(id, competition_name) VALUES (?, ?)");
+//
+//		$set_form_status_true_stmt->bind_param('ss', $id, $comp_id);
+//
+//		if (!$set_form_status_true_stmt->execute())
+//			return false;
+//	} else {
+//		$delete_form_status_stmt = $sql_conn->prepare("DELETE FROM competition_forms WHERE id = ? AND competition_name = ?");
+//
+//		$delete_form_status_stmt->bind_param('ss', $id, $comp_id);
+//
+//		if (!$delete_form_status_stmt->execute())
+//			return false;
+//	}
+//
+//	return true;
+//}

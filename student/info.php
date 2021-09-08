@@ -45,14 +45,15 @@ if (isset($_POST['id']) && checkCompareRank($_SESSION['id'], $_POST['id'], true)
 
 // View form (using correct ID)
 $id = $_SESSION['id'];
-if (isset($_GET['id'])) {
-	$rankComp = checkCompareRank($_SESSION['id'], $_GET['id'], true);
+$select_id = getSelectID();
+if (!is_null($select_id)) {
+	$rankComp = checkCompareRank($_SESSION['id'], $select_id, true);
 
 	if (!is_null($rankComp)) {
 		if ($rankComp)
-			$id = $_GET['id'];
+			$id = $select_id;
 		else
-			die("<p style=\"color:red;\">You do not have the required permissions!</p>\n");
+			die("<p style='color:red;'>You do not have the required permissions!</p>");
 	}
 }
 ?>
@@ -62,7 +63,8 @@ if (isset($_GET['id'])) {
 <?php
 
 if (getRank($_SESSION['id']) > 0) {
-	getPersonSelect();
+    personSelectForm();
+	personSelect();
 
 	if ($id != $_SESSION['id'])
 		echo "<p style='text-align: center; color:violet;'><i><b>Note:</b> You are updating an account that isn't yours, and has a permission rank below you!</i></p>\n";

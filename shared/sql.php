@@ -13,7 +13,7 @@ function getDBConn(): mysqli
 }
 
 function getDetail($table, $col, $unique_col, $unique_val) {
-	$sql_conn = getDBConn();    // Get DB connection
+	$sql_conn = getDBConn();
 
 	if ($result = $sql_conn->query("SELECT $col FROM $table WHERE $unique_col = '$unique_val'")) {
 		if ($result->num_rows == 0)

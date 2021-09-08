@@ -3,7 +3,7 @@
 function createPayment($payment_id, $cost, $info): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-	$sql_conn = getDBConn();    // Get DB connection
+	$sql_conn = getDBConn();
 
 	$create_payment_stmt = $sql_conn->prepare(
 		"INSERT INTO payment_details (payment_id, cost, info)
@@ -17,7 +17,7 @@ function createPayment($payment_id, $cost, $info): bool
 function updatePayment($payment_id, $cost, $info): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-	$sql_conn = getDBConn();    // Get DB connection
+	$sql_conn = getDBConn();
 
 	$update_payment_stmt = $sql_conn->prepare(
 		"UPDATE payment_details SET cost = ?, info = ?
@@ -32,7 +32,7 @@ function updatePayment($payment_id, $cost, $info): bool
 function deletePayment($payment_id): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-	$sql_conn = getDBConn();    // Get DB connection
+	$sql_conn = getDBConn();
 
 	// Payment Details
 	$delete_payment_details_stmt = $sql_conn->prepare(

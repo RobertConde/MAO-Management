@@ -9,37 +9,29 @@ stylesheet();
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(STUDENT);
 
-//DEBUG
-//echo "SESSION<br>";
-//foreach ($_SESSION as $key => $value) {
-//	echo "Key: $key; Value: $value<br>";
-//}
-//echo "<br>", "POST<br>";
-//foreach ($_POST as $key => $value) {
-//	echo "Key: $key; Value: $value<br>";
-//}
-
 // Update process
 $updated = null;
 if (isset($_POST['transaction'])) {  // Process POST update
 	if ($_POST['id'] != $_SESSION['id'] && !checkCompareRank($_SESSION['id'], $_POST['id'], true))   // Confirm rank is higher (so that people can't update through POST requests without being logged into an account of higher rank)
-		die("<p style=\"color:red;\">You do not have the required permissions!</p>\n");
+		die("<p style='color:red;'>You do not have the required permissions!</p>");
 
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
 
-	$updated = toggleTransaction($_POST['id'], $_POST['transaction']);
+	$updated = toggleTransactionStatus($_POST['id'], $_POST['transaction']);
 }
 
 // View form (using correct ID)
 $id = $_SESSION['id'];
-if (isset($_GET['id'])) {
-	$rankComp = checkCompareRank($_SESSION['id'], $_GET['id'], true);
+if (isset($_GET['select-id'])) {
+    $select_id = getSelectID();
+
+	$rankComp = checkCompareRank($_SESSION['id'], $select_id, true);
 
 	if (!is_null($rankComp)) {
 		if ($rankComp)
-			$id = $_GET['id'];
+			$id = $select_id;
 		else
-			die("<p style=\"color:red;\">You do not have the required permissions!</p>\n");
+			die("<p style='color:red;'>You do not have the required permissions!</p>");
 	}
 }
 
@@ -52,10 +44,12 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 
 <?php
 if (getRank($_SESSION['id']) > 0) {
-	getPersonSelect();
+    personSelectForm();
+	personSelect();
+    echo '<br>';
 
 	if ($id != $_SESSION['id'])
-		echo "<p style=\"color:violet;\"><i><b>Note:</b> You are updating an account that isn't yours, and has a permission rank below you!</i></p>\n";
+		echo "<p style='color: violet;'><i><b>Note:</b> You are updating an account that isn't yours, and has a permission rank below you!</i></p>";
 }
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
@@ -108,8 +102,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 // Report if update was successful
 if (isset($updated)) {
 	echo $updated ?
-		"<p style=\"color:green;\">Successfully updated payment (ID Updated = " . $_POST['id'] . ").</p>\n" :
-		"<p style=\"color:red;\">Failed to update payment (ID = " . $_POST['id'] . ").</p>\n";
+		"<p style='color:green;'>Successfully updated payment (ID Updated = " . $_POST['id'] . ").</p>" :
+		"<p style='color:red;'>Failed to update payment (ID = " . $_POST['id'] . ").</p>";
 }
 
 $sql_conn = getDBConn();
@@ -124,7 +118,7 @@ if (getRank($_SESSION['id']) > 0) {
 	while (!is_null($row_array = $payment_stmt->fetch_row())) {
 		$table_rows .= TR(array_merge($row_array,
 				array(
-					"\n<form id='$row_array[0]' method='post'>
+					"<form id='$row_array[0]' method='post'>
                         <input id='id' name='id' type='hidden' value='$id'>
                         <input id='transaction' name='transaction' type='hidden' value='$row_array[0]'>
                         <input id='onchange' name='onchange' type='checkbox' onchange='document.getElementById(\"$row_array[0]\").submit()' " . (isPaid($id, $row_array[0]) ? "checked" : "") . ">

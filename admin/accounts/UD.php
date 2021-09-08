@@ -3,7 +3,7 @@
 function deleteAccount($id): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-	$sql_conn = getDBConn();    // Get DB connection
+	$sql_conn = getDBConn();
 
 	$tables = array('accounts', 'competition_approvals', 'competition_forms', 'competition_selections', 'competitor_info',
 		'login', 'parents', 'people', 'schedules', 'transactions');

@@ -10,8 +10,9 @@ checkPerms(OFFICER);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 
+// Redirect to reference header (after creating PDF)
 $ref = "http://" . $_SERVER['HTTP_HOST'];
-if(isset($_GET['ref'])) {
+if (isset($_GET['ref'])) {
 	$ref = $_GET['ref'];
 
 	if (strpos($_GET['ref'], '?') == false)
@@ -21,15 +22,15 @@ if(isset($_GET['ref'])) {
 }
 
 if (!(isset($_POST['selected']) && is_array($_POST['selected'])))
-    header("Location: " . $ref . "false");
+	header("Location: " . $ref . "false");
 $ref .= "true";
 
 $IDs = $_POST['selected'];
 
 $json_array = array();
 
-if (!isset($_POST['test']))
-    die("bad");
+if (!isset($_POST['test']) || !isset($_POST['selected']))
+	die("Test or Selected IDs not POSTed!");
 
 $json_array['test'] = $_POST['test'];
 $json_array['bubbles'] = array(
@@ -54,7 +55,7 @@ foreach ($IDs as $id) {
 	if (6 <= $grade && $grade <= 8) {
 		$student['school'] = "Doral Academy Middle School";
 		$famat_id .= '5377';
-	} else if(9 <= $grade && $grade <= 12) {
+	} else if (9 <= $grade && $grade <= 12) {
 		$student['school'] = "Doral Academy High School";
 		$famat_id .= '5375';
 	} else {    // Invalid grade
@@ -66,9 +67,9 @@ foreach ($IDs as $id) {
 		. " "
 		. getAccountDetail('people', 'last_name', $id);
 
-    $mu_student_id = getAccountDetail('competitor_info', 'mu_student_id', $id);
-    if (preg_match('/[0-9\s]{3}/', $mu_student_id) == 0)
-        $mu_student_id = '   ';
+	$mu_student_id = getAccountDetail('competitor_info', 'mu_student_id', $id);
+	if (preg_match('/[0-9\s]{3}/', $mu_student_id) == 0)
+		$mu_student_id = '   ';
 	$famat_id .= $mu_student_id;
 
 	$division = getAccountDetail('competitor_info', 'division', $id);
@@ -91,7 +92,7 @@ $json = json_encode($json_array);
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js'></script>
 
 <script>
-    createPDF();
+	createPDF();
 
 	function createPDF() {
 		var doc = new jsPDF({
@@ -121,63 +122,63 @@ $json = json_encode($json_array);
 			try {
 				doc.addPage();
 
-                var name = student['name'];
+				var name = student['name'];
 				var school = student['school'];
 				var id = student['famat_id'];
 
 				doc.addImage(background, 'PNG', 0, 0, 611.77, 791.88);
 
-                drawPage(doc, name, id, school, test, bubbles);
+				drawPage(doc, name, id, school, test, bubbles);
 			} catch (error) {
 				console.log("Error (ID = " + id + "): " + error);
 			}
 		}
 
 		try {
-			doc.save(test + ".pdf");
-        } catch (error) {
+			doc.save(test + " - " + (new Date().toLocaleString()) + ".pdf");
+		} catch (error) {
 			console.log("Saving Error: " + error);
 		}
 
 		window.location.replace("<?php echo $ref; ?>");
 	}
 
-    function drawPage(pdf, studentName, studentID, school, testName, bubbles) {
-	    drawName(pdf, studentName);
-	    drawSchool(pdf,school);
-	    drawTestName(pdf, testName);
-	    drawID(pdf, studentID, bubbles);
-    }
+	function drawPage(pdf, studentName, studentID, school, testName, bubbles) {
+		drawName(pdf, studentName);
+		drawSchool(pdf, school);
+		drawTestName(pdf, testName);
+		drawID(pdf, studentID, bubbles);
+	}
 
-    function drawName(pdf, name) {
-	    pdf.text(name, 168, 113);
-    }
+	function drawName(pdf, name) {
+		pdf.text(name, 168, 113);
+	}
 
-    function drawSchool(pdf, school) {
-	    pdf.text(school, 168, 133);
-    }
+	function drawSchool(pdf, school) {
+		pdf.text(school, 168, 133);
+	}
 
-    function drawTestName(pdf, testName) {
-	    pdf.text(testName, 168, 153);
-    }
+	function drawTestName(pdf, testName) {
+		pdf.text(testName, 168, 153);
+	}
 
-    function drawID(pdf, id, bubbles) {
-	    var startX = 106,
-            diffX = 17,
-            diffY = 15.34,
-            offsetY = 19.5,
-            offsetX = 4.7;
-	    
-	    var offSets = [0.1, 0, -0.6, -0.9, -0.5, -1, -1.8, -1.8, -1];
+	function drawID(pdf, id, bubbles) {
+		var startX = 106,
+			diffX = 17,
+			diffY = 15.34,
+			offsetY = 19.5,
+			offsetX = 4.7;
 
-	    for (var i = 0; i < id.length; i++){
-		    if(bubbles[i] && id.charAt(i) !== ' ') {
-			    var currX = startX + diffX * i;
-			    pdf.text(id.charAt(i), currX, 211);
+		var offSets = [0.1, 0, -0.6, -0.9, -0.5, -1, -1.8, -1.8, -1];
 
-			    var index = parseInt(id.charAt(i));
-			    pdf.circle(currX + offsetX + offSets[i], 211 + offsetY + diffY * index, 6.6, 'F');
-		    }
-	    }
-    }
+		for (var i = 0; i < id.length; i++) {
+			if (bubbles[i] && id.charAt(i) !== ' ') {
+				var currX = startX + diffX * i;
+				pdf.text(id.charAt(i), currX, 211);
+
+				var index = parseInt(id.charAt(i));
+				pdf.circle(currX + offsetX + offSets[i], 211 + offsetY + diffY * index, 6.6, 'F');
+			}
+		}
+	}
 </script>

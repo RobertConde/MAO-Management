@@ -180,8 +180,21 @@ select:invalid {
 
 /* Printing */
 @media print {
-    .noprint {
-        display: none
+    .no-print, .no-print * {
+        display: none !important;
+    }
+}
+
+@media print {
+    a[href]:after {
+        content: none !important;
+    }
+}
+
+@media print {
+    body {
+        -webkit-print-color-adjust: exact;
+        padding-top: 0px !important;
     }
 }
 
@@ -271,4 +284,73 @@ form {
 /* Universal Body Centering */
 body {
     text-align: center;
+}
+
+/* Legend Fix */
+legend {
+    margin-bottom: 3px;
+}
+
+/* I do what I want m8 */
+fieldset {
+    padding: 4px;
+}
+
+table {
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+}
+
+/* Formatting search box */
+.search-box {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 4px;
+}
+
+.search-box input[type="text"] {
+    height: auto;
+    padding: 2px;
+    border: 1px solid #CCCCCC;
+}
+
+.result {
+    position: absolute;
+    z-index: 999;
+    top: 100%;
+    left: 0;
+    background: white;
+}
+
+.search-box input[type="text"], .result {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Formatting result items */
+.result p {
+    margin: 0;
+    padding: 2px;
+    border: 1px solid #CCCCCC;
+    border-top: none;
+    cursor: pointer;
+}
+
+.result p:hover {
+    background: #f2f2f2;
+}
+
+input[type=checkbox] {
+    margin: 0px;
 }
