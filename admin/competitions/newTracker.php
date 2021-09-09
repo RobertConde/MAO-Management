@@ -52,6 +52,7 @@ if (isset($_POST['update'])) {
 	$setTransactionStatus = setTransactionStatus($update_id, $pay_id, $update_paid_status);
 
 	$update_result = ($updateCompDate && $setTransactionStatus);
+    redirect(currentURL());
 }
 ?>
 
@@ -88,8 +89,14 @@ if (isset($_POST['update'])) {
 <?php personSelectForm('POST'); ?>
 
 <!--    Actions     -->
-<form method="post" action="../bubbles/createPDF.php?ref=<?php echo currentURL(); ?>"
+
+<?php
+compReportForm($comp, 'comp-posting');
+?>
+
+<form method="post" action="<?php echo relativeURL('admin/bubbles/createPDF?ref='), currentURL(); ?>"
       class="filled border no-print" <?php if (is_null($comp)) echo 'hidden'; ?>>
+
     <fieldset style="padding: 6px;">
         <legend><i>Actions</i></legend>
 
@@ -123,8 +130,11 @@ if (isset($_POST['update'])) {
 		}
 		?>
 
-        <input type="submit" value="Create Bubble Sheets">
+        <input type="submit" value="Create Bubble Sheets"><br>
         <br>
+
+        <u>Reports</u><br>
+        <input type="submit" form="comp-posting" value="Posting Report">
     </fieldset>
 </form><br class="no-print">
 

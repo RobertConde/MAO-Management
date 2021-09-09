@@ -66,7 +66,7 @@ table {
 th, td {
     border: 1px solid #000000;
     text-align: center;
-    padding: 2px 3px 2px 3px !important;
+    padding: 2px 3px 2px 3px;
     white-space: nowrap;
 }
 
@@ -194,7 +194,7 @@ select:invalid {
 @media print {
     body {
         -webkit-print-color-adjust: exact;
-        padding-top: 0px !important;
+        padding-top: 0 !important;
     }
 }
 
@@ -309,7 +309,7 @@ input::-webkit-inner-spin-button {
 }
 
 input[type=number] {
-    -moz-appearance:textfield; /* Firefox */
+    -moz-appearance: textfield; /* Firefox */
 }
 
 /* Formatting search box */
@@ -352,5 +352,13 @@ input[type=number] {
 }
 
 input[type=checkbox] {
-    margin: 0px;
+    margin: 0;
+}
+
+.no-padding {
+    padding: 0;
+}
+
+@page {
+    margin: 0.25in;
 }

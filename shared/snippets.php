@@ -100,7 +100,8 @@ function getDBName(): string
 	return $sql_config['database'];
 }
 
-function personSelectForm($method = 'GET') {
+function personSelectForm($method = 'GET')
+{
 	echo "<form method='$method' id='person-select'></form>";
 }
 
@@ -116,9 +117,9 @@ function getSelectID($method = 'GET')
 	$temp = null;
 	if (strtoupper($method) == 'GET' && isset($_GET['select-id']))
 		$temp = $_GET['select-id'];
-	else if(strtoupper($method) == 'POST' && isset($_POST['select-id']))
+	else if (strtoupper($method) == 'POST' && isset($_POST['select-id']))
 		$temp = $_POST['select-id'];
-	
+
 	if (!is_null($temp)) {
 		if (preg_match('/^[0-9]{7}/', $temp))
 			$select_id = $temp;
@@ -130,4 +131,12 @@ function getSelectID($method = 'GET')
 	}
 
 	return $select_id;
+}
+
+function compReportForm($comp, $report_name)
+{
+	echo
+	"<form id='$report_name' action='", relativeURL("admin/reports/$report_name"), "' target='_blank'>",
+	"<input name='comp_name' type='hidden' value='$comp'>",
+	"</form>";
 }

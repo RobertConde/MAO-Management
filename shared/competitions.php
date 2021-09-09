@@ -152,50 +152,50 @@ function updateCompData($comp, $id, $approved, $forms, $bus, $room): bool
 //	return true;
 //}
 
-//function isCompetitionPaid($id, $comp_id): bool
-//{
-//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-//	$sql_conn = getDBConn();
-//
-//	// Find payment_id for competition
-//	$find_payment_stmt = $sql_conn->prepare("SELECT payment_id FROM competitions WHERE competition_name = ?");
-//
-//	$find_payment_stmt->bind_param('s', $comp_id);
-//
-//	if (!$find_payment_stmt->execute())
-//		return false;
-//
-//	$find_payment_stmt->bind_result($payment_id);
-//
-//	$find_payment_stmt->fetch();
-//
-//	if (is_null($payment_id))
-//		return true;
-//
-//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
-//
-//	return isPaid($id, $payment_id);
-//}
+function isCompPaid($id, $comp_id): bool
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
 
-//function areFormsCollected($id, $comp_id): bool
-//{
-//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-//	$sql_conn = getDBConn();
-//
-//	// Check if already turned in
-//	$find_form_stmt = $sql_conn->prepare("SELECT COUNT(*) FROM competition_forms WHERE id = ? AND competition_name = ?");
-//
-//	$find_form_stmt->bind_param('ss', $id, $comp_id);
-//
-//	if (!$find_form_stmt->execute())
-//		return false;
-//
-//	$find_form_stmt->bind_result($num_rows);
-//
-//	$find_form_stmt->fetch();
-//
-//	return ($num_rows > 0);
-//}
+	// Find payment_id for competition
+	$find_payment_stmt = $sql_conn->prepare("SELECT payment_id FROM competitions WHERE competition_name = ?");
+
+	$find_payment_stmt->bind_param('s', $comp_id);
+
+	if (!$find_payment_stmt->execute())
+		return false;
+
+	$find_payment_stmt->bind_result($payment_id);
+
+	$find_payment_stmt->fetch();
+
+	if (is_null($payment_id))
+		return true;
+
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
+
+	return isPaid($id, $payment_id);
+}
+
+function areFormsCollected($id, $comp_id): bool
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+	// Check if already turned in
+	$find_form_stmt = $sql_conn->prepare("SELECT forms FROM competition_data WHERE id = ? AND competition_name = ?");
+
+	$find_form_stmt->bind_param('ss', $id, $comp_id);
+
+	if (!$find_form_stmt->execute())
+		return false;
+
+	$find_form_stmt->bind_result($forms);
+
+	$find_form_stmt->fetch();
+
+	return ($forms ?? false);
+}
 
 //function toggleFormStatus($id, $comp_id): bool
 //{
