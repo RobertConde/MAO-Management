@@ -22,7 +22,7 @@ if (isset($_GET['ref'])) {
 }
 
 if (!(isset($_POST['selected']) && is_array($_POST['selected']))) {
-	redirect($ref . 'false');
+	redirect($ref . 'true');
     die();
 } else
     $ref .= "true";
