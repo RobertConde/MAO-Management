@@ -21,9 +21,11 @@ if (isset($_GET['ref'])) {
 		$ref .= "&return=";
 }
 
-if (!(isset($_POST['selected']) && is_array($_POST['selected'])))
-	header("Location: " . $ref . "false");
-$ref .= "true";
+if (!(isset($_POST['selected']) && is_array($_POST['selected']))) {
+	redirect($ref . 'false');
+    die();
+} else
+    $ref .= "true";
 
 $IDs = $_POST['selected'];
 

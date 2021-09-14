@@ -9,7 +9,7 @@ stylesheet();
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(OFFICER);
 
-$post_id_is_real = isset($_POST['competition_name']) && !is_null(getDetail('competitions', 'competition_name', 'competition_name', $_POST['competition_name']));
+$post_id_is_real = isset($_POST['comp_name']) && !is_null(getDetail('competitions', 'competition_name', 'competition_name', $_POST['comp_name']));
 
 $created = null;
 $updated = null;
@@ -18,27 +18,27 @@ if (isset($_POST['create'])) {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/competitions/CUD.php";
 
 	$created = createCompetition(  // Create competition
-		$_POST['competition_name'],
-		$_POST['payment_id'],
+		$_POST['comp_name'],
+		$_POST['pay_id'],
 		$_POST['info']);
 
 	if ($created)
 		echo("<p style='color:red;'><b>Redirecting!</b></p>\n" .
-			"<meta http-equiv='refresh' content='2; url=" . currentURL(false) . "?competition_name=" . $_POST['competition_name'] . "' />");
+			"<meta http-equiv='refresh' content='2; url=" . currentURL(false) . "?comp_name=" . $_POST['comp_name'] . "' />");
 } else if (isset($_POST['update']) && $post_id_is_real) {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/competitions/CUD.php";
 
 	$updated = updateCompetition(  // Update competition
-		$_POST['competition_name'],
-		$_POST['payment_id'],
+		$_POST['comp_name'],
+		$_POST['pay_id'],
 		$_POST['info']);
 } else if (isset($_POST['delete']) && $post_id_is_real) {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/competitions/CUD.php";
 
-	$deleted = deleteCompetition($_POST['competition_name']); // Delete competition
+	$deleted = deleteCompetition($_POST['comp_name']); // Delete competition
 }
 
-$competition_name = null;
+$comp_name = null;
 $payment_id = null;
 if (isset($_GET['comp_name'])) {
 	if ($_GET['comp_name'] == '')  // Blank search
@@ -47,7 +47,7 @@ if (isset($_GET['comp_name'])) {
 		$get_id_is_real = !is_null(getDetail('competitions', 'competition_name', 'competition_name', $_GET['comp_name']));
 
 		if ($get_id_is_real) {
-			$competition_name = $_GET['comp_name'];
+			$comp_name = $_GET['comp_name'];
 			$payment_id = getDetail('competitions', 'payment_id', 'competition_name', $_GET['comp_name']);
 		}
 	}
@@ -62,6 +62,7 @@ if (isset($_GET['comp_name'])) {
         <fieldset>
             <legend><b>Competition</b></legend>
 
+            <!--suppress HtmlFormInputWithoutLabel -->
             <select name="comp_name" onchange="this.form.submit()" style="margin-bottom: 6px;">
                 <option selected disabled hidden></option>
 				<?php
@@ -73,7 +74,7 @@ if (isset($_GET['comp_name'])) {
 
 				while (!is_null($row = $competitions_result->fetch_assoc())) {
 					echo "<option value='" . $row['competition_name'] . "' "
-						. ($competition_name == $row['competition_name'] ? 'selected' : '')
+						. ($comp_name == $row['competition_name'] ? 'selected' : '')
 						. ">" . $row['competition_name'] . "</option>";
 				}
 				?>
@@ -91,15 +92,15 @@ if (isset($_GET['comp_name'])) {
 
             <label for="comp_name">Competition:</label>
             <input id="comp_name" name="comp_name" type="text" required
-                   value="<?php echo $competition_name; ?>"
-				<?php if (!is_null($competition_name)) echo 'disabled'; ?>>
+                   value="<?php echo $comp_name; ?>"
+				<?php if (!is_null($comp_name)) echo 'disabled'; ?>>
 			<?php
-			if (!is_null($competition_name))
-				echo "<input name='competition_name' type='hidden' value='$competition_name'>";
+			if (!is_null($comp_name))
+				echo "<input name='comp_name' type='hidden' value='$comp_name'>";
 			?><br>
 
-            <label for="payment_id">Payment ID:</label>
-            <select id="payment_id" name="payment_id" style="margin-bottom: 6px;">
+            <label for="pay_id">Payment ID:</label>
+            <select id="pay_id" name="pay_id" style="margin-bottom: 6px;">
                 <option selected></option>
 				<?php
 				$sql_conn = getDBConn();
@@ -116,16 +117,16 @@ if (isset($_GET['comp_name'])) {
 				?>
             </select><br>
 
-            <label for="info" style="margin-top: 0px; margin-bottom: 0px;"><u>Information</u></label><br>
+            <label for="info" style="margin-top: 0; margin-bottom: 0;"><u>Information</u></label><br>
             <textarea id="info" name="info" rows="10" cols="50"
-                      required><?php if (!is_null($competition_name)) echo getDetail('competitions', 'competition_description', 'competition_name', $competition_name); ?></textarea><br>
+                      required><?php if (!is_null($comp_name)) echo getDetail('competitions', 'competition_description', 'competition_name', $comp_name); ?></textarea><br>
             <br>
             <input id="create" name="create" type="submit" value="Create"
-                   style="color: green; float: left;" <?php if (!is_null($competition_name)) echo 'disabled'; ?>>
+                   style="color: green; float: left;" <?php if (!is_null($comp_name)) echo 'disabled'; ?>>
             <input id="update" name="update" type="submit" value="Update"
-                   style="color: blue;" <?php if (is_null($competition_name)) echo 'disabled'; ?>>
+                   style="color: blue;" <?php if (is_null($comp_name)) echo 'disabled'; ?>>
             <input id="delete" name="delete" type="submit" value="Delete"
-                   style="color: red; float: right;" <?php if (is_null($competition_name)) echo 'disabled'; ?>>
+                   style="color: red; float: right;" <?php if (is_null($comp_name)) echo 'disabled'; ?>>
         </fieldset>
     </form>
 
@@ -145,5 +146,5 @@ if (!is_null($deleted)) {
 		"<p style='color:red;'>Failed to delete!</p>\n";
 }
 
-if (isset($_GET['comp_name']) && is_null($competition_name))
+if (isset($_GET['comp_name']) && is_null($comp_name))
 	echo "<i class='rainbow'>Competition not found!</i>\n";

@@ -27,7 +27,7 @@ if (($handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/RESOURCES/import.csv", "r")) 
 		$graduation_year, $email, $phone, '');
 
 		if (!$result)
-			echo "<td>BAD</td>";
+			echo "<td>❌</td>";
 		else
 			echo "<td></td>";
 

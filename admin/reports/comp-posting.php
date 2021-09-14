@@ -79,6 +79,7 @@ while (!is_null($person)) {
         </tr>";
 
 	$i = 0;
+    $table = "";
 	while (++$i < 50 && !is_null($person = $approved_IDs_stmt->fetch())) {
 //        echo "T#$table_num";
 		if ($i == 1)
