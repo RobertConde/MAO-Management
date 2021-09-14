@@ -5,7 +5,7 @@ checkPerms(ADMIN);
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 
 $row = 1;
-if (($handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/RESOURCES/import.csv", "r")) !== FALSE) {
+if (($handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/import.csv", "r")) !== FALSE) {
 	echo "<table>";
 
 	fgetcsv($handle); // Skip header;
@@ -14,19 +14,48 @@ if (($handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/RESOURCES/import.csv", "r")) 
 		$row++;
 
 		$id = sprintf("%07d",$data[0]);
-		$first_name = $data[1];
+
+		$last_name = $data[1];
 		$middle_initial = $data[2];
-		$last_name = $data[3];
-		$email = $data[4];
-		$phone = $data[5];
-		$division = $data[6];
-		$graduation_year = $data[7];
+		$first_name = $data[3];
+
+		$division = $data[4];
+
+		$email = $data[5];
+		$phone = $data[6];
+		$address = $data[7];
+
+		$parent_name = $data[8];
+		$parent_phone = $data[9];
+		$alternate_phone = $data[10];
+		$parent_email = $data[11];
+		$alternate_ride = $data[12];
+
+		$moodle = $data[13];
+		$alcumus = $data[14];
+		$webwork = $data[15];
+
+		$graduation_year = $data[16];
 
 		echo "<tr>";
-		$result = registerAccount($id, $first_name, $middle_initial, $last_name,
-		$graduation_year, $email, $phone, '');
+		$register = registerAccount($id, $first_name, $middle_initial, $last_name,
+		$graduation_year, $email, $phone, $address);
 
-		if (!$result)
+		$update1 = updateParent($id, $parent_name, $parent_email, $parent_phone, $alternate_phone, $alternate_ride);
+
+		$update2 = updateAccounts($id, $moodle, $alcumus, $webwork);
+
+		if (!$register)
+			echo "<td>❌</td>";
+		else
+			echo "<td></td>";
+
+		if (!$update1)
+			echo "<td>❌</td>";
+		else
+			echo "<td></td>";
+
+		if (!$update2)
 			echo "<td>❌</td>";
 		else
 			echo "<td></td>";
