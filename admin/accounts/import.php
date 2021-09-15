@@ -45,6 +45,8 @@ if (($handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/import.csv", "r")) !== FALSE)
 
 		$update2 = updateAccounts($id, $moodle, $alcumus, $webwork);
 
+		$update3 = updateCompetitorInfo_Student($id, $division);
+
 		if (!$register)
 			echo "<td>❌</td>";
 		else
@@ -56,6 +58,11 @@ if (($handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/import.csv", "r")) !== FALSE)
 			echo "<td></td>";
 
 		if (!$update2)
+			echo "<td>❌</td>";
+		else
+			echo "<td></td>";
+
+		if (!$update3)
 			echo "<td>❌</td>";
 		else
 			echo "<td></td>";

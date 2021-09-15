@@ -65,6 +65,7 @@ if (isset($_POST['update'])) {
     <fieldset>
         <legend><b>Competition</b></legend>
 
+        <!--suppress HtmlFormInputWithoutLabel -->
         <select name="comp_name" onchange="this.form.submit()">
             <option selected disabled hidden></option>
 			<?php
@@ -91,7 +92,9 @@ if (isset($_POST['update'])) {
 <!--    Actions     -->
 
 <?php
+compReportForm($comp, 'comp-selections');
 compReportForm($comp, 'comp-posting');
+compReportForm($comp, 'comp-checkoff');
 ?>
 
 <form method="post" action="<?php echo relativeURL('admin/bubbles/createPDF?ref='), currentURL(); ?>"
@@ -134,7 +137,9 @@ compReportForm($comp, 'comp-posting');
         <br>
 
         <u>Reports</u><br>
-        <input type="submit" form="comp-posting" value="Posting Report">
+        <input type="submit" form="comp-selections" value="Selections">
+        <input type="submit" form="comp-posting" value="Posting">
+        <input type="submit" form="comp-checkoff" value="Checkoff List">
     </fieldset>
 </form><br class="no-print">
 

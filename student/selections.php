@@ -9,16 +9,6 @@ stylesheet();
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(STUDENT);
 
-////DEBUG
-//echo "SESSION<br>";
-//foreach ($_SESSION as $key => $value) {
-//	echo "Key: $key; Value: $value<br>";
-//}
-//echo "<br>", "POST<br>";
-//foreach ($_POST as $key => $value) {
-//	echo "Key: $key; Value: $value<br>";
-//}
-
 // Update process
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/competitions.php";
 

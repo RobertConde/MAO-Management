@@ -102,7 +102,7 @@ function getDBName(): string
 
 function personSelectForm($method = 'GET')
 {
-	echo "<form method='$method' id='person-select'></form>";
+	echo "<form method='$method' id='person-select' style='display: none;'></form>";
 }
 
 function personSelect($button_text = 'Go')
@@ -136,7 +136,17 @@ function getSelectID($method = 'GET')
 function compReportForm($comp, $report_name)
 {
 	echo
-	"<form id='$report_name' action='", relativeURL("admin/reports/$report_name"), "' target='_blank'>",
+	"<form id='$report_name' action='", relativeURL("admin/reports/$report_name"), "' target='_blank' style='display: none;'>",
 	"<input name='comp_name' type='hidden' value='$comp'>",
 	"</form>";
+}
+
+function formatPhoneNum($phone): string
+{
+	if ($phone == '')
+		return '';
+
+	return '(' . substr($phone, 0, 3) . ') '
+			. substr($phone, 3, 3) . '-'
+			. substr($phone, 6, 4);
 }
