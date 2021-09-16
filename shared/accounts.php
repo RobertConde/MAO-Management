@@ -15,6 +15,7 @@ function registerAccount($id, $first_name, $middle_initial, $last_name, $graduat
 		"INSERT INTO people (id, first_name, middle_initial, last_name, graduation_year, email, phone, address)
 			   VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
+	/** @noinspection SpellCheckingInspection */
 	$people_stmt->bind_param('ssssisss', $id, $first_name, $middle_initial, $last_name, $graduation_year, $email, $phone, $address);
 
 	// Empty rows
@@ -32,6 +33,7 @@ function registerAccount($id, $first_name, $middle_initial, $last_name, $graduat
 		&& ($accounts_stmt->execute() && $competitor_info_stmt->execute() && $parents_stmt->execute() && $schedules_stmt->execute());
 }
 
+
 /**
  * @throws \PHPMailer\PHPMailer\Exception
  */
@@ -45,6 +47,7 @@ function sendLoginCodeEmail($id): bool
 		"MAO - Login Code",
 		"<b>Account ID#:</b> <code>$id</code><br><b>Login Code:</b> <code>" . getAccountDetail('login', 'code', $id) . "</code>");
 }
+
 
 /**
  * @throws \PHPMailer\PHPMailer\Exception
@@ -63,22 +66,6 @@ function cycleLoginCode($id): bool
 	return $cycle_statement->execute() && sendLoginCodeEmail($id);
 }
 
-// --Commented out by Inspection START (8/13/2021 7:20 PM):
-///**
-// * @throws \PHPMailer\PHPMailer\Exception
-// */
-//function sendUpdateEmail($id, $updater_id): bool
-//{
-//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/email.php";
-//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
-//
-//	return sendEmail(
-//		getAccountDetail('people', 'email', $id),
-//		"MAO - Account Updated",
-//		"<b>Account ID#:</b> <code>$id</code><br><b>Updated By (ID):</b> <code>$updater_id</code>");
-//}
-// --Commented out by Inspection STOP (8/13/2021 7:20 PM)
-
 function updatePerson($id, $first_name, $middle_initial, $last_name, $graduation_year, $email, $phone, $address): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
@@ -88,6 +75,7 @@ function updatePerson($id, $first_name, $middle_initial, $last_name, $graduation
 		SET first_name = ?, middle_initial = ?, last_name = ?, graduation_year = ?,
 		    email = ?, phone = ?, address = ? WHERE id = ?;");
 
+	/** @noinspection SpellCheckingInspection */
 	$update_people_stmt->bind_param('sssissss',
 		$first_name, $middle_initial, $last_name, $graduation_year,
 		$email, $phone, $address,
@@ -110,6 +98,7 @@ function updateSchedule($id, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8,
 		    is_p5_koski = ?, is_p6_koski = ?, is_p7_koski = ?, is_p8_koski = ?
 		WHERE id = ?;");
 
+	/** @noinspection SpellCheckingInspection */
 	$update_schedule_stmt->bind_param('ssssssssiiiiiiiis',
 		$p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8,
 		$is_p1_koski, $is_p2_koski, $is_p3_koski, $is_p4_koski, $is_p5_koski, $is_p6_koski, $is_p7_koski, $is_p8_koski,
@@ -143,6 +132,7 @@ function updateParent($id, $name, $email, $phone, $alternate_phone, $alternate_r
 		SET name = ?, email = ?, phone = ?, alternate_phone = ?, alternate_ride_home = ?
 		WHERE id = ?");
 
+	/** @noinspection SpellCheckingInspection */
 	$update_parents_stmt->bind_param('ssssss',
 		$name, $email, $phone, $alternate_phone, $alternate_ride_home,
 		$id);
@@ -172,11 +162,15 @@ function updateCompetitorInfo_Admin($id, $division, $mu_student_id, $is_famat_me
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
+	if ($mu_student_id == '   ')
+		$mu_student_id = '';
+
 	$update_competitor_stmt = $sql_conn->prepare("UPDATE competitor_info
 		SET division = ?, mu_student_id = ?, is_famat_member = ?, is_national_member = ?,
 		    has_medical = ?, has_insurance = ?, has_school_insurance = ?
 		WHERE id = ?");
 
+	/** @noinspection SpellCheckingInspection */
 	$update_competitor_stmt->bind_param('isiiiiis',
 		$division, $mu_student_id, $is_famat_member, $is_national_member,
 		$has_medical, $has_insurance, $has_school_insurance,
@@ -186,46 +180,6 @@ function updateCompetitorInfo_Admin($id, $division, $mu_student_id, $is_famat_me
 }
 
 // TODO comp info updates (student and >=officer)
-
-///**
-// * @throws \PHPMailer\PHPMailer\Exception
-// */
-//function updateAccount_People($id, $first_name, $middle_initial, $last_name, $graduation_year, $email, $phone, $address, $updater_id): bool
-//{
-//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-//	$sql_conn = getDBConn();
-//
-//	$update_stmt = $sql_conn->prepare("UPDATE people
-//		SET first_name = ?, minitial = ?,  last_name = ?, email = ?, phone = ?, division = ?, grade = ?,
-//		    p1 = ?, p2 = ?, p3 = ?, p4 = ?, p5 = ?, p6 = ?, p7 = ?, p8 = ?
-//		WHERE id = ?");
-//
-//	$update_stmt->bind_param('sssssiissssssssi', $first_name, $minitial, $last_name, $email, $phone, $division, $grade,
-//		$p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $id);
-//
-//	return $update_stmt->execute() && sendUpdateEmail($id, $updater_id);
-//}
-
-///**
-// * @throws \PHPMailer\PHPMailer\Exception
-// */
-//function updateAccount_Admin($id, $permissions, $mu_student_id, $member_famat, $member_nation, $medical, $insurance, $school_insurance, $updater_id): bool
-//{
-//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-//	$sql_conn = getDBConn();
-//
-//	$update_stmt = $sql_conn->prepare("UPDATE people
-//		SET permissions = ?, mu_student_id = ?, member_famat = ?, member_nation = ?, medical = ?, insurance = ?, school_insurance = ?
-//		WHERE id = ?");
-//
-//	// No one can demote an admin
-//	if (getAccountDetail('people', 'permissions', $id) == 100)
-//		$permissions = 100;
-//
-//	$update_stmt->bind_param('isiiiiis', $permissions, $mu_student_id, $member_famat, $member_nation, $medical, $insurance, $school_insurance, $id);
-//
-//	return $update_stmt->execute() && sendUpdateEmail($id, $updater_id);
-//}
 
 function getAccountDetail($table, $col, $id)
 {

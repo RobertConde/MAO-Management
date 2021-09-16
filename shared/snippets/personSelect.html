@@ -4,13 +4,14 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
+<!--suppress JSCheckFunctionSignatures -->
 <script>
     $(document).ready(function () {
         $('.search-box input[type="text"]').on("keyup input", function () {
             /* Get input value on change */
-            var inputVal = $(this).val();
-            var resultDropdown = $(this).siblings(".result");
-            if (inputVal.length) {
+	        const inputVal = $(this).val();
+	        const resultDropdown = $(this).siblings(".result");
+	        if (inputVal.length) {
                 $.get("<?php echo relativeURL('shared/snippets/backend-search') ?>", {term: inputVal}).done(function (data) {
                     // Display the returned data in browser
                     resultDropdown.html(data);
@@ -29,8 +30,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
 </script>
 
 <div class="search-box">
+    <!--suppress HtmlFormInputWithoutLabel -->
     <input name="select-id" type="text" autocomplete="off" form="person-select" placeholder="Search..."/>
     <div class="result"></div>
 </div>
-
-<input type="submit" value="<?php echo $button_text; ?>" form="person-select" style="padding: 1px;">

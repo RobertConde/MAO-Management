@@ -54,15 +54,6 @@ $approved_IDs_stmt->bind_param('s', $comp);
 $approved_IDs_stmt->bind_result($id, $last_name, $first_name, $forms);
 $approved_IDs_stmt->execute();
 
-const DIVISIONS = array(
-	'Not A Student',
-	'Algebra I',
-	'Geometry',
-	'Algebra 2',
-	'Precalculus',
-	'Calculus',
-	'Statistics');
-
 $person = '';
 $table_num = 0;
 $page = "";

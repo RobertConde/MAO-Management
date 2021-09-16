@@ -3,58 +3,15 @@
 
 /* Source: https://www.w3schools.com/howto/howto_css_tooltip.asp */
 /* Tooltip container */
-.tooltip {
-    position: relative;
-    display: inline-block;
-    border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-}
 
 /* Tooltip text */
-.tooltip .tooltip-text {
-    visibility: hidden;
-    width: 120px;
-    background-color: #555;
-    color: #fff;
-    text-align: center;
-    padding: 5px 0;
-    border-radius: 6px;
-
-    /* Position the tooltip text */
-    position: absolute;
-    z-index: 1;
-    bottom: 125%;
-    left: 50%;
-    margin-left: -60px;
-
-    /* Fade in tooltip */
-    opacity: 0;
-    transition: opacity 0.3s;
-}
 
 /* Tooltip arrow */
-.tooltip .tooltip-text::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
-}
 
 /* Show the tooltip text when you mouse over the tooltip container */
-.tooltip:hover .tooltip-text {
-    visibility: visible;
-    opacity: 1;
-}
 
 /* Source: https://www.w3schools.com/css/tryit.asp?filename=trycss_navbar_sticky */
 /* Navigation Bar Padding */
-.nav-bar {
-    padding: 0;
-    text-align: center;
-}
 
 /* Tables */
 table {
@@ -131,38 +88,11 @@ input:disabled, select:disabled, textarea:disabled {
     display: inline-block;
 }
 
-.dropdown-button {
-    background-color: darkgray;
-    color: white;
-    padding: 12px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-    z-index: 1;
-}
-
 .dropdown-content a {
     color: black;
     padding: 12px 12px;
     text-decoration: none;
     display: block;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown:hover .dropdown-button {
-    background-color: red;
 }
 
 .dropdown-content a:hover {
@@ -227,13 +157,6 @@ form.center, input.center {
     box-sizing: border-box;
 }
 
-.column {
-    float: left;
-    width: 50%;
-    padding: 10px;
-    height: 300px; /* Should be removed. Only for demonstration */
-}
-
 /* Clear floats after the columns */
 .row:after {
     content: "";
@@ -243,9 +166,6 @@ form.center, input.center {
 
 /* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
-    .column {
-        width: 100%;
-    }
 }
 
 /* Navbar Adjust */
@@ -353,10 +273,6 @@ input[type=number] {
 
 input[type=checkbox] {
     margin: 0;
-}
-
-.no-padding {
-    padding: 0;
 }
 
 @page {

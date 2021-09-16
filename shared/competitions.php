@@ -92,7 +92,7 @@ function removeFromComp($comp, $id): bool
 	return $delete_data_stmt->execute();
 }
 
-function updateCompData($comp, $id, $approved, $forms, $bus, $room): bool
+function updateCompData($comp, $id, $forms, $bus, $room): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
@@ -101,6 +101,7 @@ function updateCompData($comp, $id, $approved, $forms, $bus, $room): bool
 		"UPDATE competition_data
 					SET forms = ?, bus = ?, room = ?
 					WHERE id = ? AND competition_name = ?");
+	/** @noinspection SpellCheckingInspection */
 	$update_data_stmt->bind_param('iisss', $forms, $bus, $room, $id, $comp);
 
 	return $update_data_stmt->execute();

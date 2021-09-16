@@ -8,7 +8,9 @@ startSession();
 if (isset($_SESSION['id']))
 	header("Location: https://" . $_SERVER['HTTP_HOST'] . "/student/info");
 else if (isset($_POST['cycle_code']))
-	$cycle_and_email_result = cycleLoginCode($_POST['id']);
+	try {
+		$cycle_and_email_result = cycleLoginCode($_POST['id']);
+	} catch (\PHPMailer\PHPMailer\Exception $e) {}  // TODO: error message
 else if (isset($_POST['login'])) {
 	if (getAccountDetail('login', 'code', $_POST['id']) == $_POST['code']) {
 		$_SESSION['id'] = $_POST['id']; // Login (session)
@@ -69,6 +71,6 @@ if (!is_null($cycle_and_email_result)) {
 <?php
 if (!is_null($login_result)) {
 	if (!$login_result)
-		echo("<p style=\"color:red;\">Invalid credentials/failed to login! </p>\n");
+		echo("<p style=\"color:red;\">Invalid credentials/failed to log in! </p>\n");
 }
 ?>

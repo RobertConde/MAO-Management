@@ -108,6 +108,8 @@ function personSelectForm($method = 'GET')
 function personSelect($button_text = 'Go')
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets/personSelect.html";
+	
+	echo "<!--suppress XmlInvalidId --><input type='submit' value='$button_text' form='person-select' style='padding: 1px;'>";
 }
 
 function getSelectID($method = 'GET')

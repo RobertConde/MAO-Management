@@ -5,7 +5,7 @@ function isPaid($id, $payment_id): bool
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
-	// Check if already if already is paid
+	// Check if already is paid
 	$find_payment_statement = $sql_conn->prepare("SELECT COUNT(*) FROM transactions WHERE id = ? AND payment_id = ?");
 
 	$find_payment_statement->bind_param('ss', $id, $payment_id);
@@ -48,7 +48,6 @@ function toggleTransactionStatus($id, $payment_id): bool
 function setTransactionStatus($id, $pay_id, $status): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-	$sql_conn = getDBConn();
 
 	if (isPaid($id, $pay_id) != $status)
 		return toggleTransactionStatus($id, $pay_id);

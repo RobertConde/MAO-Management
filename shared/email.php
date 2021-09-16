@@ -5,6 +5,7 @@ use PHPMailer\PHPMailer\SMTP;
 
 /**
  * @throws \PHPMailer\PHPMailer\Exception
+ * @noinspection SpellCheckingInspection
  */
 function sendEmail($to, $subj, $msg): bool
 {
@@ -45,7 +46,7 @@ function sendEmail($to, $subj, $msg): bool
 	//Whether to use SMTP authentication
 	$mail->SMTPAuth = true;
 
-	//Username to use for SMTP authentication - use full email address for gmail
+	//Username to use for SMTP authentication - useful email address for gmail
 	$mail->Username = $email_config['email'];
 
 	//Password to use for SMTP authentication

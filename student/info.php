@@ -13,32 +13,33 @@ checkPerms(STUDENT);
 <title>DB | Update Account</title>
 
 <?php
-if (isset($_POST['id']) && checkCompareRank($_SESSION['id'], $_POST['id'], true)) {
+//TODO: don't use $_POST['select-id']
+if (isset($_POST['select-id']) && checkCompareRank($_SESSION['id'], $_POST['select-id'], true)) {
 	if (isset($_POST['update_person'])) {
 		$updated_person = updatePerson(
-			$_POST['id'],
+			$_POST['select-id'],
 			$_POST['first_name'], $_POST['middle_initial'], $_POST['last_name'], $_POST['graduation_year'],
 			$_POST['email'], $_POST['phone'], $_POST['address']);
 	} else if (isset($_POST['update_schedule']))
 		$updated_schedule = updateSchedule(
-			$_POST['id'],
+			$_POST['select-id'],
 			$_POST['p1'], $_POST['p2'], $_POST['p3'], $_POST['p4'], $_POST['p5'], $_POST['p6'], $_POST['p7'], $_POST['p8'],
 			isset($_POST['is_p1_koski']), isset($_POST['is_p2_koski']), isset($_POST['is_p3_koski']), isset($_POST['is_p4_koski']),
 			isset($_POST['is_p5_koski']), isset($_POST['is_p6_koski']), isset($_POST['is_p7_koski']), isset($_POST['is_p8_koski']));
 	else if (isset($_POST['update_accounts']))
 		$updated_accounts = updateAccounts(
-			$_POST['id'],
+			$_POST['select-id'],
 			$_POST['moodle'], $_POST['alcumus'], $_POST['webwork']);
 	else if (isset($_POST['update_parent']))
 		$updated_parent = updateParent(
-			$_POST['id'],
+			$_POST['select-id'],
 			$_POST['name'], $_POST['email'], $_POST['phone'], $_POST['alternate_phone'], $_POST['alternate_ride_home']);
 	else if (isset($_POST['update_competitor_info'])) {
 		if (getRank($_SESSION['id']) < 1)
-			$updated_competitor_info = updateCompetitorInfo_Student($_POST['id'], $_POST['division']);
+			$updated_competitor_info = updateCompetitorInfo_Student($_POST['select-id'], $_POST['division']);
 		else
 			$updated_competitor_info = updateCompetitorInfo_Admin(
-				$_POST['id'], $_POST['division'], $_POST['mu_student_id'], $_POST['is_famat_member'],
+				$_POST['select-id'], $_POST['division'], $_POST['mu_student_id'], $_POST['is_famat_member'],
 				$_POST['is_national_member'], $_POST['has_medical'], $_POST['has_insurance'], $_POST['has_school_insurance']);
 	}
 }
@@ -63,7 +64,7 @@ if (!is_null($select_id)) {
 <?php
 
 if (getRank($_SESSION['id']) > 0) {
-    personSelectForm();
+	personSelectForm();
 	personSelect();
 
 	if ($id != $_SESSION['id'])
@@ -73,14 +74,14 @@ if (getRank($_SESSION['id']) > 0) {
 
 <div style="display: flex; justify-content: center; margin: 6px; text-align: left;">
     <div style="margin: 6px; padding-right: 6px;">
-        <form method="post" action="info.php?id=<?php echo $id; ?>" class="filled border">
+        <form method="post" action="info.php?select-id=<?php echo $id; ?>" class="filled border">
             <fieldset>
                 <legend><b>Personal Information</b></legend>
 
-                <label for="id">ID:</label>
-                <input id="id" type="text" pattern="[0-9]{7}" size="7" disabled
+                <label for="select-id">ID:</label>
+                <input id="select-id" type="text" pattern="[0-9]{7}" size="7" disabled
                        value="<?php echo $id; ?>">
-                <input name="id" type="hidden" value="<?php echo $id; ?>"><br>
+                <input name="select-id" type="hidden" value="<?php echo $id; ?>"><br>
 
                 <label for="first_name">First Name:</label>
                 <input id="first_name" name="first_name" type="text" size="10" required
@@ -112,18 +113,19 @@ if (getRank($_SESSION['id']) > 0) {
 
                 <input name="update_person" type="submit" value="Update" style="margin-top: 6px">
             </fieldset>
-        </form><br>
+        </form>
+        <br>
 
         <br>
 
-        <form method="post" action="info.php?id=<?php echo $id; ?>" class="filled border">
+        <form method="post" action="info.php?select-id=<?php echo $id; ?>" class="filled border">
             <fieldset>
                 <legend><b>School Schedule</b>
                     <i class="fa fa-question-circle"
                        title="Check the box if it is a Koski period. Include room # and course name."></i>
                 </legend>
 
-                <input name="id" type="hidden" value="<?php echo $id; ?>">
+                <input name="select-id" type="hidden" value="<?php echo $id; ?>">
 
                 <label for="p1">Period 1:</label>
                 <input id="is_p1_koski" name="is_p1_koski" type="checkbox" title="Is a Koski period?"
@@ -175,15 +177,16 @@ if (getRank($_SESSION['id']) > 0) {
 
                 <input name="update_schedule" type="submit" value="Update" style="margin-top: 6px">
             </fieldset>
-        </form><br>
+        </form>
+        <br>
 
         <br>
 
-        <form method="post" action="info.php?id=<?php echo $id; ?>" class="filled border">
+        <form method="post" action="info.php?select-id=<?php echo $id; ?>" class="filled border">
             <fieldset>
                 <legend><b>Account Usernames</b></legend>
 
-                <input name="id" type="hidden" value="<?php echo $id; ?>">
+                <input name="select-id" type="hidden" value="<?php echo $id; ?>">
 
                 <label for="moodle">Moodle:</label>
                 <input id="moodle" name="moodle" type="text" size="10"
@@ -203,11 +206,11 @@ if (getRank($_SESSION['id']) > 0) {
     </div>
 
     <div style="margin: 6px;">
-        <form method="post" action="info.php?id=<?php echo $id; ?>" class="filled border">
+        <form method="post" action="info.php?select-id=<?php echo $id; ?>" class="filled border">
             <fieldset style="display: block;">
                 <legend><b>Parent/Ride Home Information</b></legend>
 
-                <input name="id" type="hidden" value="<?php echo $id; ?>">
+                <input name="select-id" type="hidden" value="<?php echo $id; ?>">
 
                 <label for="name">Name:</label>
                 <input id="name" name="name" type="text" size="20" required
@@ -232,15 +235,16 @@ if (getRank($_SESSION['id']) > 0) {
                 <input name="update_parent" type="submit" value="Update" style="margin-top: 6px">
 
             </fieldset>
-        </form><br>
+        </form>
+        <br>
 
         <br>
 
-        <form method="post" action="info.php?id=<?php echo $id; ?>" class="filled border">
+        <form method="post" action="info.php?select-id=<?php echo $id; ?>" class="filled border">
             <fieldset>
                 <legend><b>Competitor Information</b></legend>
 
-                <input name="id" type="hidden" value="<?php echo $id; ?>">
+                <input name="select-id" type="hidden" value="<?php echo $id; ?>">
 
                 <label for="division">Division
                     <i class="fa fa-question-circle"
@@ -281,8 +285,13 @@ if (getRank($_SESSION['id']) > 0) {
                 <hr>
 
                 <label for="mu_student_id" style="color: red;">Mu Student ID:</label>
-                <input id="mu_student_id" name="mu_student_id" type="text" pattern="[0-9\s]{3}" size="3" required
-                       value="<?php echo getAccountDetail('competitor_info', 'mu_student_id', $id); ?>"
+                <input id="mu_student_id" name="mu_student_id" type="text" pattern="([0-9]{3}|[\s]{3})" size="3"
+                       required
+                       value=
+                       "<?php $mu_student_id = getAccountDetail('competitor_info', 'mu_student_id', $id);
+				       if ($mu_student_id == '')
+					       $mu_student_id = '   ';
+				       echo $mu_student_id; ?>"
 					<?php if (getRank($_SESSION['id']) < 1) echo 'disabled'; ?>><br>
 
                 <label for="is_famat_member" style="color: red;">Is FAMAT Member:</label>

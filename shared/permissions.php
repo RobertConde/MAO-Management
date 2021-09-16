@@ -3,7 +3,7 @@ const STUDENT = 1;
 const OFFICER = 10;
 const ADMIN = 100;
 
-function checkPerms($permmin): bool
+function checkPerms($permMin): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 	startSession();
@@ -11,7 +11,7 @@ function checkPerms($permmin): bool
 	if (!isset($_SESSION['id'])) {
 		die("<p style='color:red;'><b>Redirecting:</b> <i>You are not logged in [Session Status: " . session_status() . "] !</i></p>\n" .
 			"<meta http-equiv='refresh' content='2; url=https://" . $_SERVER['HTTP_HOST'] . "/' />");
-	} elseif (getAccountDetail('people', 'permissions', $_SESSION['id']) < $permmin)
+	} elseif (getAccountDetail('people', 'permissions', $_SESSION['id']) < $permMin)
 		die("<p style='color:red;'><b>You do not have the required permissions!</b></p>\n");
 
 	return true;

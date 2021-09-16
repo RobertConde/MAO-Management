@@ -21,7 +21,7 @@ if (isset($_POST['delete']) && !is_null(getDetail('people', 'id', 'id', $_POST['
 
 $id = null;
 if (isset($_GET['select-id'])) {
-    $select_id = getSelectID('GET');
+    $select_id = getSelectID();
 
 	$rankComp = checkCompareRank($_SESSION['id'], $select_id, true);
 	if (!is_null($rankComp)) {
@@ -38,7 +38,7 @@ if (isset($_GET['select-id'])) {
     <h2 style="margin: 6px;"><u>Delete Account</u></h2>
 
 <?php
-personSelectForm('GET');
+personSelectForm();
 personSelect();
 ?>
 <br>

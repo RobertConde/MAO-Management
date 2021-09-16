@@ -11,7 +11,7 @@ checkPerms(OFFICER);
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 
 // Redirect to reference header (after creating PDF)
-$ref = "http://" . $_SERVER['HTTP_HOST'];
+$ref = "https://" . $_SERVER['HTTP_HOST'];
 if (isset($_GET['ref'])) {
 	$ref = $_GET['ref'];
 
@@ -93,40 +93,41 @@ $json = json_encode($json_array);
 
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js'></script>
 
+<!--suppress JSUnresolvedFunction -->
 <script>
 	createPDF();
 
 	function createPDF() {
-		var doc = new jsPDF({
+		const doc = new jsPDF({
 			orientation: 'portrait',
 			unit: 'pt',
 			format: [611.77, 791.88]
-		})
+		});
 		doc.setFont("helvetica");
 		doc.setFontSize(12);
 		doc.deletePage(1);  // Start off with no pages
 
 		// TODO
-		var jsonText = '<?php echo $json; ?>';
+		const jsonText = '<?php echo $json; ?>';
 		console.log(jsonText);
-		var json = JSON.parse(jsonText);
+		const json = JSON.parse(jsonText);
 
-		var bubbles = json['bubbles'];   // TODO: which bubbles to fill in
+		const bubbles = json['bubbles'];   // TODO: which bubbles to fill in
 
-		var test = json['test'];
+		const test = json['test'];
 
-		var background = new Image;
+		const background = new Image;
 		background.src = 'blankBubbleSheet.png';
 
 		let student;
-		var students = json['students'];
+		const students = json['students'];
 		for (student of students) {
 			try {
 				doc.addPage();
 
-				var name = student['name'];
-				var school = student['school'];
-				var id = student['famat_id'];
+				const name = student['name'];
+				const school = student['school'];
+				const id = student['famat_id'];
 
 				doc.addImage(background, 'PNG', 0, 0, 611.77, 791.88);
 
@@ -165,20 +166,20 @@ $json = json_encode($json_array);
 	}
 
 	function drawID(pdf, id, bubbles) {
-		var startX = 106,
+		const startX = 106,
 			diffX = 17,
 			diffY = 15.34,
 			offsetY = 19.5,
 			offsetX = 4.7;
 
-		var offSets = [0.1, 0, -0.6, -0.9, -0.5, -1, -1.8, -1.8, -1];
+		const offSets = [0.1, 0, -0.6, -0.9, -0.5, -1, -1.8, -1.8, -1];
 
-		for (var i = 0; i < id.length; i++) {
+		for (let i = 0; i < id.length; i++) {
 			if (bubbles[i] && id.charAt(i) !== ' ') {
-				var currX = startX + diffX * i;
+				const currX = startX + diffX * i;
 				pdf.text(id.charAt(i), currX, 211);
 
-				var index = parseInt(id.charAt(i));
+				const index = parseInt(id.charAt(i));
 				pdf.circle(currX + offsetX + offSets[i], 211 + offsetY + diffY * index, 6.6, 'F');
 			}
 		}

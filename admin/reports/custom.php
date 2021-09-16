@@ -44,6 +44,7 @@ if (isset($_GET['order_by']))
             </select>
             <label for="tables" style="color: red;">*</label><br>
 
+            <!--suppress HtmlFormInputWithoutLabel -->
             <input id="order_by" name="order_by" type="text" placeholder="SQL Order By Expression" style="margin: 6px;"
                    value="<?php echo $order_by; ?>">
             <br>

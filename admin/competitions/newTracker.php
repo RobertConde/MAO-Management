@@ -30,9 +30,9 @@ if (!is_null($add_id))
 // Remove competitor from competition data for comp
 $remove_result = null;
 if (isset($_POST['remove'])) {
-    $remove_id = $_POST['id'];
+	$remove_id = $_POST['id'];
 
-    $remove_result = removeFromComp($comp, $remove_id);
+	$remove_result = removeFromComp($comp, $remove_id);
 }
 
 // Update row of competitor competition data
@@ -44,7 +44,7 @@ if (isset($_POST['update'])) {
 	$update_bus = ($_POST['bus'] ?? '');
 	$update_room = ($_POST['room'] ?? '');
 
-	$updateCompDate = updateCompData($comp, $update_id, $update_approved, $update_forms, $update_bus, $update_room);
+	$updateCompDate = updateCompData($comp, $update_id, $update_forms, $update_bus, $update_room);
 
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
 
@@ -52,7 +52,7 @@ if (isset($_POST['update'])) {
 	$setTransactionStatus = setTransactionStatus($update_id, $pay_id, $update_paid_status);
 
 	$update_result = ($updateCompDate && $setTransactionStatus);
-    redirect(currentURL());
+	redirect(currentURL());
 }
 ?>
 
@@ -90,7 +90,6 @@ if (isset($_POST['update'])) {
 <?php personSelectForm('POST'); ?>
 
 <!--    Actions     -->
-
 <?php
 compReportForm($comp, 'comp-selections');
 compReportForm($comp, 'comp-posting');
@@ -201,7 +200,8 @@ compReportForm($comp, 'comp-checkoff');
 			$checkbox_status = ($value ? 'checked' : '');
 		}
 
-		return "<input name='$data_name' type='checkbox' form='$id-update' style='margin: 0;' $checkbox_status>";
+		return "<!--suppress XmlInvalidId -->
+                <input name='$data_name' type='checkbox' form='$id-update' style='margin: 0;' $checkbox_status>";
 	}
 
 	if (!is_null($comp)) {
@@ -232,12 +232,13 @@ compReportForm($comp, 'comp-checkoff');
 		while (!is_null($person = $approved_IDs_stmt->fetch())) {
 			// Table data
 			$row_interior =
-				"<div id='div-$id'>"
+				"<!--suppress ALL -->
+                   <div id='div-$id'>"
 				. "<input name='id' type='hidden' form='$id-update' value='$id'>"
 				. "<input name='id' type='hidden' form='$id-remove' value='$id'>"
 				. "</div>";
 
-			$row_interior .= surrTags('td', "<input name='remove' type='checkbox' form='$id-remove' onchange='this.form.submit()'>", "class='no-print'");
+			$row_interior .= surrTags('td', "<!--suppress XmlInvalidId --><input name='remove' type='checkbox' form='$id-remove' onchange='this.form.submit()'>", "class='no-print'");
 
 			$row_interior .= surrTags('td', makeLink($id, "student/info?id=$id", '_blank'));
 
@@ -252,11 +253,11 @@ compReportForm($comp, 'comp-checkoff');
 
 			$row_interior .= surrTags('td', getCheckbox($comp, $pay_id, 'forms', $id, $forms));
 
-			$row_interior .= surrTags('td', "<input name='bus' type='number' min='0' form='$id-update' style='width: 45px; text-align: center;' value='$bus'>");
+			$row_interior .= surrTags('td', "<!--suppress XmlInvalidId --><input name='bus' type='number' min='0' form='$id-update' style='width: 45px; text-align: center;' value='$bus'>");
 
-			$row_interior .= surrTags('td', "<input name='room' type='text' size='2' form='$id-update' style='text-align: center;' value='$room'>");
+			$row_interior .= surrTags('td', "<!--suppress XmlInvalidId --><input name='room' type='text' size='2' form='$id-update' style='text-align: center;' value='$room'>");
 
-			$row_interior .= surrTags('td', "<input name='update' type='submit' form='$id-update' value='Update'>", "class='no-print'");
+			$row_interior .= surrTags('td', "<!--suppress XmlInvalidId --><input name='update' type='submit' form='$id-update' value='Update'>", "class='no-print'");
 
 			// Define form then add table row (wrap row interior by table row)
 			$row = surrTags('tr',

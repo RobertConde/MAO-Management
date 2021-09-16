@@ -59,6 +59,7 @@ if (isset($_GET['payment_id'])) {
     <fieldset>
         <legend><b>Payment</b></legend>
 
+        <!--suppress HtmlFormInputWithoutLabel -->
         <select name="payment_id" onchange="this.form.submit()" style="margin-bottom: 6px;">
             <option selected disabled hidden></option>
 			<?php
@@ -99,7 +100,7 @@ if (isset($_GET['payment_id'])) {
         $<input id="cost" name="cost" type="number" step="0.01" required
                 value="<?php if (!is_null($payment_id)) echo sprintf('%01.2f', getDetail('payment_details', 'cost', 'payment_id', $payment_id)); ?>"><br>
 
-        <label for="info" style="margin-top: 0px; margin-bottom: 0px;"><u>Information</u></label><br>
+        <label for="info" style="margin-top: 0; margin-bottom: 0;"><u>Information</u></label><br>
         <textarea id="info" name="info" rows="10" cols="50"
                   required><?php if (!is_null($payment_id)) echo getDetail('payment_details', 'info', 'payment_id', $payment_id); ?></textarea><br>
         <br>
