@@ -240,7 +240,7 @@ compReportForm($comp, 'comp-checkoff');
 
 			$row_interior .= surrTags('td', "<!--suppress XmlInvalidId --><input name='remove' type='checkbox' form='$id-remove' onchange='this.form.submit()'>", "class='no-print'");
 
-			$row_interior .= surrTags('td', makeLink($id, "student/info?id=$id", '_blank'));
+			$row_interior .= surrTags('td', makeLink($id, "student/info?select-id=$id", '_blank'));
 
 			$selected = (isSelected($comp, $id) ? "background-color: lightgreen;" : '');
 			$row_interior .= surrTags('td', $name, "style='text-align: left; $selected'");
