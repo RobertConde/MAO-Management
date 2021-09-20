@@ -12,10 +12,11 @@ checkPerms(OFFICER);
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 
 $deleted = null;
-if (isset($_POST['delete']) && !is_null(getDetail('people', 'id', 'id', $_POST['id']))) { // If form is POSTed
+$post_id = getSelectID('POST');
+if (isset($_POST['delete']) && !is_null(getDetail('people', 'id', 'id', $post_id))) { // If form is POSTed
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/accounts/UD.php";
 
-	$deleted = deleteAccount($_POST['id']); // Delete account
+	$deleted = deleteAccount($post_id); // Delete account
 	checkPerms(OFFICER);
 }
 
@@ -51,7 +52,7 @@ personSelect();
         <input id="id" type="text" pattern="[0-9]{7}" size="7" required
                value="<?php echo $id; ?>"
                disabled>
-        <input name="id" type="hidden" value="<?php echo $id; ?>"><br>
+        <input name="select-id" type="hidden" value="<?php echo $id; ?>"><br>
         <br>
         <label for="first_name">First Name:</label>
         <input id="first_name" name="first_name" type="text" size="10"

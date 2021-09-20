@@ -33,7 +33,6 @@ function registerAccount($id, $first_name, $middle_initial, $last_name, $graduat
 		&& ($accounts_stmt->execute() && $competitor_info_stmt->execute() && $parents_stmt->execute() && $schedules_stmt->execute());
 }
 
-
 /**
  * @throws \PHPMailer\PHPMailer\Exception
  */
@@ -47,7 +46,6 @@ function sendLoginCodeEmail($id): bool
 		"MAO - Login Code",
 		"<b>Account ID#:</b> <code>$id</code><br><b>Login Code:</b> <code>" . getAccountDetail('login', 'code', $id) . "</code>");
 }
-
 
 /**
  * @throws \PHPMailer\PHPMailer\Exception
