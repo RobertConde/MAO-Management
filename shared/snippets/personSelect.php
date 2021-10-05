@@ -30,7 +30,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
 </script>
 
 <div class="search-box">
-    <!--suppress HtmlFormInputWithoutLabel -->
+    <!--suppress HtmlFormInputWithoutLabel, XmlInvalidId -->
     <input name="select-id" type="text" autocomplete="off" form="person-select" placeholder="Search..."/>
     <div class="result"></div>
 </div>

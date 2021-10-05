@@ -133,7 +133,7 @@ $json = json_encode($json_array);
 
 				drawPage(doc, name, id, school, test, bubbles);
 			} catch (error) {
-				console.log("Error (ID = " + id + "): " + error);
+				console.log("Error (Name = " + student['name'] + "): " + error);
 			}
 		}
 

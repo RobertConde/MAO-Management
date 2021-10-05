@@ -32,7 +32,7 @@ function redirect($url)
 
 function navigationBar()
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets/navbar.html";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets/navbar.php";
 }
 
 // $tag is without carets or '/'
@@ -107,7 +107,7 @@ function personSelectForm($method = 'GET')
 
 function personSelect($button_text = 'Go')
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets/personSelect.html";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets/personSelect.php";
 	
 	echo "<!--suppress XmlInvalidId --><input type='submit' value='$button_text' form='person-select' style='padding: 1px;'>";
 }

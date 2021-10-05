@@ -105,7 +105,7 @@ while (!is_null($person)) {
 
 	$i = 0;
 	$table = "";
-	while (++$i < 50 && !is_null($person = $approved_IDs_stmt->fetch())) {
+	while ($i++ < 50 && !is_null($person = $approved_IDs_stmt->fetch())) {
 		if ($i == 1)
 			$table = $table_header_row;
 
@@ -142,5 +142,5 @@ while (!is_null($person)) {
 	echo $page, '<br>';
 	$page = "";
 
-	++$index;
+//	++$index;
 }
