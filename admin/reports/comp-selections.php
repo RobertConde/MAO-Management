@@ -56,9 +56,9 @@ $approved_IDs_stmt = $sql_conn->prepare(
                 p.first_name,
                 ci.division
             FROM competition_selections cs
-            INNER JOIN people p ON cs.id = p.id
-            INNER JOIN competitor_info ci ON cs.id = ci.id
-            LEFT JOIN competition_data cd on cs.id = cd.id
+            LEFT JOIN people p ON p.id = cs.id
+            LEFT JOIN competitor_info ci ON ci.id = cs.id
+            LEFT JOIN competition_data cd ON cd.id = cs.id AND cd.competition_name = cs.competition_name
             WHERE cs.competition_name = ?
             ORDER BY last_name, first_name");
 $approved_IDs_stmt->bind_param('s', $comp);
@@ -80,12 +80,13 @@ $page = "";
 while (!is_null($person)) {
 //    echo "ITT";
 	$table_header_row =
-		"<tr><th colspan='5'>$comp</th></tr>
+        "<tr><th colspan='6'>$comp</th></tr>
         <tr>
             <th>Add</th>
             <th>ID</th>
             <th>Last Name</th>
             <th>First Name</th>
+            <th>Grade</th>
             <th>Division</th>
         </tr>";
 
@@ -104,21 +105,23 @@ while (!is_null($person)) {
                     <input type='submit' value='Add'>
                 </form>";
         }
-		$row_interior = surrTags('td', $add_cell, "style='padding: 1 2px;'");
+        $row_interior = surrTags('td', $add_cell, "style='padding: 1 2px;'");
 
-		$row_interior .= surrTags('td', $id, "style='padding: 1 2px;'");
+        $row_interior .= surrTags('td', $id, "style='padding: 1 2px;'");
 
-		$row_interior .= surrTags('td', $last_name, "style='text-align: left; padding: 1 2px;'");
+        $row_interior .= surrTags('td', $last_name, "style='text-align: left; padding: 1 2px;'");
 
-		$row_interior .= surrTags('td', $first_name, "style='text-align: left; padding: 1 2px;'");
+        $row_interior .= surrTags('td', $first_name, "style='text-align: left; padding: 1 2px;'");
 
-		$row_interior .= surrTags('td', DIVISIONS[$division], "style='padding: 1 2px;'");
+        $row_interior .= surrTags('td', formatOrdinalNumber(getGrade($id)));
 
-		// Define form then add table row (wrap row interior by table row)
-		$row = surrTags('tr', $row_interior);
+        $row_interior .= surrTags('td', DIVISIONS[$division], "style='padding: 1 2px;'");
 
-		$table .= $row;
-	}
+        // Define form then add table row (wrap row interior by table row)
+        $row = surrTags('tr', $row_interior);
+
+        $table .= $row;
+    }
 
 	$page .= surrTags('table', $table, "class='filled' style='font-size: small; display: inline-block; vertical-align: top;'");
 

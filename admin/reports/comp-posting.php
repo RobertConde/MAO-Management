@@ -60,11 +60,12 @@ $page = "";
 while (!is_null($person)) {
 //    echo "ITT";
 	$table_header_row =
-		"<tr><th colspan='5'>$comp</th></tr>
+		"<tr><th colspan='6'>$comp</th></tr>
         <tr>
             <th>ID</th>
             <th>Last Name</th>
             <th>First Name</th>
+            <th>Grade</th>
             <th " . (is_null($pay_id) ? 'hidden' : '') . ">Paid</th>
             <th>Forms</th>
         </tr>";
@@ -72,28 +73,29 @@ while (!is_null($person)) {
 	$i = 0;
     $table = "";
 	while (++$i < 50 && !is_null($person = $approved_IDs_stmt->fetch())) {
-//        echo "T#$table_num";
-		if ($i == 1)
-			$table = $table_header_row;
+        if ($i == 1)
+            $table = $table_header_row;
 
-		// Table data
-		$row_interior = surrTags('td', $id, "style='padding: 1 2px;'");
+        // Table data
+        $row_interior = surrTags('td', $id, "style='padding: 1 2px;'");
 
-		$row_interior .= surrTags('td', $last_name, "style='text-align: left; padding: 1 2px;'");
+        $row_interior .= surrTags('td', $last_name, "style='text-align: left; padding: 1 2px;'");
 
-		$row_interior .= surrTags('td', $first_name, "style='text-align: left; padding: 1 2px;'");
+        $row_interior .= surrTags('td', $first_name, "style='text-align: left; padding: 1 2px;'");
 
-		// If the competition doesn't have an assigned payment, don't show the 'Paid' columns
-		if (!is_null($pay_id))
-			$row_interior .= surrTags('td', isCompPaid($id, $comp) ? '✔️' : '', "style='padding: 1 2px;'");
+        $row_interior .= surrTags('td', formatOrdinalNumber(getGrade($id)));
 
-		$row_interior .= surrTags('td', areFormsCollected($id, $comp) ? '✔️' : '', "style='padding: 1 2px; '");
+        // If the competition doesn't have an assigned payment, don't show the 'Paid' columns
+        if (!is_null($pay_id))
+            $row_interior .= surrTags('td', isCompPaid($id, $comp) ? '✔️' : '', "style='padding: 1 2px;'");
 
-		// Define form then add table row (wrap row interior by table row)
-		$row = surrTags('tr', $row_interior);
+        $row_interior .= surrTags('td', areFormsCollected($id, $comp) ? '✔️' : '', "style='padding: 1 2px; '");
 
-		$table .= $row;
-	}
+        // Define form then add table row (wrap row interior by table row)
+        $row = surrTags('tr', $row_interior);
+
+        $table .= $row;
+    }
 
 	$page .= surrTags('table', $table, "class='filled' style='font-size: small; display: inline-block; vertical-align: top;'");
 //    $page .= $table_num;
