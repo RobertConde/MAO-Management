@@ -7,7 +7,7 @@ navigationBar();
 stylesheet();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
-checkPerms(OFFICER);
+checkPerms(ADMIN);
 
 $table = "";
 if (isset($_GET['table']))

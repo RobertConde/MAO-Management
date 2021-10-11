@@ -12,8 +12,8 @@ checkPerms(STUDENT);
 // Update process
 $updated = null;
 if (isset($_POST['transaction'])) {  // Process POST update
-	if ($_POST['id'] != $_SESSION['id'] && !checkCompareRank($_SESSION['id'], $_POST['id'], true))   // Confirm rank is higher (so that people can't update through POST requests without being logged into an account of higher rank)
-		die("<p style='color:red;'>You do not have the required permissions!</p>");
+	if ($_POST['id'] != $_SESSION['id'] && getRank($_SESSION['id']) >= OFFICER)   // Confirm rank is higher (so that people can't update through POST requests without being logged into an account of higher rank)
+        die("<p style='color:red;'>You do not have the required permissions!</p>");
 
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
 

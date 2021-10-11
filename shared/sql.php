@@ -21,7 +21,7 @@ function getDetail($table, $col, $unique_col, $unique_val) {
 		else if ($result->num_rows == 1)
 			return $result->fetch_row()[0];
 		else
-			die("<p style=\"color:red;\">Get detail function fetched a non-singular result: num_rows = $result->num_rows.</p>\n");
+			die("<p style='color:red;'>Get detail function fetched a non-singular result: num_rows = $result->num_rows.</p>\n");
 	} else
-		die("<p style=\"color:red;\">Get detail function occurred an error upon query!</p>\n");
+        die("<p style='color:red;'>Get detail function occurred an error upon query!</p>\n");
 }
