@@ -184,7 +184,7 @@ if (getRank($_SESSION['id']) > 0) {
 
         <form method="post" action="info.php?select-id=<?php echo $id; ?>" class="filled border">
             <fieldset>
-                <legend><b>Account Usernames</b></legend>
+                <legend><b>Accounts</b></legend>
 
                 <input name="select-id" type="hidden" value="<?php echo $id; ?>">
 
@@ -220,11 +220,11 @@ if (getRank($_SESSION['id']) > 0) {
                 <input id="email" name="email" type="email" required
                        value="<?php echo getAccountDetail('parents', 'email', $id); ?>"><br>
 
-                <label for="phone">Phone:</label>
+                <label for="phone">Phone #:</label>
                 <input id="phone" name="phone" type="tel" pattern="[0-9]{10}" size="10" required
                        value="<?php echo getAccountDetail('parents', 'phone', $id); ?>"><br>
 
-                <label for="alternate_phone">Alt. Phone:</label>
+                <label for="alternate_phone">Alt. Phone #:</label>
                 <input id="alternate_phone" name="alternate_phone" type="tel" pattern="[0-9]{10}" size="10" required
                        value="<?php echo getAccountDetail('parents', 'alternate_phone', $id); ?>"><br>
 

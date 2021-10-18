@@ -162,3 +162,10 @@ function formatOrdinalNumber($num): string
     else
         return $num . $suffixes[$num % 10];
 }
+
+function getCurrentDate()
+{
+	date_default_timezone_set('America/New_York');
+
+	return (new DateTime())->format("M j, Y @ g:i:s A") . ' EST';
+}
