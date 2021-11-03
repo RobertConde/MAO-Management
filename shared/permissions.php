@@ -6,7 +6,7 @@ const ADMIN = 100;
 function checkPerms($permMin): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
-	startSession();
+	safeStartSession();
 
 	if (!isset($_SESSION['id'])) {
 		die("<p style='color:red;'><b>Redirecting:</b> <i>You are not logged in [Session Status: " . session_status() . "] !</i></p>\n" .

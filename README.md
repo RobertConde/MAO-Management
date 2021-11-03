@@ -5,7 +5,6 @@ Installation Instruction to Come!
 ## To-do
 
 - FAMAT ID Updater
-- Change `start_session();` to `safeStartSession();` where possible.
 - Remove `time_last_login` from `login` table.
 - Add remove checkoff buttons for Competition Selections
 - Competition Tracker:

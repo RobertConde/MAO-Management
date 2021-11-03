@@ -1,6 +1,7 @@
 <?php
 
-function startSession() {
+function safeStartSession()
+{
 	if (session_status() != PHP_SESSION_ACTIVE)
 		session_start();
 }
