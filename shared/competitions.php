@@ -1,5 +1,14 @@
 <?php
 
+const DIVISIONS = array(
+	'Not A Student',
+	'Algebra I',
+	'Geometry',
+	'Algebra 2',
+	'Precalculus',
+	'Calculus',
+	'Statistics');
+
 function isSelected($comp, $id): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";

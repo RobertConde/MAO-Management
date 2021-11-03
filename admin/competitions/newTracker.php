@@ -221,15 +221,6 @@ compReportForm($comp, 'comp-checkoff');
         $approved_IDs_stmt->bind_result($id, $name, $forms, $bus, $room);
         $approved_IDs_stmt->execute();
 
-        define("DIVISIONS", array(
-            'Not A Student',
-            'Algebra I',
-            'Geometry',
-            'Algebra 2',
-            'Precalculus',
-            'Calculus',
-            'Statistics'));
-
         $index = 1;
         $rows = "";
         while (!is_null($person = $approved_IDs_stmt->fetch())) {

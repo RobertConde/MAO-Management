@@ -69,8 +69,6 @@ if (!is_null($cycle_and_email_result)) {
 </form>
 
 <?php
-if (!is_null($login_result)) {
-	if (!$login_result)
-		echo("<p style=\"color:red;\">Invalid credentials/failed to log in! </p>\n");
-}
+if ($login_result == false)
+	echo("<p style='color:red;'>Invalid credentials/failed to log in! </p>\n");
 ?>
