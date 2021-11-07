@@ -57,8 +57,6 @@ $pay_id = getDetail('competitions', 'payment_id', 'competition_name', $comp);
 
                 <!--suppress HtmlFormInputWithoutLabel -->
                 <select name="sort_by" onchange="this.form.submit()">
-                    <!--                    <option selected value="Name">Name</option>-->
-
 					<?php
 					$sort_options = array('Name', 'Division', 'Grade', 'ID');
 					$sort_order_by = array(

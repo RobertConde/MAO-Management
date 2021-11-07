@@ -3,20 +3,23 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 08, 2021 at 05:12 PM
--- Server version: 10.4.20-MariaDB
--- PHP Version: 7.4.22
+-- Generation Time: Nov 07, 2021 at 08:56 PM
+-- Server version: 10.4.21-MariaDB
+-- PHP Version: 7.4.24
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT = @@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS = @@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION = @@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
+--
+-- Database: `mao`
+--
 
 -- --------------------------------------------------------
 
@@ -24,12 +27,14 @@ SET time_zone = "+00:00";
 -- Table structure for table `accounts`
 --
 
-CREATE TABLE `accounts` (
-  `id` varchar(7) NOT NULL,
-  `moodle` text NOT NULL DEFAULT '',
-  `alcumus` text NOT NULL DEFAULT '',
-  `webwork` text NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `accounts`
+(
+    `id`      varchar(7) NOT NULL,
+    `moodle`  text       NOT NULL DEFAULT '',
+    `alcumus` text       NOT NULL DEFAULT '',
+    `webwork` text       NOT NULL DEFAULT ''
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -93,11 +98,11 @@ CREATE TABLE `competitor_info` (
 -- Table structure for table `login`
 --
 
-CREATE TABLE `login` (
-  `id` varchar(7) NOT NULL,
-  `code` text NOT NULL DEFAULT 'abc123',
-  `time_cycled` timestamp NOT NULL DEFAULT current_timestamp(),
-  `time_last_login` timestamp NULL DEFAULT NULL
+CREATE TABLE `login`
+(
+    `id`          varchar(7) NOT NULL,
+    `code`        text       NOT NULL DEFAULT 'abc123',
+    `time_cycled` timestamp  NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------

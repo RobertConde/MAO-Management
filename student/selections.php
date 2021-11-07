@@ -16,7 +16,7 @@ $updated = null;
 if (isset($_POST['comp_name'])) {    // Process POST update
 	$updated = toggleSelection($_POST['comp_name'], $_SESSION['id']);
 
-    redirect(currentURL());
+    refresh();
 }
 
 // View form (using correct ID)

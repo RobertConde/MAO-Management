@@ -34,7 +34,7 @@ function isSelected($comp, $id): bool
 function toggleSelection($comp, $id): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-	$sql_conn = getDBConn();    
+	$sql_conn = getDBConn();
 
 	if (!isSelected($comp, $id)) {
 		$insert_selection_stmt = $sql_conn->prepare("INSERT INTO competition_selections(id, competition_name) VALUES (?, ?)");
@@ -55,6 +55,26 @@ function toggleSelection($comp, $id): bool
 	}
 
 	return true;
+}
+
+function numUnaddedSelections($comp)
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+	$selections_stmt = $sql_conn->prepare(
+		"SELECT COUNT(*) FROM competition_selections cs
+                        WHERE cs.competition_name = ? AND
+                              NOT EXISTS(SELECT NULL FROM competition_data cd
+                                            WHERE cd.competition_name = cs.competition_name AND 
+                                                  cd.id = cs.id)");
+	$selections_stmt->bind_param('s', $comp);
+	$selections_stmt->bind_result($unadded);
+	$selections_stmt->execute();
+
+	$selections_stmt->fetch();
+
+	return $unadded;
 }
 
 function inComp($comp, $id): bool
@@ -116,6 +136,22 @@ function updateCompData($comp, $id, $forms, $bus, $room): bool
 	return $update_data_stmt->execute();
 }
 
+function numRegisteredForComp($comp)
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+	$registered_stmt = $sql_conn->prepare(
+		"SELECT COUNT(*) FROM competition_data cd
+                        WHERE cd.competition_name = ?");
+	$registered_stmt->bind_param('s', $comp);
+	$registered_stmt->bind_result($registered);
+	$registered_stmt->execute();
+
+	$registered_stmt->fetch();
+
+	return $registered;
+}
 
 
 //function isApproved($id, $comp_id): bool

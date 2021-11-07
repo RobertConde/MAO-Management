@@ -30,6 +30,11 @@ function redirect($url)
 	echo "<script> window.location.replace('$url') </script>";
 }
 
+function refresh()
+{
+	redirect(currentURL());
+}
+
 function navigationBar()
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets/navbar.php";

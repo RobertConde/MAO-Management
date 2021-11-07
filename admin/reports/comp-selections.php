@@ -24,10 +24,18 @@ if (isset($_GET['comp_name'])) { // Check if `comp_id` was sent
 if (is_null($comp))
 	die("Competition name not specified.");
 
-// Add student if is sent
-$add_id = getSelectID('POST');
-if (!is_null($add_id))
-	addToComp($comp, $add_id);
+// If add to comp or remove selection is sent, process then refresh
+if (isset($_POST['select-id'])) {
+	$select_id = $_POST['select-id'];
+
+	if (isset($_POST['add'])) {
+		addToComp($comp, $select_id);
+		refresh();
+	} else if (isset($_POST['remove'])) {
+		toggleSelection($comp, $select_id);
+		refresh();
+	}
+}
 
 $pay_id = getDetail('competitions', 'payment_id', 'competition_name', $comp);
 ?>
@@ -71,9 +79,10 @@ $page = "";
 while (!is_null($person)) {
 //    echo "ITT";
 	$table_header_row =
-        "<tr><th colspan='100'>$comp</th></tr>
+		"<tr><th colspan='100'>$comp</th></tr>
         <tr>
-            <th>Add</th>
+            <th>❌</th>
+            <th style='color: transparent; text-shadow: 0 0 0 #16c60c;'>➕</th>
             <th>ID</th>
             <th>Last Name</th>
             <th>First Name</th>
@@ -88,15 +97,20 @@ while (!is_null($person)) {
 			$table = $table_header_row;
 
 		// Table data
+		$remove_cell = '';
 		$add_cell = '';
 		if (is_null($unique_id)) {
-			$add_cell =
-				"<form method='post'>
+			$remove_cell =
+				"<form id='$id' method='post'>
                     <input type='hidden' name='select-id' value='$id'>
-                    <input type='submit' value='Add'>
+                    <input type='submit' name='remove' value='❌' title='Remove''>
                 </form>";
+			$add_cell = "<input type='submit' form='$id' name='add' value='➕' title='Add'>";
 		}
-		$row_interior = surrTags('td', $add_cell, "style='padding: 1 2px;'");
+
+		$row_interior = surrTags('td', $remove_cell, "style='padding: 1 2px;'");
+
+		$row_interior .= surrTags('td', $add_cell, "style='padding: 1 2px;'");
 
 		$row_interior .= surrTags('td', $id, "style='padding: 1 2px;'");
 
@@ -108,11 +122,11 @@ while (!is_null($person)) {
 
 		$row_interior .= surrTags('td', DIVISIONS[$division], "style='padding: 1 2px;'");
 
-        // Define form then add table row (wrap row interior by table row)
-        $row = surrTags('tr', $row_interior);
+		// Define form then add table row (wrap row interior by table row)
+		$row = surrTags('tr', $row_interior);
 
-        $table .= $row;
-    }
+		$table .= $row;
+	}
 
 	$page .= surrTags('table', $table, "class='filled' style='font-size: small; display: inline-block; vertical-align: top;'");
 
