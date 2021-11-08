@@ -191,7 +191,7 @@ compReportForm($comp, 'comp-checkoff');
 <table class="border filled" <?php if (is_null($comp)) echo 'hidden'; ?>>
     <tr>
         <th class="no-print">❌</i></th>
-        <th>#<sub><i>67</i></sub></th>
+        <th>#<sub><i><?php echo numRegisteredForComp($comp); ?></i></sub></th>
         <th>ID</th>
         <th>Name</th>
         <th>Grade</th>
