@@ -23,8 +23,7 @@ if (isset($_POST['create'])) {
 		$_POST['info']);
 
 	if ($created)
-		echo("<p style='color:red;'><b>Redirecting!</b></p>\n" .
-			"<meta http-equiv='refresh' content='2; url=" . currentURL(false) . "?comp_name=" . $_POST['comp_name'] . "' />");
+		redirect(currentURL() . '?comp_name=' . rawurlencode($_POST['comp_name']));
 } else if (isset($_POST['update']) && $post_id_is_real) {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/competitions/CUD.php";
 
@@ -36,6 +35,7 @@ if (isset($_POST['create'])) {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/competitions/CUD.php";
 
 	$deleted = deleteCompetition($_POST['comp_name']); // Delete competition
+	redirect(currentURL(false));
 }
 
 $comp_name = null;
@@ -58,7 +58,7 @@ if (isset($_GET['comp_name'])) {
 
     <h2 style="margin: 6px;"><u>Competitions</u></h2>
 
-    <form method="get" style="margin: 6px;" class="filled border">
+    <form method="get" class="filled border" style="text-align: center; margin: 6px;">
         <fieldset>
             <legend><b>Competition</b></legend>
 
@@ -86,7 +86,7 @@ if (isset($_GET['comp_name'])) {
     </form>
     <br>
 
-    <form method="post" class="filled border">
+    <form method="post" class="filled border" style="text-align: center;">
         <fieldset>
             <!--            TODO: Add tooltip! (why???; idk...)-->
 
