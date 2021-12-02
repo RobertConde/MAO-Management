@@ -3,16 +3,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 safeStartSession();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
-navigationBar();
+navigationBarAndBootstrap();
 stylesheet();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
-checkPerms(OFFICER);
+checkPerms(OFFICER_PERMS);
 ?>
 
-<title>DB | Bubble Sheets</title>
+<title>DB | Bubbles - Select Student</title>
 
-<h2 style="margin: 6px;"><u>Bubbles Selection</u></h2>
+<h2 style="margin: 6px;"><u>Bubbles From Selection</u></h2>
 
 <?php
 if (isset($_GET['return'])) {
@@ -44,21 +44,22 @@ if (isset($_GET['return'])) {
 		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 
 		$table_rows = sql_TH(array_merge($students_result->fetch_fields(), array('grade', 'select')));
-		while (!is_null($row_array = $students_result->fetch_assoc())) {
+		while ($row_array = $students_result->fetch_assoc()) {
 			if (getGrade($row_array['id']) != 0)
 				$table_rows .= TR(array_merge($row_array,
 					array(getGrade($row_array['id']),
-						"<input name='selected[]' type='checkbox' value='" . $row_array['id'] . "'>")),
+						'<input name="selected[]" type="checkbox" value="' . $row_array['id'] . '">')),
 					true);
 		}
+		$sql_conn->close();
 
 		echo surrTags('table', $table_rows),
-		"<br>",
-		"<input type='submit' value='Create'>";
+		'<br>',
+		'<input type="submit" value="Create">';
 		?>
     </fieldset>
 </form><br>
 <br>
 
-<a href="https://raw.githubusercontent.com/AnirudhRahul/FAMATBubbler/master/LICENSE.MD" class="rainbow">
+<a href="https://github.com/AnirudhRahul/FAMATBubbler" class="rainbow">
     ♥ Credit Where Credit Is Due ♥️</a>

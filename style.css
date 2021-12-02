@@ -22,7 +22,6 @@ table {
 
 th, td {
     border: 1px solid #000000;
-    text-align: center;
     padding: 2px 3px 2px 3px;
     white-space: nowrap;
 }
@@ -30,6 +29,11 @@ th, td {
 th {
     background-color: #ced4dA;
     font-size: 115%;
+    text-align: center;
+}
+
+td {
+    text-align: left;
 }
 
 tr:nth-child(odd) {
@@ -143,30 +147,30 @@ table {
 /* Form Things */
 form {
     margin-block-end: 0;
-}
-
-form.center, input.center {
-    text-align: center;
+    text-align: left;
 }
 
 /* Columns */
 /* Source: https://www.w3schools.com/howto/howto_css_two_columns.asp */
 /* Create two equal columns that floats next to each other */
 
-* {
-    box-sizing: border-box;
-}
+/*HEART*/
+/** {*/
+/*    box-sizing: border-box;*/
+/*}*/
 
+/*HEART*/
 /* Clear floats after the columns */
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
+/*.row:after {*/
+/*    content: "";*/
+/*    display: table;*/
+/*    clear: both;*/
+/*}*/
 
+/*HEART*/
 /* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 600px) {
-}
+/*@media screen and (max-width: 600px) {*/
+/*}*/
 
 /* Navbar Adjust */
 body {
@@ -277,4 +281,12 @@ input[type=checkbox] {
 
 @page {
     margin: 0.25in;
+}
+
+/*input[type=number] {*/
+/*    text-align: right;*/
+/*}*/
+
+.no-border {
+    border: none;
 }

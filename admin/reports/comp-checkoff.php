@@ -3,11 +3,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 safeStartSession();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
-navigationBar();
+navigationBarAndBootstrap();
 stylesheet();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
-checkPerms(OFFICER);
+checkPerms(OFFICER_PERMS);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 

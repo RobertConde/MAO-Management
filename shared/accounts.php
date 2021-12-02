@@ -58,7 +58,7 @@ function cycleLoginCode($id): bool
 
 	$cycle_statement = $sql_conn->prepare("INSERT INTO login(id, code) VALUES (?, ?) ON DUPLICATE KEY UPDATE code = ?");
 
-	$new_code = substr(md5(rand()), 0, 6);
+	$new_code = strtoupper(substr(md5(rand()), 0, 6));
 
 	$cycle_statement->bind_param('sss', $id, $new_code, $new_code);
 
@@ -185,16 +185,6 @@ function getAccountDetail($table, $col, $id)
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 
 	return getDetail($table, $col, 'id', $id);
-}
-
-function getRank($id)
-{
-	$permissions = getAccountDetail('people', 'permissions', $id);
-
-	if ($permissions < 1)
-		return -1;
-
-	return floor(log10($permissions));
 }
 
 function getGrade($id): int

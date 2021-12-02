@@ -3,11 +3,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 safeStartSession();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
-navigationBar();
+navigationBarAndBootstrap();
 stylesheet();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
-checkPerms(OFFICER);
+checkPerms(OFFICER_PERMS);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 
@@ -37,6 +37,23 @@ if (isset($_POST['select-id'])) {
 	}
 }
 
+// Add all
+if (isset($_POST['add-all'])) {
+	$sql_conn = getDBConn();
+
+	$not_added_IDs_stmt = $sql_conn->prepare("SELECT cs.id
+            FROM competition_selections cs
+            LEFT JOIN competition_data cd ON cd.id = cs.id AND cd.competition_name = cs.competition_name
+            WHERE cs.competition_name = ? AND cd.unique_id IS NULL;");
+	$not_added_IDs_stmt->bind_param('s', $comp);
+	$not_added_IDs_stmt->bind_result($to_add_ID);
+
+	if ($not_added_IDs_stmt->execute()) {
+		while ($not_added_IDs_stmt->fetch())
+			addToComp($comp, $to_add_ID);
+	}
+}
+
 $pay_id = getDetail('competitions', 'payment_id', 'competition_name', $comp);
 ?>
 
@@ -51,11 +68,19 @@ $pay_id = getDetail('competitions', 'payment_id', 'competition_name', $comp);
     <div class="no-print">
         <h2><u><?php echo $comp; ?> - Selections</u></h2>
 
-        &nbsp;<button type="button" onClick="window.print()" class="no-print">Print</button>
+        <button type="button" onClick="window.print()" class="no-print">Print</button>
+        <br>
+
+        <form method="post">
+            <input name="add-all" type="submit" value="Add All"
+                   title="Note: This may take a moment.">
+        </form>
     </div>
 
 <?php
-$sql_conn = getDBConn();
+if (!isset($sql_conn))
+	$sql_conn = getDBConn();
+
 $approved_IDs_stmt = $sql_conn->prepare(
 	"SELECT
                 cd.unique_id,

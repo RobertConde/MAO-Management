@@ -24,7 +24,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 safeStartSession();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
-navigationBar();
+navigationBarAndBootstrap();
 stylesheet();
 ?>
 
@@ -47,9 +47,9 @@ stylesheet();
 <?php
 if (!is_null($cycle_and_email_result)) {
 	if ($cycle_and_email_result)
-		echo("<p style=\"color:green;\">Successfully sent new login code to email! </p>\n");
+		echo("<p style='color:green;'>Successfully sent new login code to email! </p>\n");
 	else
-		echo("<p style=\"color:red;\">Failed to send new login code to email (retry)! </p>\n");
+		echo("<p style='color:red;'>Failed to send new login code to email (retry)! </p>\n");
 }
 ?>
 
@@ -61,7 +61,7 @@ if (!is_null($cycle_and_email_result)) {
         <input id="id" name="id" type="text" pattern="[0-9]{7}" size="7" required><br>
 
         <label for="code">Code:</label>
-        <input id="code" name="code" type="password" pattern="[0-9a-f]{6}" size="6" required><br>
+        <input id="code" name="code" type="password" pattern="[0-9A-F]{6}" size="6" required><br>
         <br>
 
         <input id="login" name="login" type="submit" value="Login">
@@ -69,6 +69,6 @@ if (!is_null($cycle_and_email_result)) {
 </form>
 
 <?php
-if ($login_result == false)
+if ($login_result === false)
 	echo("<p style='color:red;'>Invalid credentials/failed to log in! </p>\n");
 ?>

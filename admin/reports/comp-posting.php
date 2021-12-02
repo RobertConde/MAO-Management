@@ -3,11 +3,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 safeStartSession();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
-navigationBar();
+navigationBarAndBootstrap();
 stylesheet();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
-checkPerms(OFFICER);
+checkPerms(OFFICER_PERMS);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 
@@ -92,10 +92,14 @@ $approved_IDs_stmt->bind_param('s', $comp);
 $approved_IDs_stmt->bind_result($id, $last_name, $first_name, $forms);
 $approved_IDs_stmt->execute();
 
+$show_forms = getAssociatedCompInfo($comp, 'show_forms');
+//$show_bus = getAssociatedCompInfo($comp, 'show_bus');
+//$show_room = getAssociatedCompInfo($comp, 'show_room');
+
 $person = '';
 $table_num = 0;
 $page = "";
-while (!is_null($person)) {
+while (!is_null($person)) { // For multi-column posting report
 //    echo "ITT";
 	$table_header_row =
 		"<tr><th colspan='100'>$comp</th></tr>
@@ -106,7 +110,7 @@ while (!is_null($person)) {
             <th>Grade</th>
             <th>Division</th>
             <th " . (is_null($pay_id) ? 'hidden' : '') . ">Paid</th>
-            <th>Forms</th>
+            <th " . (!$show_forms ? 'hidden' : '') . ">Forms</th>
         </tr>";
 
 	$i = 0;
@@ -130,7 +134,8 @@ while (!is_null($person)) {
 		if (!is_null($pay_id))
 			$row_interior .= surrTags('td', isCompPaid($id, $comp) ? '✔️' : '', "style='padding: 1 2px;'");
 
-		$row_interior .= surrTags('td', areFormsCollected($id, $comp) ? '✔️' : '', "style='padding: 1 2px; '");
+		if ($show_forms)
+			$row_interior .= surrTags('td', areFormsCollected($id, $comp) ? '✔️' : '', "style='padding: 1 2px; '");
 
 		// Define form then add table row (wrap row interior by table row)
 		$row = surrTags('tr', $row_interior);

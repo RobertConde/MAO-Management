@@ -3,26 +3,26 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 safeStartSession();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
-navigationBar();
+navigationBarAndBootstrap();
 stylesheet();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
-checkPerms(STUDENT);
+checkPerms(STUDENT_PERMS);
 
 // Update process
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/competitions.php";
 
 $updated = null;
-if (isset($_POST['comp_name'])) {    // Process POST update
-	$updated = toggleSelection($_POST['comp_name'], $_SESSION['id']);
+if (isset($_POST['comp'])) {    // Process POST update
+	$updated = toggleSelection($_POST['comp'], $_SESSION['id']);
 
-    refresh();
+	refresh();
 }
 
 // View form (using correct ID)
 $id = $_SESSION['id'];
 if (isset($_GET['id'])) {
-	$rankComp = checkCompareRank($_SESSION['id'], $_GET['id'], true);
+	$rankComp = compareRank($_SESSION['id'], $_GET['id'], true);
 
 	if (!is_null($rankComp)) {
 		if ($rankComp)
@@ -31,83 +31,142 @@ if (isset($_GET['id'])) {
 			die("<p style='color:red;'>You do not have the required permissions!</p>\n");
 	}
 }
-
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 ?>
 
-    <title>DB | Selections</title>
+<title>DB | Selections</title>
 
-    <h2 style="margin: 6px;"><u>Competition Selections</u></h2>
+<h2 style="margin: 6px;"><u>Competition Selections</u></h2>
 
-    <form style="margin: 6px; display: inline-block;" class="filled border">
-        <fieldset>
-            <legend><i>Account Information</i></legend>
+<form style="margin: 6px; display: inline-block;" class="filled border">
+    <fieldset>
+        <legend><i>Account Information</i></legend>
 
-            <label for="first_name">First Name:</label>
-            <input id="first_name" name="first_name" type="text" size="10"
-                   value="<?php echo getAccountDetail('people', 'first_name', $id); ?>"
-                   disabled><br>
+        <label for="id">ID:</label>
+        <input id="id" type="text" size="7"
+               value="<?php echo $id; ?>"
+               disabled><br>
 
-            <label for="last_name">Last Name:</label>
-            <input id="last_name" name="last_name" type="text" size="10"
-                   value="<?php echo getAccountDetail('people', 'last_name', $id); ?>"
-                   disabled><br>
+        <label for="first_name">First Name:</label>
+        <input id="first_name" type="text" size="15"
+               value="<?php echo getAccountDetail('people', 'first_name', $id); ?>"
+               disabled><br>
 
-            <label for="mu_student_id">Mu Student ID:</label>
-            <input id="mu_student_id" name="mu_student_id" type="text" pattern="[0-9\s]{3}" size="3" disabled
-                   value="<?php echo getAccountDetail('competitor_info', 'mu_student_id', $id); ?>"><br>
+        <label for="last_name">Last Name:</label>
+        <input id="last_name" type="text" size="15"
+               value="<?php echo getAccountDetail('people', 'last_name', $id); ?>"
+               disabled><br>
 
-            <label for="division">Division:</label>
-            <select id="division" name="division" disabled>
-                <option value="1" <?php echo getAccountDetail('competitor_info', 'division', $id) == 1 ? "selected" : ""; ?>>
-                    Algebra I
-                </option>
-                <option value="2" <?php echo getAccountDetail('competitor_info', 'division', $id) == 2 ? "selected" : ""; ?>>
-                    Geometry
-                </option>
-                <option value="3" <?php echo getAccountDetail('competitor_info', 'division', $id) == 3 ? "selected" : ""; ?>>
-                    Algebra II
-                </option>
-                <option value="4" <?php echo getAccountDetail('competitor_info', 'division', $id) == 4 ? "selected" : ""; ?>>
-                    Precalculus
-                </option>
-                <option value="5" <?php echo getAccountDetail('competitor_info', 'division', $id) == 5 ? "selected" : ""; ?>>
-                    Calculus
-                </option>
-                <option value="6" <?php echo getAccountDetail('competitor_info', 'division', $id) == 6 ? "selected" : ""; ?>>
-                    Statistics
-                </option>
-                <option value="0" <?php echo getAccountDetail('competitor_info', 'division', $id) == 0 ? "selected" : ""; ?>>
-                    Not a Student
-                </option>
-            </select>
-        </fieldset>
-    </form>
+        <label for="mu_student_id">Mu Student ID:</label>
+        <input id="mu_student_id" type="text" size="3"
+               value="<?php echo getAccountDetail('competitor_info', 'mu_student_id', $id); ?>"
+               disabled><br>
 
-<?php
-// Report if update was successful
-if (isset($updated)) {
-	echo $updated ?
-		"<p style='color:green;'>Successfully updated competition selection (ID Updated = " . $_SESSION['id'] . ").</p>\n" :
-		"<p style='color:red;'>Failed to update competition selection (ID = " . $_SESSION['id'] . ").</p>\n";
-}
+        <label for="division">Division:</label>
+        <input id="division" type="text" size="13"
+               value="<?php echo DIVISIONS[getAccountDetail('competitor_info', 'division', $id)]; ?>"
+               disabled>
+    </fieldset>
+</form><br>
 
-//TODO: Better tables; no function will do! Function should ONLY be for custom reports!
-$sql_conn = getDBConn();
-if (!is_a($comps_stmt = $sql_conn->query("SELECT c.competition_name AS comp_name, c.competition_description AS comp_desc FROM competitions c LEFT OUTER JOIN competition_selections cs ON c.competition_name = cs.competition_name AND cs.id = $id ORDER BY c.competition_name;"), 'mysqli_result'))
-	die("<p style='color:red;'>Get table function occurred an error upon execution of statement!</p>\n");
+<p style='color: violet;'><i><b>Note:</b> By selecting to go to a competition, you are agreeing to pay for the
+        associated competition fee.</i></p>
 
-// TODO: Ugh, I hate how this works. "Efficient", but a waste.
-$table_rows = sql_TH(array_merge($comps_stmt->fetch_fields(), array('selected')));
-while (!is_null($row = $comps_stmt->fetch_assoc())) {
-	$comp_name = $row['comp_name'];
-	$comp_desc = $row['comp_desc'];
 
-	$table_rows .= TR(array_merge($row,
-			array(
-				"<form method='post' class='center'>
-                        <input name='comp_name' type='hidden' value='$comp_name'>
-                        <input type='checkbox' onchange='this.form.submit()' " . (isSelected($comp_name, $id) ? 'checked' : '') . ">
-                    </form>"))) . "\n";
-}
-echo surrTags('table', $table_rows, "class='center' style='margin-top: 6px; margin-bottom: 6px;'");
+<table>
+    <tr>
+        <th>Competition</th>
+        <th>Date(s)</th>
+        <th>Description</th>
+        <th>Selected</th>
+        <th>Registered</th>
+        <th>Payment Status</th>
+        <th>Forms</th>
+        <th>Bus</th>
+        <th>Room</th>
+    </tr>
+
+	<?php
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+
+	$sql_conn = getDBConn();
+
+	$stmt = $sql_conn->prepare("SELECT c.competition_name AS comp, c.description AS comp_desc, c.start_date, c.end_date,  (cs.unique_id IS NOT NULL) AS is_selected FROM competitions c LEFT OUTER JOIN competition_selections cs ON c.competition_name = cs.competition_name AND cs.id = ? ORDER BY c.start_date, c.end_date, c.competition_name");
+	$stmt->bind_param('s', $id);
+	$stmt->bind_result($comp, $comp_desc, $start_date, $end_date, $is_selected);
+	$stmt->execute();
+
+	while ($stmt->fetch()) {
+		$row_interior = surrTags('td', $comp);
+
+		$start_date_str = formatToUSDate($start_date);
+		$end_date_str = formatToUSDate($end_date);
+		$row_interior .= surrTags('td', "<b>Start:</b>&nbsp;$start_date_str<br><b>End:</b>&nbsp;$end_date_str");
+
+		$row_interior .= surrTags('td', $comp_desc);
+
+		$row_interior .= surrTags('td',
+			"<form method='post'>" .
+			"<input name='comp' type='hidden' value='$comp'>" .
+			"<input type='checkbox' " . ($is_selected ? 'checked' : '') . " onchange='this.form.submit()'>" .
+			"</form>",
+			'style="text-align: center;"');
+
+		$in_comp = inComp($comp, $id);
+		$row_interior .= surrTags('td', '', 'style="background-color: ' . ($in_comp ? 'lightgreen' : '#ff6666') . ';"');
+
+		// Paid
+		$paid_text = '';
+		$paid_color = 'black';
+		if (!is_null($payment_id = getAssociatedCompInfo($comp, 'payment_id'))) {
+			// Paid Color
+			if (isCompPaid($id, $comp))
+				$paid_color = 'lightgreen';
+			else
+				$paid_color = '#ff6666';
+
+			// Paid Text
+			$price = formatMoney(getDetail('payment_details', 'price', 'payment_id', $payment_id));
+			$due_date = getDetail('payment_details', 'due_date', 'payment_id', $payment_id);
+
+			$paid_text = "<b>$price</b><br><b>Due:</b> <input type='date' value='$due_date' style='text-align: center; background-color: $paid_color;' readonly>";
+		}
+		$row_interior .= surrTags('td', $paid_text, "style='background-color: $paid_color; text-align: center;'");
+
+		// Forms
+		$forms_color = 'black';
+		if (getAssociatedCompInfo($comp, 'show_forms')) {
+			if (areFormsCollected($id, $comp))
+				$forms_color = 'lightgreen';
+			else
+				$forms_color = '#ff6666';
+		}
+		$row_interior .= surrTags('td', '', "style='background-color: $forms_color;'");
+
+		// Bus
+		$bus = '';
+		$bus_color = 'black';
+		if ($in_comp && getAssociatedCompInfo($comp, 'show_bus')) {
+			$bus_color = '';
+
+			$bus = getBus($id, $comp);
+		}
+
+		$row_interior .= surrTags('td', $bus, 'style="text-align: center; ' . (!empty($bus_color) ? 'background-color: black;' : '') . '"');
+
+		// Room
+		$room = '';
+		$room_color = 'black';
+		if ($in_comp && getAssociatedCompInfo($comp, 'show_room')) {
+			$room_color = '';
+
+			$room = getRoom($id, $comp);
+		}
+
+		$row_interior .= surrTags('td', $room, 'style="text-align: center; ' . (!empty($room_color) ? 'background-color: black;' : '') . '"');
+
+		echo surrTags('tr', $row_interior);
+	}
+
+	$sql_conn->close();
+	?>
+</table>
