@@ -49,7 +49,7 @@ if (isset($_FILES[$attribute_name], $_POST['test'])) {
         <input id="test" name="test" type="text"><br>
         <br>
 
-        <label for="bubbleInfoCSV"><u>CSV Upload (<?php echo makeLink('Example', 'shared/examples/CSV Example.csv') ?>
+        <label for="bubbleInfoCSV"><u>CSV Upload (<?php echo makeLink('Example', 'shared/examples/CSV Example.csv'); ?>
                 )</u></label>
         <input id="bubbleInfoCSV" name="bubbleInfoCSV" type="file" required><br>
 

@@ -15,7 +15,7 @@ if (isset($_REQUEST['term'])) {
 			while (!is_null($stmt->fetch()))
 				echo "<p>$last_name, $first_name [$id]</p>";
 		} else
-			echo "ERROR: Could not able to execute $query. " . $sql_conn->error;
+			echo "Error searching: $sql_conn->error";
 	}
 
 	$stmt->close();

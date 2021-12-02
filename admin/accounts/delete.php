@@ -3,11 +3,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 safeStartSession();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
-navigationBar();
+navigationBarAndBootstrap();
 stylesheet();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
-checkPerms(OFFICER);
+checkPerms(OFFICER_PERMS);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 
@@ -17,14 +17,14 @@ if (isset($_POST['delete']) && !is_null(getDetail('people', 'id', 'id', $post_id
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/admin/accounts/UD.php";
 
 	$deleted = deleteAccount($post_id); // Delete account
-	checkPerms(OFFICER);
+	checkPerms(OFFICER_PERMS);
 }
 
 $id = null;
 if (isset($_GET['select-id'])) {
     $select_id = getSelectID();
 
-	$rankComp = checkCompareRank($_SESSION['id'], $select_id, true);
+	$rankComp = compareRank($_SESSION['id'], $select_id, true);
 	if (!is_null($rankComp)) {
 		if ($rankComp)
 			$id = $select_id;
@@ -113,8 +113,8 @@ personSelect();
 
 <?php
 if (!is_null($deleted)) {
-	echo $deleted ? "<p style=\"color:green;\">Successfully deleted.</p>\n" :
-		"<p style=\"color:red;\">Failed to delete!</p>\n";
+	echo $deleted ? "<p style='color:green;'>Successfully deleted.</p>\n" :
+		"<p style='color:red;'>Failed to delete!</p>\n";
 }
 
 if (is_null($id) && isset($_GET['id']))

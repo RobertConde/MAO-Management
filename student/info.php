@@ -3,18 +3,18 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 safeStartSession();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
-navigationBar();
+navigationBarAndBootstrap();
 stylesheet();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
-checkPerms(STUDENT);
+checkPerms(STUDENT_PERMS);
 ?>
 
 <title>DB | Update Account</title>
 
 <?php
 //TODO: don't use $_POST['select-id']
-if (isset($_POST['select-id']) && checkCompareRank($_SESSION['id'], $_POST['select-id'], true)) {
+if (isset($_POST['select-id']) && compareRank($_SESSION['id'], $_POST['select-id'], true)) {
 	if (isset($_POST['update_person'])) {
 		$updated_person = updatePerson(
 			$_POST['select-id'],
@@ -35,20 +35,22 @@ if (isset($_POST['select-id']) && checkCompareRank($_SESSION['id'], $_POST['sele
 			$_POST['select-id'],
 			$_POST['name'], $_POST['email'], $_POST['phone'], $_POST['alternate_phone'], $_POST['alternate_ride_home']);
 	else if (isset($_POST['update_competitor_info'])) {
-		if (getRank($_SESSION['id']) < 1)
+		if (getRank($_SESSION['id']) < OFFICER_RANK)
 			$updated_competitor_info = updateCompetitorInfo_Student($_POST['select-id'], $_POST['division']);
 		else
 			$updated_competitor_info = updateCompetitorInfo_Admin(
 				$_POST['select-id'], $_POST['division'], $_POST['mu_student_id'], $_POST['is_famat_member'],
 				$_POST['is_national_member'], $_POST['has_medical'], $_POST['has_insurance'], $_POST['has_school_insurance']);
 	}
+
+	redirect(currentURL());
 }
 
 // View form (using correct ID)
 $id = $_SESSION['id'];
 $select_id = getSelectID();
 if (!is_null($select_id)) {
-	$rankComp = checkCompareRank($_SESSION['id'], $select_id, true);
+	$rankComp = compareRank($_SESSION['id'], $select_id, true);
 
 	if (!is_null($rankComp)) {
 		if ($rankComp)
@@ -63,7 +65,7 @@ if (!is_null($select_id)) {
 
 <?php
 
-if (getRank($_SESSION['id']) > 0) {
+if (getRank($_SESSION['id']) > STUDENT_RANK) {
 	personSelectForm();
 	personSelect();
 
@@ -71,6 +73,7 @@ if (getRank($_SESSION['id']) > 0) {
 		echo "<p style='text-align: center; color:violet;'><i><b>Note:</b> You are updating an account that isn't yours, and has a permission rank below you!</i></p>\n";
 }
 ?>
+<!-- TODO: This is bad and ugly and makes me want to cry. I hate my old code :( -->
 
 <div style="display: flex; justify-content: center; margin: 6px; text-align: left;">
     <div style="margin: 6px; padding-right: 6px;">
@@ -84,7 +87,7 @@ if (getRank($_SESSION['id']) > 0) {
                 <input name="select-id" type="hidden" value="<?php echo $id; ?>"><br>
 
                 <label for="first_name">First Name:</label>
-                <input id="first_name" name="first_name" type="text" size="10" required
+                <input id="first_name" name="first_name" type="text" size="15" required
                        value="<?php echo getAccountDetail('people', 'first_name', $id); ?>"><br>
 
                 <label for="middle_initial">Middle Initial:</label>
@@ -92,7 +95,7 @@ if (getRank($_SESSION['id']) > 0) {
                        value="<?php echo getAccountDetail('people', 'middle_initial', $id); ?>"><br>
 
                 <label for="last_name">Last Name:</label>
-                <input id="last_name" name="last_name" type="text" size="10" required
+                <input id="last_name" name="last_name" type="text" size="15" required
                        value="<?php echo getAccountDetail('people', 'last_name', $id); ?>"><br>
 
                 <label for="graduation_year">Grad. Year:</label>
@@ -100,7 +103,7 @@ if (getRank($_SESSION['id']) > 0) {
                        value="<?php echo getAccountDetail('people', 'graduation_year', $id); ?>"><br>
 
                 <label for="email">Email:</label>
-                <input id="email" name="email" type="email" required
+                <input id="email" name="email" type="email" size="25" required
                        value="<?php echo getAccountDetail('people', 'email', $id); ?>"><br>
 
                 <label for="phone">Phone #:</label>
@@ -108,7 +111,7 @@ if (getRank($_SESSION['id']) > 0) {
                        value="<?php echo getAccountDetail('people', 'phone', $id); ?>"><br>
 
                 <label for="address">Address:</label>
-                <input id="address" name="address" type="text" size="25" required
+                <input id="address" name="address" type="text" size="35" required
                        value="<?php echo getAccountDetail('people', 'address', $id); ?>"><br>
 
                 <input name="update_person" type="submit" value="Update" style="margin-top: 6px">
@@ -130,49 +133,49 @@ if (getRank($_SESSION['id']) > 0) {
                 <label for="p1">Period 1:</label>
                 <input id="is_p1_koski" name="is_p1_koski" type="checkbox" title="Is a Koski period?"
 					<?php if (getAccountDetail('schedules', 'is_p1_koski', $id) == 1) echo 'checked'; ?>>
-                <input id="p1" name="p1" type="text"
+                <input id="p1" name="p1" type="text" size="30"
                        value="<?php echo getAccountDetail('schedules', 'p1', $id); ?>"><br>
 
                 <label for="p2">Period 2:</label>
                 <input id="is_p2_koski" name="is_p2_koski" type="checkbox" title="Is a Koski period?"
 					<?php if (getAccountDetail('schedules', 'is_p2_koski', $id) == 1) echo 'checked'; ?>>
-                <input id="p2" name="p2" type="text"
+                <input id="p2" name="p2" type="text" size="30"
                        value="<?php echo getAccountDetail('schedules', 'p2', $id); ?>"><br>
 
                 <label for="p3">Period 3:</label>
                 <input id="is_p3_koski" name="is_p3_koski" type="checkbox" title="Is a Koski period?"
 					<?php if (getAccountDetail('schedules', 'is_p3_koski', $id) == 1) echo 'checked'; ?>>
-                <input id="p3" name="p3" type="text"
+                <input id="p3" name="p3" type="text" size="30"
                        value="<?php echo getAccountDetail('schedules', 'p3', $id); ?>"><br>
 
                 <label for="p4">Period 4:</label>
                 <input id="is_p4_koski" name="is_p4_koski" type="checkbox" title="Is a Koski period?"
 					<?php if (getAccountDetail('schedules', 'is_p4_koski', $id) == 1) echo 'checked'; ?>>
-                <input id="p4" name="p4" type="text"
+                <input id="p4" name="p4" type="text" size="30"
                        value="<?php echo getAccountDetail('schedules', 'p4', $id); ?>"><br>
 
                 <label for="p5">Period 5:</label>
                 <input id="is_p5_koski" name="is_p5_koski" type="checkbox" title="Is a Koski period?"
 					<?php if (getAccountDetail('schedules', 'is_p5_koski', $id) == 1) echo 'checked'; ?>>
-                <input id="p5" name="p5" type="text"
+                <input id="p5" name="p5" type="text" size="30"
                        value="<?php echo getAccountDetail('schedules', 'p5', $id); ?>"><br>
 
                 <label for="p6">Period 6:</label>
                 <input id="is_p6_koski" name="is_p6_koski" type="checkbox" title="Is a Koski period?"
 					<?php if (getAccountDetail('schedules', 'is_p6_koski', $id) == 1) echo 'checked'; ?>>
-                <input id="p6" name="p6" type="text"
+                <input id="p6" name="p6" type="text" size="30"
                        value="<?php echo getAccountDetail('schedules', 'p6', $id); ?>"><br>
 
                 <label for="p7">Period 7:</label>
                 <input id="is_p7_koski" name="is_p7_koski" type="checkbox" title="Is a Koski period?"
 					<?php if (getAccountDetail('schedules', 'is_p7_koski', $id) == 1) echo 'checked'; ?>>
-                <input id="p7" name="p7" type="text"
+                <input id="p7" name="p7" type="text" size="30"
                        value="<?php echo getAccountDetail('schedules', 'p7', $id); ?>"><br>
 
                 <label for="p8">Period 8:</label>
                 <input id="is_p8_koski" name="is_p8_koski" type="checkbox" title="Is a Koski period?"
 					<?php if (getAccountDetail('schedules', 'is_p8_koski', $id) == 1) echo 'checked'; ?>>
-                <input id="p8" name="p8" type="text"
+                <input id="p8" name="p8" type="text" size="30"
                        value="<?php echo getAccountDetail('schedules', 'p8', $id); ?>"><br>
 
                 <input name="update_schedule" type="submit" value="Update" style="margin-top: 6px">
@@ -217,7 +220,7 @@ if (getRank($_SESSION['id']) > 0) {
                        value="<?php echo getAccountDetail('parents', 'name', $id); ?>"><br>
 
                 <label for="email">Email:</label>
-                <input id="email" name="email" type="email" required
+                <input id="email" name="email" type="email" size="25" required
                        value="<?php echo getAccountDetail('parents', 'email', $id); ?>"><br>
 
                 <label for="phone">Phone #:</label>
@@ -289,14 +292,14 @@ if (getRank($_SESSION['id']) > 0) {
                        required
                        value=
                        "<?php $mu_student_id = getAccountDetail('competitor_info', 'mu_student_id', $id);
-				       if ($mu_student_id == '')
-					       $mu_student_id = '   ';
-				       echo $mu_student_id; ?>"
-					<?php if (getRank($_SESSION['id']) < 1) echo 'disabled'; ?>><br>
+					   if (empty($mu_student_id))
+						   $mu_student_id = '   ';
+					   echo $mu_student_id; ?>"
+					<?php if (getRank($_SESSION['id']) < OFFICER_RANK) echo 'disabled'; ?>><br>
 
                 <label for="is_famat_member" style="color: red;">Is FAMAT Member:</label>
                 <select id="is_famat_member" name="is_famat_member"
-					<?php if (getRank($_SESSION['id']) < 1) echo 'disabled'; ?>>
+					<?php if (getRank($_SESSION['id']) < OFFICER_RANK) echo 'disabled'; ?>>
                     <option value="0" <?php if (getAccountDetail('competitor_info', 'is_famat_member', $id) == 0) echo 'selected'; ?>>
                         No
                     </option>
@@ -308,7 +311,7 @@ if (getRank($_SESSION['id']) > 0) {
 
                 <label for="is_national_member" style="color: red;">Is National Member:</label>
                 <select id="is_national_member" name="is_national_member"
-					<?php if (getRank($_SESSION['id']) < 1) echo 'disabled'; ?>>
+					<?php if (getRank($_SESSION['id']) < OFFICER_RANK) echo 'disabled'; ?>>
                     <option value="0" <?php if (getAccountDetail('competitor_info', 'is_national_member', $id) == 0) echo 'selected'; ?>>
                         No
                     </option>
@@ -320,7 +323,7 @@ if (getRank($_SESSION['id']) > 0) {
 
                 <label for="has_medical" style="color: red;">Medical:</label>
                 <select id="has_medical" name="has_medical"
-					<?php if (getRank($_SESSION['id']) < 1) echo 'disabled'; ?>>
+					<?php if (getRank($_SESSION['id']) < OFFICER_RANK) echo 'disabled'; ?>>
                     <option value="0" <?php if (getAccountDetail('competitor_info', 'has_medical', $id) == 0) echo 'selected'; ?>>
                         No
                     </option>
@@ -332,7 +335,7 @@ if (getRank($_SESSION['id']) > 0) {
 
                 <label for="has_insurance" style="color: red;">Insurance:</label>
                 <select id="has_insurance" name="has_insurance"
-					<?php if (getRank($_SESSION['id']) < 1) echo 'disabled'; ?>>
+					<?php if (getRank($_SESSION['id']) < OFFICER_RANK) echo 'disabled'; ?>>
                     <option value="0" <?php if (getAccountDetail('competitor_info', 'has_insurance', $id) == 0) echo 'selected'; ?>>
                         No
                     </option>
@@ -344,7 +347,7 @@ if (getRank($_SESSION['id']) > 0) {
 
                 <label for="has_school_insurance" style="color: red;">School Insurance:</label>
                 <select id="has_school_insurance" name="has_school_insurance"
-					<?php if (getRank($_SESSION['id']) < 1) echo 'disabled'; ?>>
+					<?php if (getRank($_SESSION['id']) < OFFICER_RANK) echo 'disabled'; ?>>
                     <option value="0" <?php if (getAccountDetail('competitor_info', 'has_school_insurance', $id) == 0) echo 'selected'; ?>>
                         No
                     </option>

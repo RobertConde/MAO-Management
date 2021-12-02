@@ -12,6 +12,7 @@ function getDBConn(): mysqli
 	return $sql_conn;
 }
 
+// TODO: lord, the <i>security</i>
 function getDetail($table, $col, $unique_col, $unique_val) {
 	$sql_conn = getDBConn();
 

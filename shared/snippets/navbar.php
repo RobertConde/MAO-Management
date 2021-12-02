@@ -1,9 +1,11 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/shared/snippets.php';
+stylesheet();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/shared/permissions.php';
+safeStartSession();
 
-stylesheet();
+$navbar_rank = getRank();
 ?>
 
 <meta charset="utf-8">
@@ -50,7 +52,7 @@ stylesheet();
             <div class="navbar-collapse collapse" id="navbar">
                 <ul class="nav navbar-nav">
 
-                    <li class="dropdown">
+                    <li class="dropdown" <?php if ($navbar_rank < STUDENT_RANK) echo 'style="display: none;"'; ?>>
                         <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" data-toggle="dropdown"
                            role="button">Your Account
                             <span class="caret"></span>
@@ -70,9 +72,9 @@ stylesheet();
                         </ul>
                     </li>
 
-                    <li class="dropdown">
+                    <li class="dropdown" <?php if ($navbar_rank < OFFICER_RANK) echo 'style="display: none;"'; ?>>
                         <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" data-toggle="dropdown"
-                           target="_self" href="#" role="button">Officer Administration
+                           target="_self" href="#" role="button">Officer Management
                             <span class="caret"></span>
                         </a>
 
@@ -105,11 +107,25 @@ stylesheet();
                             <li><a target="_self" href="<?php echo relativeURL('admin/competitions/newTracker'); ?>">
                                     Competition Tracker</a></li>
 
-                            <li><a target="_self" href="<?php echo relativeURL('admin/bubbles/selectStudents'); ?>">
-                                    Custom Bubble Sheets</a></li>
-
                             <li class="divider" role="separator"></li>
 
+                            <li class="dropdown-header">Bubble Sheets</li>
+
+                            <li><a target="_self" href="<?php echo relativeURL('admin/bubbles/bubblesFromFile'); ?>">
+                                    Bubble Sheets From File</a></li>
+
+                            <li><a target="_self" href="<?php echo relativeURL('admin/bubbles/selectStudents'); ?>">
+                                    Custom Bubble Sheets</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown" <?php if ($navbar_rank < ADMIN_RANK) echo 'style="display: none;"'; ?>>
+                        <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" data-toggle="dropdown"
+                           target="_self" href="#" role="button">Admin Management
+                            <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu" hidden>
                             <li class="dropdown-header">Reports <i>(WIP!)</i></li>
 
                             <li><a target="_self" href="<?php echo relativeURL('admin/reports/custom'); ?>">

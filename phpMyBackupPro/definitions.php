@@ -25,7 +25,7 @@
 include_once('mysql2i.class.php');
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
-checkPerms(ADMIN);
+checkPerms(ADMIN_PERMS);
 
 // ---- adjust these two lines to your file system. The pathes must be relative to this file! ----- //
 

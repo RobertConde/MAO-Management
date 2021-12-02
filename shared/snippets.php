@@ -35,7 +35,7 @@ function refresh()
 	redirect(currentURL());
 }
 
-function navigationBar()
+function navigationBarAndBootstrap()
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets/navbar.php";
 }
@@ -107,14 +107,14 @@ function getDBName(): string
 
 function personSelectForm($method = 'GET')
 {
-	echo "<form method='$method' id='person-select' style='display: none;'></form>";
+	echo "<form method='$method' id='person-select-form' style='display: none;'></form>";
 }
 
 function personSelect($button_text = 'Go')
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets/personSelect.php";
 
-	echo "<!--suppress XmlInvalidId --><input type='submit' value='$button_text' form='person-select' style='padding: 1px;'>";
+	echo "<input type='submit' value='$button_text' form='person-select-form' style='padding: 1px;'>";
 }
 
 function getSelectID($method = 'GET')
@@ -150,7 +150,7 @@ function compReportForm($comp, $report_name)
 
 function formatPhoneNum($phone): string
 {
-	if ($phone == '')
+	if (empty($phone))
 		return '';
 
 	return '(' . substr($phone, 0, 3) . ') '
@@ -168,9 +168,38 @@ function formatOrdinalNumber($num): string
 		return $num . $suffixes[$num % 10];
 }
 
-function getCurrentDate(): string
+function formatMoney($amount): string
+{
+	return ($amount < 0 ? '−' : '') . '$' . number_format(abs($amount), 2);
+}
+
+function formatDateTime($date_time, $second = false)
+{
+	return $date_time->format('n/j/Y @ g:i' . ($second ? ':s' : '') . ' A');
+}
+
+function getCurrentDateTime($second = false): string
 {
 	date_default_timezone_set('America/New_York');
 
-	return (new DateTime())->format("M j, Y @ g:i:s A") . ' EST';
+	return formatDateTime(new DateTime('now'), $second);
+}
+
+//function getCurrentDateTimeHTML(): string
+//{
+//	date_default_timezone_set('America/New_York');
+//
+//	return (new DateTime())->format('Y-m-d H:i');
+//}
+
+function formatToUSDate($date_str, $second = false): string
+{
+	$datetime = date_create_from_format('Y-m-d', $date_str);
+
+	return $datetime->format('n/j/Y');
+}
+
+function noNavBar()
+{
+	echo "<style>.navbar {display: none;} body {padding: 0;}</style>";
 }

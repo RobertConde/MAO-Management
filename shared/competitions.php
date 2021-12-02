@@ -9,6 +9,123 @@ const DIVISIONS = array(
 	'Calculus',
 	'Statistics');
 
+function existsComp($comp)
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+	$find_comp_stmt = $sql_conn->prepare("SELECT COUNT(*) FROM competitions WHERE competition_name = ?");
+	$find_comp_stmt->bind_param('s', $comp);
+	$find_comp_stmt->bind_result($num_comps);
+
+	if (!$find_comp_stmt->execute())
+		die("Error occurred determining if a competition exists: $find_comp_stmt->error");
+	$find_comp_stmt->fetch();
+
+	return ($num_comps == 1);
+}
+
+function inComp($comp, $id): bool
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+	$in_comp_stmt = $sql_conn->prepare(
+		"SELECT COUNT(id) FROM competition_data
+					WHERE id = ? AND competition_name = ?");
+	$in_comp_stmt->bind_param('ss', $id, $comp);
+	$in_comp_stmt->bind_result($in_comp);
+	$in_comp_stmt->execute();
+
+	$in_comp_stmt->fetch();
+
+	return $in_comp;
+}
+
+function addToComp($comp, $id): bool
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+	if (!inComp($comp, $id)) {
+		$add_person_stmt = $sql_conn->prepare("INSERT INTO competition_data (competition_name, id) VALUES (? , ?)");
+		$add_person_stmt->bind_param('ss', $comp, $id);
+
+		if ($add_person_stmt->execute()) {
+			$payment_id = getAssociatedCompInfo($comp, 'payment_id');
+
+			if (!is_null($payment_id)) {
+				require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
+
+				return setTransaction($id, $payment_id, 1, null, null);
+			}
+
+			return true;
+		} else
+			return false;
+	}
+
+	return false;
+}
+
+function removeFromComp($comp, $id): bool
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+	$payment_id = getAssociatedCompInfo($comp, 'payment_id');
+	if (!is_null($payment_id)) {
+		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
+
+		if (isPaid($id, $payment_id))
+			setTransaction($id, $payment_id, 0, null, null);
+		else
+			archiveTransaction($id, $payment_id);
+	}
+
+	$delete_data_stmt = $sql_conn->prepare(
+		"DELETE FROM competition_data
+					WHERE id = ? AND competition_name = ?");
+	$delete_data_stmt->bind_param('ss', $id, $comp);
+
+	return $delete_data_stmt->execute();
+}
+
+function updateCompData($comp, $id, $forms, $bus, $room): bool
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+	$update_data_stmt = $sql_conn->prepare(
+		"UPDATE competition_data
+					SET forms = ?, bus = ?, room = ?
+					WHERE id = ? AND competition_name = ?");
+	/** @noinspection SpellCheckingInspection */
+	$update_data_stmt->bind_param('iisss', $forms, $bus, $room, $id, $comp);
+
+	return $update_data_stmt->execute();
+}
+
+function getAssociatedCompInfo($comp, $info_col)
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+	// Find info for competition
+	// TODO: enumerate possibilities
+	$find_payment_stmt = $sql_conn->prepare("SELECT $info_col FROM competitions WHERE competition_name = ?");
+
+	$find_payment_stmt->bind_param('s', $comp);
+	$find_payment_stmt->bind_result($info);
+
+	if (!$find_payment_stmt->execute())
+		return false;
+	$find_payment_stmt->fetch();
+
+	return $info;
+}
+
+
 function isSelected($comp, $id): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
@@ -18,17 +135,14 @@ function isSelected($comp, $id): bool
 	$find_selection_stmt = $sql_conn->prepare(
 		"SELECT COUNT(*) FROM competition_selections
 					WHERE id = ? AND competition_name = ?");
-
 	$find_selection_stmt->bind_param('ss', $id, $comp);
+	$find_selection_stmt->bind_result($num_selections);
 
 	if (!$find_selection_stmt->execute())
-		return false;
-
-	$find_selection_stmt->bind_result($num_rows);
-
+		die("Error occurred determining if a selection exists: $find_selection_stmt->error");
 	$find_selection_stmt->fetch();
 
-	return ($num_rows > 0);
+	return ($num_selections == 1);
 }
 
 function toggleSelection($comp, $id): bool
@@ -77,65 +191,6 @@ function numUnaddedSelections($comp)
 	return $unadded;
 }
 
-function inComp($comp, $id): bool
-{
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-	$sql_conn = getDBConn();
-
-	$in_comp_stmt = $sql_conn->prepare(
-		"SELECT COUNT(id) FROM competition_data
-					WHERE id = ? AND competition_name = ?");
-	$in_comp_stmt->bind_param('ss', $id, $comp);
-	$in_comp_stmt->bind_result($in_comp);
-	$in_comp_stmt->execute();
-
-	$in_comp_stmt->fetch();
-	return $in_comp;
-}
-
-function addToComp($comp, $id): bool
-{
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-	$sql_conn = getDBConn();
-
-	if (!inComp($comp, $id)) {
-		$add_person_stmt = $sql_conn->prepare("INSERT INTO competition_data (competition_name, id) VALUES (? , ?)");
-		$add_person_stmt->bind_param('ss', $comp, $id);
-
-		return $add_person_stmt->execute();
-	}
-
-	return false;
-}
-
-function removeFromComp($comp, $id): bool
-{
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-	$sql_conn = getDBConn();
-
-	$delete_data_stmt = $sql_conn->prepare(
-		"DELETE FROM competition_data
-					WHERE id = ? AND competition_name = ?");
-	$delete_data_stmt->bind_param('ss', $id, $comp);
-
-	return $delete_data_stmt->execute();
-}
-
-function updateCompData($comp, $id, $forms, $bus, $room): bool
-{
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-	$sql_conn = getDBConn();
-
-	$update_data_stmt = $sql_conn->prepare(
-		"UPDATE competition_data
-					SET forms = ?, bus = ?, room = ?
-					WHERE id = ? AND competition_name = ?");
-	/** @noinspection SpellCheckingInspection */
-	$update_data_stmt->bind_param('iisss', $forms, $bus, $room, $id, $comp);
-
-	return $update_data_stmt->execute();
-}
-
 function numRegisteredForComp($comp)
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
@@ -153,116 +208,73 @@ function numRegisteredForComp($comp)
 	return $registered;
 }
 
-
-//function isApproved($id, $comp_id): bool
-//{
-//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-//	$sql_conn = getDBConn();
-//
-//	// Check if is already approved
-//	$find_approval_stmt = $sql_conn->prepare("SELECT COUNT(*) FROM competition_approvals WHERE id = ? AND competition_name = ?");
-//
-//	$find_approval_stmt->bind_param('ss', $id, $comp_id);
-//
-//	if (!$find_approval_stmt->execute())
-//		return false;
-//
-//	$find_approval_stmt->bind_result($num_rows);
-//
-//	$find_approval_stmt->fetch();
-//
-//	return ($num_rows > 0);
-//}
-
-//function toggleApproved($id, $comp_id): bool
-//{
-//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-//	$sql_conn = getDBConn();
-//
-//	if (!isApproved($id, $comp_id)) {
-//		$insert_approval_stmt = $sql_conn->prepare("INSERT INTO competition_approvals(id, competition_name) VALUES (?, ?)");
-//
-//		$insert_approval_stmt->bind_param('ss', $id, $comp_id);
-//
-//		if (!$insert_approval_stmt->execute())
-//			return false;
-//	} else {
-//		$delete_approval_stmt = $sql_conn->prepare("DELETE FROM competition_approvals WHERE id = ? AND competition_name = ?");
-//
-//		$delete_approval_stmt->bind_param('ss', $id, $comp_id);
-//
-//		if (!$delete_approval_stmt->execute())
-//			return false;
-//	}
-//
-//	return true;
-//}
-
-function isCompPaid($id, $comp_id): bool
+function isCompPaid($id, $comp): ?bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-	$sql_conn = getDBConn();
-
-	// Find payment_id for competition
-	$find_payment_stmt = $sql_conn->prepare("SELECT payment_id FROM competitions WHERE competition_name = ?");
-
-	$find_payment_stmt->bind_param('s', $comp_id);
-
-	if (!$find_payment_stmt->execute())
-		return false;
-
-	$find_payment_stmt->bind_result($payment_id);
-
-	$find_payment_stmt->fetch();
+	$payment_id = getAssociatedCompInfo($comp, 'payment_id');
 
 	if (is_null($payment_id))
-		return true;
+		return null;
 
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
 
 	return isPaid($id, $payment_id);
 }
 
-function areFormsCollected($id, $comp_id): bool
+function areFormsCollected($id, $comp): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
 	// Check if already turned in
 	$find_form_stmt = $sql_conn->prepare("SELECT forms FROM competition_data WHERE id = ? AND competition_name = ?");
-
-	$find_form_stmt->bind_param('ss', $id, $comp_id);
-
-	if (!$find_form_stmt->execute())
-		return false;
-
+	$find_form_stmt->bind_param('ss', $id, $comp);
 	$find_form_stmt->bind_result($forms);
 
+	if (!$find_form_stmt->execute())
+		die("Error occurred checking if forms are collected: $find_form_stmt->error");
 	$find_form_stmt->fetch();
 
+	$sql_conn->close();
 	return ($forms ?? false);
 }
 
-//function toggleFormStatus($id, $comp_id): bool
-//{
-//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-//	$sql_conn = getDBConn();
-//
-//	if (!areFormsCollected($id, $comp_id)) {
-//		$set_form_status_true_stmt = $sql_conn->prepare("INSERT INTO competition_forms(id, competition_name) VALUES (?, ?)");
-//
-//		$set_form_status_true_stmt->bind_param('ss', $id, $comp_id);
-//
-//		if (!$set_form_status_true_stmt->execute())
-//			return false;
-//	} else {
-//		$delete_form_status_stmt = $sql_conn->prepare("DELETE FROM competition_forms WHERE id = ? AND competition_name = ?");
-//
-//		$delete_form_status_stmt->bind_param('ss', $id, $comp_id);
-//
-//		if (!$delete_form_status_stmt->execute())
-//			return false;
-//	}
-//
-//	return true;
-//}
+
+function getBus($id, $comp)
+{
+	if (inComp($comp, $id)) {
+		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+		$sql_conn = getDBConn();
+
+		$get_bus_stmt = $sql_conn->prepare("SELECT bus FROM competition_data WHERE id = ? AND competition_name = ?");
+		$get_bus_stmt->bind_param('ss', $id, $comp);
+		$get_bus_stmt->bind_result($bus);
+
+		if (!$get_bus_stmt->execute())
+			die("Error occurred getting bus field: $get_bus_stmt->error");
+		$get_bus_stmt->fetch();
+
+		return $bus;
+	}
+
+	return null;
+}
+
+function getRoom($id, $comp)
+{
+	if (inComp($comp, $id)) {
+		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+		$sql_conn = getDBConn();
+
+		$get_room_stmt = $sql_conn->prepare("SELECT room FROM competition_data WHERE id = ? AND competition_name = ?");
+		$get_room_stmt->bind_param('ss', $id, $comp);
+		$get_room_stmt->bind_result($room);
+
+		if (!$get_room_stmt->execute())
+			die("Error occurred getting room field: $get_room_stmt->error");
+		$get_room_stmt->fetch();
+
+		return $room;
+	}
+
+	return null;
+}

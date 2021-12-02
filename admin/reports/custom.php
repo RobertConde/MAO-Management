@@ -3,11 +3,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 safeStartSession();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
-navigationBar();
+navigationBarAndBootstrap();
 stylesheet();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
-checkPerms(ADMIN);
+checkPerms(ADMIN_PERMS);
 
 $table = "";
 if (isset($_GET['table']))
@@ -22,7 +22,7 @@ if (isset($_GET['order_by']))
 
     <h2 style="margin: 6px;"><u>Custom Report</u></h2>
 
-    <form id="table-form" method="get" style="margin: 6px;" class="filled border">
+    <form id="table-form" method="get" style="margin: 6px; text-align: center;" class="filled border">
         <fieldset>
             <legend><b>Report Parameters</b></legend>
 
@@ -36,7 +36,7 @@ if (isset($_GET['order_by']))
 				$tables_result = $sql_conn->query($tables_query);
 
 				while (!is_null($row = $tables_result->fetch_assoc())) {
-					echo "<option value=\"" . $row['TABLE_NAME'] . "\" "
+					echo "<option value='" . $row['TABLE_NAME'] . "' "
 						. ($table == $row['TABLE_NAME'] ? 'selected' : '')
 						. ">" . $row['TABLE_NAME'] . "</option>";
 				}
@@ -55,8 +55,8 @@ if (isset($_GET['order_by']))
 
 <?php
 if (isset($_GET['table'])) {
-	if ($_GET['table'] == '')
-		die("<p style=\"color:red; text-align:center; margin: 6px;\">A table must be specified!</p>\n");
+	if (empty($_GET['table']))
+		die("<p style='color:red; text-align:center; margin: 6px;'>A table must be specified!</p>\n");
 	else
 		echo surrTags('center', ($order_by == "" ? getTable($_GET['table']) : getTable($_GET['table'], $order_by)));
 }

@@ -1,6 +1,6 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
-checkPerms(ADMIN);
+checkPerms(ADMIN_PERMS);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 
@@ -8,12 +8,12 @@ $row = 1;
 if (($handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/import.csv", "r")) !== FALSE) {
 	echo "<table>";
 
-	fgetcsv($handle); // Skip header;
+	fgetcsv($handle); // Skip header
 	while (($data = fgetcsv($handle)) !== FALSE) {
 		$num = count($data);
 		$row++;
 
-		$id = sprintf("%07d",$data[0]);
+		$id = sprintf("%07d", $data[0]);
 
 		$last_name = $data[1];
 		$middle_initial = $data[2];
