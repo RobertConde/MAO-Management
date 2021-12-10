@@ -139,23 +139,23 @@ function updateParent($id, $name, $email, $phone, $alternate_phone, $alternate_r
 	return $update_parents_stmt->execute();
 }
 
-function updateCompetitorInfo_Student($id, $division): bool
+function updateCompetitorInfo_Student($id, $division, $tshirt): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
 	$update_competitor_stmt = $sql_conn->prepare("UPDATE competitor_info
-		SET division = ?
+		SET division = ?, tshirt_size = ?
 		WHERE id = ?");
 
-	$update_competitor_stmt->bind_param('is',
-		$division,
+	$update_competitor_stmt->bind_param('iss',
+		$division, $tshirt,
 		$id);
 
 	return $update_competitor_stmt->execute();
 }
 
-function updateCompetitorInfo_Admin($id, $division, $mu_student_id, $is_famat_member, $is_national_member,
+function updateCompetitorInfo_Admin($id, $division, $tshirt, $mu_student_id, $is_famat_member, $is_national_member,
                                     $has_medical, $has_insurance, $has_school_insurance): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
@@ -165,13 +165,13 @@ function updateCompetitorInfo_Admin($id, $division, $mu_student_id, $is_famat_me
 		$mu_student_id = '';
 
 	$update_competitor_stmt = $sql_conn->prepare("UPDATE competitor_info
-		SET division = ?, mu_student_id = ?, is_famat_member = ?, is_national_member = ?,
+		SET division = ?, tshirt_size = ?, mu_student_id = ?, is_famat_member = ?, is_national_member = ?,
 		    has_medical = ?, has_insurance = ?, has_school_insurance = ?
 		WHERE id = ?");
 
 	/** @noinspection SpellCheckingInspection */
-	$update_competitor_stmt->bind_param('isiiiiis',
-		$division, $mu_student_id, $is_famat_member, $is_national_member,
+	$update_competitor_stmt->bind_param('issiiiiis',
+		$division, $tshirt, $mu_student_id, $is_famat_member, $is_national_member,
 		$has_medical, $has_insurance, $has_school_insurance,
 		$id);
 

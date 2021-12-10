@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.7
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Dec 05, 2021 at 12:37 PM
--- Server version: 5.6.41-84.1
--- PHP Version: 7.3.32
+-- Host: 127.0.0.1
+-- Generation Time: Dec 10, 2021 at 02:23 AM
+-- Server version: 10.4.22-MariaDB
+-- PHP Version: 7.3.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -19,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `rconde45_mao`
+-- Database: `mao`
 --
 
 -- --------------------------------------------------------
@@ -47,9 +46,9 @@ CREATE TABLE `competitions` (
   `end_date` date NOT NULL,
   `description` text NOT NULL,
   `payment_id` varchar(128) DEFAULT NULL,
-  `show_forms` tinyint(1) NOT NULL DEFAULT '1',
-  `show_bus` tinyint(1) NOT NULL DEFAULT '1',
-  `show_room` tinyint(1) NOT NULL DEFAULT '1'
+  `show_forms` tinyint(1) NOT NULL DEFAULT 1,
+  `show_bus` tinyint(1) NOT NULL DEFAULT 1,
+  `show_room` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -62,8 +61,8 @@ CREATE TABLE `competition_data` (
   `unique_id` int(11) NOT NULL,
   `id` varchar(7) NOT NULL,
   `competition_name` varchar(128) NOT NULL,
-  `forms` tinyint(1) NOT NULL DEFAULT '0',
-  `bus` int(11) NOT NULL DEFAULT '1',
+  `forms` tinyint(1) NOT NULL DEFAULT 0,
+  `bus` int(11) NOT NULL DEFAULT 1,
   `room` varchar(128) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -87,13 +86,14 @@ CREATE TABLE `competition_selections` (
 
 CREATE TABLE `competitor_info` (
   `id` varchar(7) NOT NULL,
-  `division` int(11) NOT NULL DEFAULT '0',
+  `division` int(11) NOT NULL DEFAULT 0,
+  `tshirt_size` set('S','M','L','XL') NOT NULL,
   `mu_student_id` varchar(3) NOT NULL DEFAULT '',
-  `is_famat_member` tinyint(1) NOT NULL DEFAULT '0',
-  `is_national_member` tinyint(1) NOT NULL DEFAULT '0',
-  `has_medical` tinyint(1) NOT NULL DEFAULT '0',
-  `has_insurance` tinyint(1) NOT NULL DEFAULT '0',
-  `has_school_insurance` tinyint(1) NOT NULL DEFAULT '0'
+  `is_famat_member` tinyint(1) NOT NULL DEFAULT 0,
+  `is_national_member` tinyint(1) NOT NULL DEFAULT 0,
+  `has_medical` tinyint(1) NOT NULL DEFAULT 0,
+  `has_insurance` tinyint(1) NOT NULL DEFAULT 0,
+  `has_school_insurance` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -105,7 +105,7 @@ CREATE TABLE `competitor_info` (
 CREATE TABLE `login` (
   `id` varchar(7) NOT NULL,
   `code` text NOT NULL,
-  `time_cycled` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `time_cycled` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -144,7 +144,7 @@ CREATE TABLE `payment_details` (
 
 CREATE TABLE `people` (
   `id` varchar(7) NOT NULL,
-  `permissions` int(11) NOT NULL DEFAULT '1',
+  `permissions` int(11) NOT NULL DEFAULT 1,
   `first_name` text NOT NULL,
   `middle_initial` varchar(1) NOT NULL,
   `last_name` text NOT NULL,
@@ -170,14 +170,14 @@ CREATE TABLE `schedules` (
   `p6` varchar(128) NOT NULL DEFAULT '',
   `p7` varchar(128) NOT NULL DEFAULT '',
   `p8` varchar(128) NOT NULL DEFAULT '',
-  `is_p1_koski` tinyint(1) NOT NULL DEFAULT '0',
-  `is_p2_koski` tinyint(1) NOT NULL DEFAULT '0',
-  `is_p3_koski` tinyint(1) NOT NULL DEFAULT '0',
-  `is_p4_koski` tinyint(1) NOT NULL DEFAULT '0',
-  `is_p5_koski` tinyint(1) NOT NULL DEFAULT '0',
-  `is_p6_koski` tinyint(1) NOT NULL DEFAULT '0',
-  `is_p7_koski` tinyint(1) NOT NULL DEFAULT '0',
-  `is_p8_koski` tinyint(1) NOT NULL DEFAULT '0'
+  `is_p1_koski` tinyint(1) NOT NULL DEFAULT 0,
+  `is_p2_koski` tinyint(1) NOT NULL DEFAULT 0,
+  `is_p3_koski` tinyint(1) NOT NULL DEFAULT 0,
+  `is_p4_koski` tinyint(1) NOT NULL DEFAULT 0,
+  `is_p5_koski` tinyint(1) NOT NULL DEFAULT 0,
+  `is_p6_koski` tinyint(1) NOT NULL DEFAULT 0,
+  `is_p7_koski` tinyint(1) NOT NULL DEFAULT 0,
+  `is_p8_koski` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -190,8 +190,8 @@ CREATE TABLE `transactions` (
   `unique_id` int(11) NOT NULL,
   `id` varchar(7) NOT NULL,
   `payment_id` text NOT NULL,
-  `owed` int(11) NOT NULL DEFAULT '0',
-  `paid` int(11) NOT NULL DEFAULT '0',
+  `owed` int(11) NOT NULL DEFAULT 0,
+  `paid` int(11) NOT NULL DEFAULT 0,
   `modifiers` text NOT NULL,
   `log` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -204,11 +204,11 @@ CREATE TABLE `transactions` (
 
 CREATE TABLE `transactions_archive` (
   `unique_id` int(11) NOT NULL,
-  `timestamp_archived` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `timestamp_archived` timestamp NOT NULL DEFAULT current_timestamp(),
   `id` varchar(7) NOT NULL,
   `payment_id` text NOT NULL,
-  `owed` int(11) NOT NULL DEFAULT '0',
-  `paid` int(11) NOT NULL DEFAULT '0',
+  `owed` int(11) NOT NULL DEFAULT 0,
+  `paid` int(11) NOT NULL DEFAULT 0,
   `modifiers` set('S','M','L','XL') NOT NULL DEFAULT '',
   `log` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

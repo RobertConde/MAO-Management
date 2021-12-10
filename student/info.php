@@ -36,10 +36,10 @@ if (isset($_POST['select-id']) && compareRank($_SESSION['id'], $_POST['select-id
 			$_POST['name'], $_POST['email'], $_POST['phone'], $_POST['alternate_phone'], $_POST['alternate_ride_home']);
 	else if (isset($_POST['update_competitor_info'])) {
 		if (getRank($_SESSION['id']) < OFFICER_RANK)
-			$updated_competitor_info = updateCompetitorInfo_Student($_POST['select-id'], $_POST['division']);
+			$updated_competitor_info = updateCompetitorInfo_Student($_POST['select-id'], $_POST['division'], $_POST['tshirt']);
 		else
 			$updated_competitor_info = updateCompetitorInfo_Admin(
-				$_POST['select-id'], $_POST['division'], $_POST['mu_student_id'], $_POST['is_famat_member'],
+				$_POST['select-id'], $_POST['division'], $_POST['tshirt'], $_POST['mu_student_id'], $_POST['is_famat_member'],
 				$_POST['is_national_member'], $_POST['has_medical'], $_POST['has_insurance'], $_POST['has_school_insurance']);
 	}
 
@@ -284,6 +284,29 @@ if (getRank($_SESSION['id']) > STUDENT_RANK) {
                         Not a Student
                     </option>
                 </select><br>
+
+                <!--suppress SpellCheckingInspection -->
+                <label for="tshirt">T-Shirt Size:</label>
+                <!--suppress SpellCheckingInspection -->
+                <select id="tshirt" name="tshirt" required>
+                    <option disabled selected></option>
+
+                    <option value="S" <?php if (getAccountDetail('competitor_info', 'tshirt_size', $id) == 'S') echo 'selected'; ?>>
+                        Small
+                    </option>
+
+                    <option value="M" <?php if (getAccountDetail('competitor_info', 'tshirt_size', $id) == 'M') echo 'selected'; ?>>
+                        Medium
+                    </option>
+
+                    <option value="L" <?php if (getAccountDetail('competitor_info', 'tshirt_size', $id) == 'L') echo 'selected'; ?>>
+                        Large
+                    </option>
+
+                    <option value="XL" <?php if (getAccountDetail('competitor_info', 'tshirt_size', $id) == 'XL') echo 'selected'; ?>>
+                        X-Large
+                    </option>
+                </select>
 
                 <hr>
 

@@ -45,6 +45,7 @@ if (($handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/import.csv", "r")) !== FALSE)
 
 		$update2 = updateAccounts($id, $moodle, $alcumus, $webwork);
 
+		// TODO: bad
 		$update3 = updateCompetitorInfo_Student($id, $division);
 
 		if (!$register)
