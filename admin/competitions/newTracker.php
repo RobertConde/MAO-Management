@@ -65,6 +65,7 @@ if (isset($_POST['update'])) {
 	$setTransactionStatus = setTransaction($update_id, $pay_id, 1, ($update_paid_status ? 1 : 0), '');   // TODO: Integrate "Competition Fee" (not a generic payment) so that it is either paid or not
 
 	$update_result = ($updateCompData && $setTransactionStatus);
+	redirect(currentURL()); // Prevents go-back "submit form again" prompt by re-requesting the page through a GET request
 }
 ?>
 

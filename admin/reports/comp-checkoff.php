@@ -31,7 +31,7 @@ if (is_null($comp))
 
 $pay_id = getDetail('competitions', 'payment_id', 'competition_name', $comp);
 ?>
-
+<!--    TODO: move to style.css    -->
     <!--suppress CssUnusedSymbol -->
     <style>
         td {
@@ -40,6 +40,10 @@ $pay_id = getDetail('competitions', 'payment_id', 'competition_name', $comp);
 
         .checkoff {
             border: 1px solid #000000;
+        }
+
+        .row-border-under {
+            border-bottom: 1px solid #000000;
         }
     </style>
 
@@ -58,6 +62,7 @@ $pay_id = getDetail('competitions', 'payment_id', 'competition_name', $comp);
                 <!--suppress HtmlFormInputWithoutLabel -->
                 <select name="sort_by" onchange="this.form.submit()">
 					<?php
+					//TODO: although this is admin only, make more secure
 					$sort_options = array('Name', 'Division', 'Grade', 'ID');
 					$sort_order_by = array(
 						'Name' => 'p.last_name, p.first_name',
@@ -84,8 +89,7 @@ $sql_conn = getDBConn();
 $approved_IDs_stmt = $sql_conn->prepare(
 	"SELECT 
                 cd.id,
-                p.last_name,
-                p.first_name,
+                CONCAT(p.last_name, ', ', p.first_name) AS name,
                 ci.division,
                 p.phone,
                 cd.forms
@@ -95,21 +99,23 @@ $approved_IDs_stmt = $sql_conn->prepare(
             WHERE competition_name = ?
             ORDER BY " . $sort_order_by[$sort_by]);
 $approved_IDs_stmt->bind_param('s', $comp);
-$approved_IDs_stmt->bind_result($id, $last_name, $first_name, $division, $phone, $forms);
+$approved_IDs_stmt->bind_result($id, $name, $division, $phone, $forms);
 $approved_IDs_stmt->execute();
+
+// TODO: Come back and make consistent with payments
+$show_forms = getAssociatedCompInfo($comp, 'show_forms');
 
 $index = 0;
 $person = '';
 $table_num = 0;
-$page = "";
+$page = ""; //TODO: I done like this; I should write the page incrementally (reduce expensive string concatenation)
 while (!is_null($person)) {
-	$table_header_row =
+	$table_header_row = // TODO: Make emojis universal (across all reports) -- *intuitive* design
 		"<tr><th colspan='100'>$comp</th></tr>
         <tr>
             <th>#</th>
-            <th>ID</th>
-            <th>Last Name</th>
-            <th>First Name</th>
+            <th " . (!$show_forms ? 'hidden' : '') . ">📝</th>
+            <th>Name</th>
             <th>1</th>
             <th>2</th>
             <th>3</th>
@@ -122,10 +128,13 @@ while (!is_null($person)) {
             <th>10</th>
             <th>Division</th>
             <th>Phone #</th>
-            <th " . (is_null($pay_id) ? 'hidden' : '') . ">Paid</th>
-            <th>Forms</th>
+            <th>ID</th>
+            <th " . (is_null($pay_id) ? 'hidden' : '') . ">💲</th>
         </tr>";
 
+	//TODO: start at i=1; decide a better name for index variable
+	//TODO: do something about the styling (recursive or inherited CSS)
+    //TODO: make _pretty_
 	$i = 0;
 	$table = "";
 	while ($i++ < 45 && !is_null($person = $approved_IDs_stmt->fetch())) {
@@ -133,29 +142,28 @@ while (!is_null($person)) {
 			$table = $table_header_row;
 
 		// Table data
-		$row_interior = surrTags('td', ++$index . ')', "style='padding: 1 2px;'");
+		$row_interior = surrTags('td', ++$index, "style='padding: 1 2px; border-left: 1px solid black;'");
 
-		$row_interior .= surrTags('td', $id, "style='padding: 1 2px;'");
+        if ($show_forms)
+		    $row_interior .= surrTags('td', areFormsCollected($id, $comp) ? '✔️' : '', "style='padding: 1 2px; '");
 
-		$row_interior .= surrTags('td', $last_name, "style='text-align: left; padding: 1 2px;'");
-
-		$row_interior .= surrTags('td', $first_name, "style='text-align: left; padding: 1 2px;'");
+		$row_interior .= surrTags('td', $name, "style='text-align: left; padding: 1 2px;'");
 
 		// Checkoff boxes
 		$row_interior .= str_repeat(surrTags('td', '', "class='checkoff' style='padding: 1 2px; width: 20px;'"), 10);
 
-		$row_interior .= surrTags('td', DIVISIONS[$division], "style='padding: 1 2px;'");
+		$row_interior .= surrTags('td', DIVISIONS[$division], "style='text-align: left; padding: 1 2px;'");
 
 		$row_interior .= surrTags('td', formatPhoneNum($phone), "style='padding: 1 2px;'");
 
+		$row_interior .= surrTags('td', $id, "style='padding: 1 2px;" . (is_null($pay_id) ? ' border-right: 1px solid black;' : '') . "'"); //TODO: bad...
+
 		// If the competition doesn't have an assigned payment, don't show the 'Paid' columns
 		if (!is_null($pay_id))
-			$row_interior .= surrTags('td', isCompPaid($id, $comp) ? '✔️' : '', "style='padding: 1 2px;'");
-
-		$row_interior .= surrTags('td', areFormsCollected($id, $comp) ? '✔️' : '', "style='padding: 1 2px; '");
+			$row_interior .= surrTags('td', isCompPaid($id, $comp) ? '✔️' : '', "style='padding: 1 2px; border-right: 1px solid black;'");
 
 		// Define form then add table row (wrap row interior by table row)
-		$row = surrTags('tr', $row_interior);
+		$row = surrTags('tr', $row_interior, "class='row-border-under'");
 
 		$table .= $row;
 	}
