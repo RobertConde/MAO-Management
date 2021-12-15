@@ -31,7 +31,7 @@ if (isset($_POST['add_id'])) {
 }
 ?>
 
-<title>DB | Add Transaction(s) [ID: <?php echo $id; ?>]</title>
+<title>MAO | Add Transaction(s) [ID: <?php echo $id; ?>]</title>
 
 <h2 style="margin: 6px;"><u>Add Transaction(s)</u></h2>
 

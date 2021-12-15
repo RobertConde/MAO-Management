@@ -10,7 +10,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(OFFICER_PERMS);
 ?>
 
-<title>DB | Bubbles - Select Student</title>
+<title>MAO | Bubbles - Select Student</title>
 
 <h2 style="margin: 6px;"><u>Bubbles From Selection</u></h2>
 

@@ -38,7 +38,7 @@ if (isset($_FILES[$attribute_name], $_POST['test'])) {
 
 ?>
 
-<title>DB | Bubble - Upload File</title>
+<title>MAO | Bubble - Upload File</title>
 
 <h2 style="margin: 6px;"><u>Bubbles From File</u></h2>
 

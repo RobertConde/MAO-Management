@@ -28,7 +28,7 @@ navigationBarAndBootstrap();
 stylesheet();
 ?>
 
-<title>DB | Login</title>
+<title>MAO | Login</title>
 
 <h2 style="margin: 6px;"><u>Account Login</u></h2>
 

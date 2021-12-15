@@ -34,7 +34,7 @@ if (isset($_GET['select-id'])) {
 }
 ?>
 
-    <title>DB | Delete Account</title>
+    <title>MAO | Delete Account</title>
 
     <h2 style="margin: 6px;"><u>Delete Account</u></h2>
 

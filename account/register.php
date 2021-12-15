@@ -6,7 +6,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
 navigationBarAndBootstrap();
 stylesheet();
 ?>
-    <title>DB | Register</title>
+    <title>MAO | Register</title>
 
     <h2 style="margin: 6px;"><u>Account Registration</u></h2>
 

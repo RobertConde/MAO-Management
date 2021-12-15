@@ -42,7 +42,7 @@ if (isset($_GET['comp_name']) && existsComp($_GET['comp_name']))
 	$comp = $_GET['comp_name']
 ?>
 
-<title>DB | Competitions</title>
+<title>MAO | Competitions</title>
 
 <h2 style="margin: 6px;"><u>Competitions</u></h2>
 

@@ -10,7 +10,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(STUDENT_PERMS);
 ?>
 
-<title>DB | Update Account</title>
+<title>MAO | Update Account</title>
 
 <?php
 //TODO: don't use $_POST['select-id']

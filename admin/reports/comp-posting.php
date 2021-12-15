@@ -38,7 +38,7 @@ $pay_id = getDetail('competitions', 'payment_id', 'competition_name', $comp);
         }
     </style>
 
-    <title>DB | Posting [<?php echo $comp ?>]</title>
+    <title>MAO | Posting [<?php echo $comp ?>]</title>
 
     <div class="no-print">
         <h2><u><?php echo $comp; ?> - Posting</u></h2>

@@ -47,7 +47,7 @@ $pay_id = getDetail('competitions', 'payment_id', 'competition_name', $comp);
         }
     </style>
 
-    <title>DB | Checkoff List [<?php echo $comp ?>]</title>
+    <title>MAO | Checkoff List [<?php echo $comp ?>]</title>
 
     <div class="no-print">
         <h2><u><?php echo $comp; ?> - Checkoff List</u></h2>

@@ -69,7 +69,7 @@ if (isset($_POST['update'])) {
 }
 ?>
 
-<title>DB | Tracker</title>
+<title>MAO | Tracker</title>
 
 <h2 style="text-align: center; margin: 6px;"><u>Competition Tracker</u></h2>
 

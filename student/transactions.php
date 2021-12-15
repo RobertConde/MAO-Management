@@ -37,7 +37,7 @@ if (isset($_GET['select-id'])) {
 }
 ?>
 
-<title>DB | Transactions</title>
+<title>MAO | Transactions</title>
 
 <h2 style="margin: 6px;"><u>Transactions</u></h2>
 

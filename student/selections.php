@@ -33,7 +33,7 @@ if (isset($_GET['id'])) {
 }
 ?>
 
-<title>DB | Selections</title>
+<title>MAO | Selections</title>
 
 <h2 style="margin: 6px;"><u>Competition Selections</u></h2>
 

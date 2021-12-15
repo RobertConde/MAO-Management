@@ -51,7 +51,7 @@ if (isset($_GET['payment_id'])) {
 }
 ?>
 
-    <title>DB | Payments</title>
+    <title>MAO | Payments</title>
 
     <h2 style="margin: 6px;"><u>Payments</u></h2>
 

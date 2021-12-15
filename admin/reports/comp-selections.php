@@ -63,7 +63,7 @@ $pay_id = getDetail('competitions', 'payment_id', 'competition_name', $comp);
         }
     </style>
 
-    <title>DB | Selections [<?php echo $comp ?>]</title>
+    <title>MAO | Selections [<?php echo $comp ?>]</title>
 
     <div class="no-print">
         <h2><u><?php echo $comp; ?> - Selections</u></h2>
