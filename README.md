@@ -11,5 +11,4 @@
 - FAMAT ID Updater
 - Competition Tracker:
     - Competition Tracker Deselect Page Should Have Statistics on all Comps.
-- Shirt Size
 - Administration Panel (_TBD, WIP_)
