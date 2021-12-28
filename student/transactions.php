@@ -127,11 +127,12 @@ if (getRank($_SESSION['id']) >= OFFICER_RANK) {
 		$row_interior .= surrTags('td', "<b>$payment_id</b>");
 
 		// Due Date
-		try {
+		try {   // TODO: fix
 			$datetime_days_left = date_diff(new DateTime('now'), new DateTime($due_date))->days;
 		} catch (Exception $e) {
 			die("Error occurred finding the difference between two dates: $e");
 		}
+        
 		$datetime_style = '';   // Not paid and has >= three days to pay
 		if ($total_owed <= 0)   // Paid
 			$datetime_style = 'style="background-color: lightgreen; text-align: left;"';
@@ -142,17 +143,17 @@ if (getRank($_SESSION['id']) >= OFFICER_RANK) {
 		$row_interior .= surrTags('td', "<input id='due_date' name='due_date' type='date' value='$due_date' readonly required><br>", $datetime_style);
 
 		// Description
-		$row_interior .= surrTags('td', $desc);
+		$row_interior .= surrTags('td', $desc, 'style="text-align: left;"');
 
 		// Price
 		$row_interior .= surrTags('td', formatMoney($price));
 
 		// Quantity (Owed & Paid)
-		$row_interior .= surrTags('td', "<b>Owed:<br>Paid:</b>");
+		$row_interior .= surrTags('td', "<b>Owed:<br>Paid:</b>", 'style="text-align: right; border-right: none;"');
 		$row_interior .= surrTags('td',
 			"<input name='owed' form='$payment_id' type='number' min='0' value='$owed' size='1' $readonly_if_student><br>" .
 			"<input name='paid' form='$payment_id' type='number' min='0' value='$paid' size='1' $readonly_if_student><br>",
-			'style="text-align: right;"');
+			'style="text-align: left; border-left: none;"');
 
 		// Total Owed
 		$total_bg_color = '';

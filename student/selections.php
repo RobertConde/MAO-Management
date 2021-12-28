@@ -100,9 +100,9 @@ if (isset($_GET['id'])) {
 
 		$start_date_str = formatToUSDate($start_date);
 		$end_date_str = formatToUSDate($end_date);
-		$row_interior .= surrTags('td', "<b>Start:</b>&nbsp;$start_date_str<br><b>End:</b>&nbsp;$end_date_str");
+		$row_interior .= surrTags('td', "<b>Start:</b>&nbsp;$start_date_str<br><b>End:</b>&nbsp;$end_date_str", 'style="text-align: right;"');
 
-		$row_interior .= surrTags('td', $comp_desc);
+		$row_interior .= surrTags('td', $comp_desc, 'style="text-align: left;"');
 
 		$row_interior .= surrTags('td',
 			"<form method='post'>" .
@@ -128,13 +128,13 @@ if (isset($_GET['id'])) {
 			$price = formatMoney(getDetail('payment_details', 'price', 'payment_id', $payment_id));
 			$due_date = getDetail('payment_details', 'due_date', 'payment_id', $payment_id);
 
-			$paid_text = "<b>$price</b><br><b>Due:</b> <input type='date' value='$due_date' style='text-align: center; background-color: $paid_color;' readonly>";
+			$paid_text = "<b>$price</b><br><b>Due:</b> <input type='date' value='$due_date' style='text-align: center; background-color: $paid_color;' readonly required>";
 		}
 		$row_interior .= surrTags('td', $paid_text, "style='background-color: $paid_color; text-align: center;'");
 
 		// Forms
 		$forms_color = 'black';
-		if (getAssociatedCompInfo($comp, 'show_forms')) {
+		if ($in_comp && getAssociatedCompInfo($comp, 'show_forms')) {
 			if (areFormsCollected($id, $comp))
 				$forms_color = 'lightgreen';
 			else

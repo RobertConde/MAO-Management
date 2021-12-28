@@ -126,6 +126,12 @@ $navbar_rank = getRank();
                         </a>
 
                         <ul class="dropdown-menu" hidden>
+                            <li><a target="_self" href="<?php echo relativeURL('backup'); ?>">
+                                    Backup</a>
+                            </li>
+
+                            <li class="divider" role="separator"></li>
+
                             <li class="dropdown-header">Reports <i>(WIP!)</i></li>
 
                             <li><a target="_self" href="<?php echo relativeURL('admin/reports/custom'); ?>">

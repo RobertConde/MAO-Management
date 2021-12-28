@@ -164,7 +164,7 @@ function isPaid($id, $payment_id): bool
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
-	$is_paid_stmt = $sql_conn->prepare("SELECT (owed = paid) is_paid FROM transactions WHERE id = ? AND payment_id = ?");
+	$is_paid_stmt = $sql_conn->prepare("SELECT (owed <= paid) is_paid FROM transactions WHERE id = ? AND payment_id = ?");
 	$is_paid_stmt->bind_param('ss', $id, $payment_id);
 	$is_paid_stmt->bind_result($is_paid);
 
