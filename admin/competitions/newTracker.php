@@ -132,14 +132,8 @@ compReportForm($comp, 'comp-checkoff');
         <!--suppress HtmlFormInputWithoutLabel -->
         <select name="sort_by" form="sort-form" onchange="this.form.submit()">
 			<?php
-			$sort_options = array('Name', 'Division', 'Grade', 'ID');
-			$sort_order_by = array(
-				'Name' => 'p.last_name, p.first_name',
-				'Division' => 'ci.division, p.last_name, p.first_name',
-				'Grade' => 'p.graduation_year DESC, p.last_name, p.first_name',
-				'ID' => 'p.id, p.last_name, p.first_name');
-
-			foreach ($sort_options as $curr_sort_option) {
+			/** @noinspection PhpUndefinedVariableInspection */
+			foreach ($SORT_OPTIONS as $curr_sort_option) {
 				$curr_selected_status = ($curr_sort_option == $sort_by ? 'selected' : '');
 
 				echo "<option value='$curr_sort_option' $curr_selected_status>$curr_sort_option</option>";
@@ -251,6 +245,7 @@ compReportForm($comp, 'comp-checkoff');
 
 	if (!is_null($comp)) {
 		// TODO: do it right
+		/** @noinspection PhpUndefinedVariableInspection */
 		$approved_IDs_stmt = $sql_conn->prepare(
 			"SELECT
                         cd.id,
@@ -261,7 +256,7 @@ compReportForm($comp, 'comp-checkoff');
                     FROM competition_data cd
                     INNER JOIN people p ON cd.competition_name = ? AND p.id = cd.id
                     JOIN competitor_info ci ON ci.id = cd.id
-                    ORDER BY " . $sort_order_by[$sort_by]);
+                    ORDER BY " . $SORT_ORDER_BY[$sort_by]);
 		$approved_IDs_stmt->bind_param('s', $comp);
 		$approved_IDs_stmt->bind_result($id, $name, $forms, $bus, $room);
 		$approved_IDs_stmt->execute();

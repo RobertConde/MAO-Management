@@ -1,5 +1,13 @@
 <?php
 
+$SORT_OPTIONS = array('Name', 'Division', 'Division, Grade', 'Grade', 'ID');
+$SORT_ORDER_BY = array(
+	'Name' => 'p.last_name, p.first_name',
+	'Division' => 'ci.division, p.last_name, p.first_name',
+	'Division, Grade' => 'ci.division, p.graduation_year DESC, p.last_name, p.first_name',
+	'Grade' => 'p.graduation_year DESC, p.last_name, p.first_name',
+	'ID' => 'p.id, p.last_name, p.first_name');
+
 function stylesheet()
 {
 	echo "<link rel='stylesheet' href='https://" . $_SERVER['HTTP_HOST'] . "/style.css'>";

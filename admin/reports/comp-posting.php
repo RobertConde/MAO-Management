@@ -53,14 +53,8 @@ $pay_id = getDetail('competitions', 'payment_id', 'competition_name', $comp);
                 <!--suppress HtmlFormInputWithoutLabel -->
                 <select name="sort_by" onchange="this.form.submit()">
 					<?php
-					$sort_options = array('Name', 'Division', 'Grade', 'ID');
-					$sort_order_by = array(
-						'Name' => 'p.last_name, p.first_name',
-						'Division' => 'ci.division, p.last_name, p.first_name',
-						'Grade' => 'p.graduation_year DESC, p.last_name, p.first_name',
-						'ID' => 'p.id, p.last_name, p.first_name');
-
-					foreach ($sort_options as $curr_sort_option) {
+					/** @noinspection PhpUndefinedVariableInspection */
+					foreach ($SORT_OPTIONS as $curr_sort_option) {
 						$curr_selected_status = ($curr_sort_option == $sort_by ? 'selected' : '');
 
 						echo "<option value='$curr_sort_option' $curr_selected_status>$curr_sort_option</option>";
@@ -76,6 +70,7 @@ $pay_id = getDetail('competitions', 'payment_id', 'competition_name', $comp);
 
 <?php
 $sql_conn = getDBConn();
+/** @noinspection PhpUndefinedVariableInspection */
 $approved_IDs_stmt = $sql_conn->prepare(
 	"SELECT
                     cd.id,
@@ -87,7 +82,7 @@ $approved_IDs_stmt = $sql_conn->prepare(
                 INNER JOIN competitor_info ci ON cd.id = ci.id
                 WHERE competition_name = ?
 
-                ORDER BY " . $sort_order_by[$sort_by]);
+                ORDER BY " . $SORT_ORDER_BY[$sort_by]);
 $approved_IDs_stmt->bind_param('s', $comp);
 $approved_IDs_stmt->bind_result($id, $last_name, $first_name, $forms);
 $approved_IDs_stmt->execute();
