@@ -142,21 +142,24 @@ $navbar_rank = getRank();
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="active">
-                        <a target="_self" href=""><?php echo 'ID: ' . ($_SESSION['id'] ?? '<i>N/A</i>'); ?>
-                            <span class="sr-only">(current)</span>
+                    <li class="active" <?php if (!isset($_SESSION['id'])) echo 'style="display: none;"' ?>>
+                        <a target="_self" href="">
+							<?php if (isset($_SESSION['id']))
+								echo(getAccountDetail('people', 'last_name', $_SESSION['id']) . ', '
+									. getAccountDetail('people', 'first_name', $_SESSION['id'])
+									. ' [' . $_SESSION['id'] . ']'); ?>
                         </a>
                     </li>
 
-                    <li hidden>
+                    <li <?php if (isset($_SESSION['id'])) echo 'style="display: none;"' ?>>
                         <a href="<?php echo relativeURL('account/login'); ?>">Login</a>
                     </li>
 
-                    <li>
+                    <li <?php if (isset($_SESSION['id'])) echo 'style="display: none;"' ?>>
                         <a href="<?php echo relativeURL('account/register'); ?>">Register</a>
                     </li>
 
-                    <li>
+                    <li <?php if (!isset($_SESSION['id'])) echo 'style="display: none;"' ?>>
                         <a href="<?php echo relativeURL('account/logout'); ?>">Logout</a>
                     </li>
                 </ul>

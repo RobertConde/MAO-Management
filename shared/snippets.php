@@ -193,13 +193,7 @@ function getCurrentDateTime($second = false): string
 	return formatDateTime(new DateTime('now'), $second);
 }
 
-//function getCurrentDateTimeHTML(): string
-//{
-//	date_default_timezone_set('America/New_York');
-//
-//	return (new DateTime())->format('Y-m-d H:i');
-//}
-
+/* TODO: use `second` parameter?? */
 function formatToUSDate($date_str, $second = false): string
 {
 	$datetime = date_create_from_format('Y-m-d', $date_str);
@@ -210,4 +204,12 @@ function formatToUSDate($date_str, $second = false): string
 function noNavBar()
 {
 	echo "<style>.navbar {display: none;} body {padding: 0;}</style>";
+}
+
+function koskiKids() {
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets/koski-kids.php";
+}
+
+function calendar(){
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/calendar.php";
 }
