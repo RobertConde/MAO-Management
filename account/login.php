@@ -36,10 +36,12 @@ koskiKids();
 ?>
 
 <div style="display: flex; justify-content: center; align-items: center; height: 85vh;">
-    <div style="display: inline-block;">
-		<?php
-		calendar();
-		?>
+    <div style="display: inline-block; background: rgba(255, 255, 255, 0.65); padding: 5px; border-radius: 10px;">
+        <div style="display: inline-block; background: #e3e9ff; padding: 4px; border-radius: 10px;">
+			<?php
+			calendar();
+			?>
+        </div>
     </div>
 
     <div style="display: inline-block; background: rgba(255, 255, 255, 0.65); padding: 10px; margin-left: 75px; border-radius: 10px; height: fit-content; scale: 110%">
