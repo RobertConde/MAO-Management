@@ -86,7 +86,7 @@ if (isset($_POST['update'])) {
 			<?php
 			$sql_conn = getDBConn();
 
-			$comps_stmt = $sql_conn->prepare("SELECT competition_name AS comp_id FROM competitions;");
+			$comps_stmt = $sql_conn->prepare("SELECT competition_name AS comp_id FROM competitions ORDER BY start_date, end_date;");
 			$comps_stmt->bind_result($curr_comp_id);
 			$comps_stmt->execute();
 
@@ -189,7 +189,7 @@ compReportForm($comp, 'comp-checkoff');
 <table class="border filled" <?php if (is_null($comp)) echo 'hidden'; ?>>
     <tr>
         <th class="no-print">❌</i></th>
-        <th><?php echo numRegisteredForComp($comp); ?></th>
+        <th><?php echo getCompCount($comp); ?></th>
         <th>ID</th>
         <th>Name</th>
         <th>Grade</th>
@@ -256,7 +256,7 @@ compReportForm($comp, 'comp-checkoff');
                     FROM competition_data cd
                     INNER JOIN people p ON cd.competition_name = ? AND p.id = cd.id
                     JOIN competitor_info ci ON ci.id = cd.id
-                    ORDER BY " . $SORT_ORDER_BY[$sort_by]);
+                    ORDER BY " . SORT_ORDER_BY[$sort_by]);
 		$approved_IDs_stmt->bind_param('s', $comp);
 		$approved_IDs_stmt->bind_result($id, $name, $forms, $bus, $room);
 		$approved_IDs_stmt->execute();

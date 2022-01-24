@@ -82,7 +82,7 @@ $approved_IDs_stmt = $sql_conn->prepare(
                 INNER JOIN competitor_info ci ON cd.id = ci.id
                 WHERE competition_name = ?
 
-                ORDER BY " . $SORT_ORDER_BY[$sort_by]);
+                ORDER BY " . SORT_ORDER_BY[$sort_by]);
 $approved_IDs_stmt->bind_param('s', $comp);
 $approved_IDs_stmt->bind_result($id, $last_name, $first_name, $forms);
 $approved_IDs_stmt->execute();

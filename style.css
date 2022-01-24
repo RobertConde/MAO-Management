@@ -283,10 +283,16 @@ input[type=checkbox] {
     margin: 0.25in;
 }
 
-/*input[type=number] {*/
-/*    text-align: right;*/
-/*}*/
-
 .no-border {
     border: none;
+}
+
+@media print {
+    .page-break {
+        page-break-after: always;
+    }
+}
+
+.checkoff {
+    border: 1px solid #000000;
 }

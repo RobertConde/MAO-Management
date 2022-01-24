@@ -257,7 +257,7 @@ if (getRank($_SESSION['id']) > STUDENT_RANK) {
                     <option value="0" disabled selected></option>
 
                     <option value="1" <?php if (getAccountDetail('competitor_info', 'division', $id) == 1) echo 'selected'; ?>>
-                        Algebra I
+                        Algebra 1
                     </option>
 
                     <option value="2" <?php if (getAccountDetail('competitor_info', 'division', $id) == 2) echo 'selected'; ?>>
@@ -265,7 +265,7 @@ if (getRank($_SESSION['id']) > STUDENT_RANK) {
                     </option>
 
                     <option value="3" <?php if (getAccountDetail('competitor_info', 'division', $id) == 3) echo 'selected'; ?>>
-                        Algebra II
+                        Algebra 2
                     </option>
 
                     <option value="4" <?php if (getAccountDetail('competitor_info', 'division', $id) == 4) echo 'selected'; ?>>
@@ -315,9 +315,9 @@ if (getRank($_SESSION['id']) > STUDENT_RANK) {
                        required
                        value=
                        "<?php $mu_student_id = getAccountDetail('competitor_info', 'mu_student_id', $id);
-					   if (empty($mu_student_id))
-						   $mu_student_id = '   ';
-					   echo $mu_student_id; ?>"
+				       if (empty($mu_student_id))
+					       $mu_student_id = '   ';
+				       echo $mu_student_id; ?>"
 					<?php if (getRank($_SESSION['id']) < OFFICER_RANK) echo 'disabled'; ?>><br>
 
                 <label for="is_famat_member" style="color: red;">Is FAMAT Member:</label>

@@ -29,21 +29,10 @@ if (isset($_GET['comp_name'])) { // Check if `comp_id` was sent
 if (is_null($comp))
 	die("Competition name not specified.");
 
-$pay_id = getDetail('competitions', 'payment_id', 'competition_name', $comp);
 ?>
-<!--    TODO: move to style.css    -->
-    <!--suppress CssUnusedSymbol -->
     <style>
         td {
             border: none;
-        }
-
-        .checkoff {
-            border: 1px solid #000000;
-        }
-
-        .row-border-under {
-            border-bottom: 1px solid #000000;
         }
     </style>
 
@@ -80,10 +69,10 @@ $pay_id = getDetail('competitions', 'payment_id', 'competition_name', $comp);
 
 <?php
 $sql_conn = getDBConn();
-/** @noinspection PhpUndefinedVariableInspection */
 $approved_IDs_stmt = $sql_conn->prepare(
 	"SELECT 
                 cd.id,
+                cd.bus,
                 CONCAT(p.last_name, ', ', p.first_name) AS name,
                 ci.division,
                 p.phone,
@@ -92,79 +81,91 @@ $approved_IDs_stmt = $sql_conn->prepare(
             INNER JOIN people p ON cd.id = p.id
             INNER JOIN competitor_info ci ON cd.id = ci.id
             WHERE competition_name = ?
-            ORDER BY " . $SORT_ORDER_BY[$sort_by]);
+            ORDER BY " . SORT_ORDER_BY[$sort_by]);
 $approved_IDs_stmt->bind_param('s', $comp);
-$approved_IDs_stmt->bind_result($id, $name, $division, $phone, $forms);
 $approved_IDs_stmt->execute();
+$approved_IDs_result = $approved_IDs_stmt->get_result();
 
-// TODO: Come back and make consistent with payments
+// TODO: make function
 $show_forms = getAssociatedCompInfo($comp, 'show_forms');
+$is_bus_list = (strpos(SORT_ORDER_BY[$sort_by], 'bus') !== false); // TODO: make not bad
 
-$index = 0;
-$person = '';
-$table_num = 0;
-$page = ""; //TODO: I done like this; I should write the page incrementally (reduce expensive string concatenation)
-while (!is_null($person)) {
-	$table_header_row = // TODO: Make emojis universal (across all reports) -- *intuitive* design
-		"<tr><th colspan='100'>$comp</th></tr>
-        <tr>
-            <th>#</th>
-            <th " . (!$show_forms ? 'hidden' : '') . ">📝</th>
-            <th>Name</th>
-            <th>1</th>
-            <th>2</th>
-            <th>3</th>
-            <th>4</th>
-            <th>5</th>
-            <th>6</th>
-            <th>7</th>
-            <th>8</th>
-            <th>9</th>
-            <th>10</th>
-            <th>Division</th>
-            <th>Phone #</th>
-            <th>ID</th>
-            <th " . (is_null($pay_id) ? 'hidden' : '') . ">💲</th>
-        </tr>";
+$person_index = 1;
+$curr_person = $approved_IDs_result->fetch_assoc();
+do { // All tables for the report
+	$table_bus = $curr_person['bus'];
+	$table_count = ($is_bus_list ? getBusCount($comp, $table_bus) : getCompCount($comp, false));
 
-	//TODO: start at i=1; decide a better name for index variable
-	//TODO: do something about the styling (recursive or inherited CSS)
-    //TODO: make _pretty_
-	$i = 0;
-	$table = "";
-	while ($i++ < 45 && !is_null($person = $approved_IDs_stmt->fetch())) {
-		if ($i == 1)
-			$table = $table_header_row;
+	do {  // All tables for a bus
+		echo "<table class='page-break' style='font-size: small;'>";
 
-		// Table data
-		$row_interior = surrTags('td', ++$index, "style='padding: 1 2px; border-left: 1px solid black;'");
+		echo "<tr><th colspan='100'>$comp" . ($is_bus_list ? " [Bus #$table_bus: _______________ ]" : '') . "</th></tr>",
+			"<tr>
+                <th>$table_count</th>
+                <th>Name</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+                <th>6</th>
+                <th>7</th>
+                <th>8</th>
+                <th>9</th>
+                <th>10</th>
+                <th>Division</th>
+                <th>Phone #</th>
+                <th>ID</th>
+                <th " . ($show_forms ? '' : 'hidden') . ">📝</th>
+            </tr>";
 
-        if ($show_forms)
-		    $row_interior .= surrTags('td', areFormsCollected($id, $comp) ? '✔️' : '', "style='padding: 1 2px; '");
+		$table_index = 0;
+		do {
+			$curr_person_name = $curr_person['name'];
+			$curr_person_id = $curr_person['id'];
+			$curr_person_division = $curr_person['division'];
+			$curr_person_division_name = ($curr_person_division != 0 ? DIVISIONS[$curr_person_division] : '');
+			$curr_person_phone_formatted = formatPhoneNum($curr_person['phone']);
+			$curr_person_forms = $curr_person['forms'];
 
-		$row_interior .= surrTags('td', $name, "style='text-align: left; padding: 1 2px;'");
+			$curr_person_index = $person_index;
+			if ($curr_person_division == 0)
+				$curr_person_index = '';
+			else
+				++$person_index;
 
-		// Checkoff boxes
-		$row_interior .= str_repeat(surrTags('td', '', "class='checkoff' style='padding: 1 2px; width: 20px;'"), 10);
+			echo "<tr>";
 
-		$row_interior .= surrTags('td', DIVISIONS[$division], "style='text-align: left; padding: 1 2px;'");
+			// Person #
+			echo "<td style='text-align: right;'>$curr_person_index</td>";
 
-		$row_interior .= surrTags('td', formatPhoneNum($phone), "style='padding: 1 2px;'");
+			// Name
+			echo "<td style='text-align: left;'>$curr_person_name</td>";
 
-		$row_interior .= surrTags('td', $id, "style='padding: 1 2px;" . (is_null($pay_id) ? ' border-right: 1px solid black;' : '') . "'"); //TODO: bad...
+			// Checkboxes
+			echo str_repeat("<td class='checkoff' style='width: 20px;'></td>", 10);
 
-		// If the competition doesn't have an assigned payment, don't show the 'Paid' columns
-		if (!is_null($pay_id))
-			$row_interior .= surrTags('td', isCompPaid($id, $comp) ? '✔️' : '', "style='padding: 1 2px; border-right: 1px solid black;'");
+			// Division
+			echo "<td style='text-align: left;'>$curr_person_division_name</td>";
 
-		// Define form then add table row (wrap row interior by table row)
-		$row = surrTags('tr', $row_interior, "class='row-border-under'");
+			// Phone #
+			echo "<td>$curr_person_phone_formatted</td>";
 
-		$table .= $row;
-	}
+			// ID #
+			echo "<td>$curr_person_id</td>";
 
-	$page .= surrTags('table', $table, "class='filled' style='font-size: small; display: inline-block; vertical-align: top;'");
+			// Forms
+			if ($show_forms)
+				echo "<td>" . ($curr_person_forms ? '✔' : '') . "</td>";
 
-	echo $page, '<br>';
-	$page = "";
-}
+			echo "</tr>";
+		} while (++$table_index < 45
+		&& !is_null($curr_person = $approved_IDs_result->fetch_assoc())
+		&& (!$is_bus_list || $curr_person['bus'] == $table_bus));
+
+		echo "</table>";
+	} while ((!$is_bus_list || $curr_person['bus'] == $table_bus)
+	&& (!is_null($curr_person = $approved_IDs_result->fetch_assoc())
+		&& (!$is_bus_list || $curr_person['bus'] == $table_bus)));
+
+} while (!is_null($curr_person));

@@ -1,10 +1,11 @@
 <?php
 
-$SORT_OPTIONS = array('Name', 'Division', 'Division, Grade', 'Grade', 'ID');
-$SORT_ORDER_BY = array(
+$SORT_OPTIONS = array('Name', 'Division', 'Division, Grade', 'Bus, Division, Grade', 'Grade', 'ID');
+const SORT_ORDER_BY = array(
 	'Name' => 'p.last_name, p.first_name',
 	'Division' => 'ci.division, p.last_name, p.first_name',
 	'Division, Grade' => 'ci.division, p.graduation_year DESC, p.last_name, p.first_name',
+	'Bus, Division, Grade' => 'cd.bus, ci.division, p.graduation_year DESC, p.last_name, p.first_name',
 	'Grade' => 'p.graduation_year DESC, p.last_name, p.first_name',
 	'ID' => 'p.id, p.last_name, p.first_name');
 

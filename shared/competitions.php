@@ -2,7 +2,7 @@
 
 const DIVISIONS = array(
 	'Not A Student',
-	'Algebra I',
+	'Algebra 1',
 	'Geometry',
 	'Algebra 2',
 	'Precalculus',
@@ -178,10 +178,10 @@ function numUnaddedSelections($comp)
 
 	$selections_stmt = $sql_conn->prepare(
 		"SELECT COUNT(*) FROM competition_selections cs
-                        WHERE cs.competition_name = ? AND
-                              NOT EXISTS(SELECT NULL FROM competition_data cd
-                                            WHERE cd.competition_name = cs.competition_name AND 
-                                                  cd.id = cs.id)");
+                    WHERE cs.competition_name = ? AND
+                          NOT EXISTS(SELECT NULL FROM competition_data cd
+                                        WHERE cd.competition_name = cs.competition_name AND 
+                                              cd.id = cs.id)");
 	$selections_stmt->bind_param('s', $comp);
 	$selections_stmt->bind_result($unadded);
 	$selections_stmt->execute();
@@ -191,14 +191,15 @@ function numUnaddedSelections($comp)
 	return $unadded;
 }
 
-function numRegisteredForComp($comp)
+function getCompCount($comp, $include_not_students = true)
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
 	$registered_stmt = $sql_conn->prepare(
 		"SELECT COUNT(*) FROM competition_data cd
-                        WHERE cd.competition_name = ?");
+					INNER JOIN competitor_info ci ON ci.id = cd.id
+	                WHERE cd.competition_name = ?" . (!$include_not_students ? ' AND ci.division != 0' : ''));
 	$registered_stmt->bind_param('s', $comp);
 	$registered_stmt->bind_result($registered);
 	$registered_stmt->execute();
@@ -277,4 +278,20 @@ function getRoom($id, $comp)
 	}
 
 	return null;
+}
+
+function getBusCount($comp, $bus): int
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+	$bus_counts_stmt = $sql_conn->prepare("SELECT COUNT(*) FROM competition_data cd
+                                                INNER JOIN competitor_info ci ON ci.id = cd.id
+                                                WHERE competition_name = ? AND cd.bus = ?  AND ci.division != 0");
+	$bus_counts_stmt->bind_param('si', $comp, $bus);
+	$bus_counts_stmt->bind_result($bus_count);
+	$bus_counts_stmt->execute();
+	$bus_counts_stmt->fetch();
+
+	return ($bus_count ?? 0);
 }
