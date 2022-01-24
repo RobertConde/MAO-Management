@@ -139,18 +139,16 @@ function updateParent($id, $name, $email, $phone, $alternate_phone, $alternate_r
 	return $update_parents_stmt->execute();
 }
 
-function updateCompetitorInfo_Student($id, $division, $tshirt): bool
+function updateCompetitorInfo_Student($id, $tshirt): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
 	$update_competitor_stmt = $sql_conn->prepare("UPDATE competitor_info
-		SET division = ?, tshirt_size = ?
+		SET tshirt_size = ?
 		WHERE id = ?");
 
-	$update_competitor_stmt->bind_param('iss',
-		$division, $tshirt,
-		$id);
+	$update_competitor_stmt->bind_param('iss',$tshirt,$id);
 
 	return $update_competitor_stmt->execute();
 }

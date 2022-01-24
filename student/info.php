@@ -36,7 +36,7 @@ if (isset($_POST['select-id']) && compareRank($_SESSION['id'], $_POST['select-id
 			$_POST['name'], $_POST['email'], $_POST['phone'], $_POST['alternate_phone'], $_POST['alternate_ride_home']);
 	else if (isset($_POST['update_competitor_info'])) {
 		if (getRank($_SESSION['id']) < OFFICER_RANK)
-			$updated_competitor_info = updateCompetitorInfo_Student($_POST['select-id'], $_POST['division'], $_POST['tshirt']);
+			$updated_competitor_info = updateCompetitorInfo_Student($_POST['select-id'], $_POST['tshirt']);
 		else
 			$updated_competitor_info = updateCompetitorInfo_Admin(
 				$_POST['select-id'], $_POST['division'], $_POST['tshirt'], $_POST['mu_student_id'], $_POST['is_famat_member'],
@@ -249,11 +249,34 @@ if (getRank($_SESSION['id']) > STUDENT_RANK) {
 
                 <input name="select-id" type="hidden" value="<?php echo $id; ?>">
 
-                <label for="division">Division
-                    <i class="fa fa-question-circle"
-                       title="Select the division you will compete the most this competition cycle."></i>:
-                </label>
-                <select id="division" name="division" required>
+                <!--suppress SpellCheckingInspection -->
+                <label for="tshirt">T-Shirt Size:</label>
+                <!--suppress SpellCheckingInspection -->
+                <select id="tshirt" name="tshirt" required>
+                    <option disabled selected></option>
+
+                    <option value="S" <?php if (getAccountDetail('competitor_info', 'tshirt_size', $id) == 'S') echo 'selected'; ?>>
+                        Small
+                    </option>
+
+                    <option value="M" <?php if (getAccountDetail('competitor_info', 'tshirt_size', $id) == 'M') echo 'selected'; ?>>
+                        Medium
+                    </option>
+
+                    <option value="L" <?php if (getAccountDetail('competitor_info', 'tshirt_size', $id) == 'L') echo 'selected'; ?>>
+                        Large
+                    </option>
+
+                    <option value="XL" <?php if (getAccountDetail('competitor_info', 'tshirt_size', $id) == 'XL') echo 'selected'; ?>>
+                        X-Large
+                    </option>
+                </select>
+
+                <hr>
+
+                <label for="division" style="color: red;">Division:</label>
+                <select id="division" name="division"
+                        required <?php if (getRank($_SESSION['id']) < OFFICER_RANK) echo 'disabled'; ?>>
                     <option value="0" disabled selected></option>
 
                     <option value="1" <?php if (getAccountDetail('competitor_info', 'division', $id) == 1) echo 'selected'; ?>>
@@ -284,31 +307,6 @@ if (getRank($_SESSION['id']) > STUDENT_RANK) {
                         Not a Student
                     </option>
                 </select><br>
-
-                <!--suppress SpellCheckingInspection -->
-                <label for="tshirt">T-Shirt Size:</label>
-                <!--suppress SpellCheckingInspection -->
-                <select id="tshirt" name="tshirt" required>
-                    <option disabled selected></option>
-
-                    <option value="S" <?php if (getAccountDetail('competitor_info', 'tshirt_size', $id) == 'S') echo 'selected'; ?>>
-                        Small
-                    </option>
-
-                    <option value="M" <?php if (getAccountDetail('competitor_info', 'tshirt_size', $id) == 'M') echo 'selected'; ?>>
-                        Medium
-                    </option>
-
-                    <option value="L" <?php if (getAccountDetail('competitor_info', 'tshirt_size', $id) == 'L') echo 'selected'; ?>>
-                        Large
-                    </option>
-
-                    <option value="XL" <?php if (getAccountDetail('competitor_info', 'tshirt_size', $id) == 'XL') echo 'selected'; ?>>
-                        X-Large
-                    </option>
-                </select>
-
-                <hr>
 
                 <label for="mu_student_id" style="color: red;">Mu Student ID:</label>
                 <input id="mu_student_id" name="mu_student_id" type="text" pattern="([0-9]{3}|[\s]{3})" size="3"

@@ -25,8 +25,8 @@ if (isset($_POST['selected']) && is_array($_POST['selected'])) {
 
 	$IDs = $_POST['selected'];
 
-	if (!isset($_POST['test']) || !isset($_POST['selected']))
-		die("Test or Selected IDs not POSTed!");
+	if (!isset($_POST['test']))
+		die("Test name not POSTed!");
 
 	$json_array['test'] = $_POST['test'];
 	$json_array['bubbles'] = array(
@@ -79,7 +79,7 @@ if (isset($_POST['selected']) && is_array($_POST['selected'])) {
 
 		$student['famat_id'] = $famat_id;
 
-		array_push($json_array['students'], $student);
+		$json_array['students'][] = $student;
 	}
 } else if (isset($_GET['csv_filename'], $_GET['test'])) { // CSV file
 	$test = $_GET['test'];
@@ -110,9 +110,9 @@ if (isset($_POST['selected']) && is_array($_POST['selected'])) {
 
 			$student['name'] = $data[1];
 
-			$student['famat_id'] = $data[0];;
+			$student['famat_id'] = $data[0];
 
-			array_push($json_array['students'], $student);
+			$json_array['students'][] = $student;
 		}
 	} else
 		die("ERROR: Could not read CSV file with filename '$csv_filename'!");
