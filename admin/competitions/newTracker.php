@@ -158,7 +158,7 @@ compReportForm($comp, 'comp-checkoff');
 
         <!--        Bubble Sheet Stuff          -->
 		<?php
-		// TODO: Make this better
+		// TODO: Make this better, this is really, really bad!
 		// Information for bubble sheet creator
 		if (!is_null($comp)) {
 			// Competition name for bubble sheet creator
@@ -168,8 +168,9 @@ compReportForm($comp, 'comp-checkoff');
 			$select_studs_query =
 				"SELECT cd.id
 					FROM competition_data cd
-					JOIN people p ON cd.id = p.id
-					WHERE cd.competition_name = ?
+					INNER JOIN people p ON p.id = cd.id
+                    INNER JOIN competitor_info ci ON ci.id = cd.id
+					WHERE cd.competition_name = ? AND ci.division != 0
 					ORDER BY p.last_name, p.first_name";
 
 			$select_studs_stmt = $sql_conn->prepare($select_studs_query);
