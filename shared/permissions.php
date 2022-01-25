@@ -10,7 +10,7 @@ const ADMIN_RANK = 2;
 function getPerms($id = null): ?int
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
-	safeStartSession();
+	safelyStartSession();
 
 	if (is_null($id) && isset($_SESSION['id']))
 		$id = $_SESSION['id'];

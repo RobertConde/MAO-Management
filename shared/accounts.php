@@ -1,6 +1,6 @@
 <?php
 
-function safeStartSession()
+function safelyStartSession()
 {
 	if (session_status() != PHP_SESSION_ACTIVE)
 		session_start();
@@ -148,7 +148,7 @@ function updateCompetitorInfo_Student($id, $tshirt): bool
 		SET tshirt_size = ?
 		WHERE id = ?");
 
-	$update_competitor_stmt->bind_param('iss',$tshirt,$id);
+	$update_competitor_stmt->bind_param('iss', $tshirt, $id);
 
 	return $update_competitor_stmt->execute();
 }

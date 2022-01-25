@@ -3,7 +3,7 @@ $cycle_and_email_result = null;
 $login_result = null;
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
-safeStartSession();
+safelyStartSession();
 
 if (isset($_SESSION['id']))
 	header("Location: https://" . $_SERVER['HTTP_HOST'] . "/student/info");
@@ -21,9 +21,7 @@ else if (isset($_POST['login'])) {
 		$login_result = false;
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
-safeStartSession();
-
+// This must stay here because header could change above!
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
 navigationBarAndBootstrap();
 stylesheet();

@@ -3,7 +3,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/shared/snippets.php';
 stylesheet();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/shared/permissions.php';
-safeStartSession();
+safelyStartSession();
 
 $navbar_rank = getRank();
 ?>
