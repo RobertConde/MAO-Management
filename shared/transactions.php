@@ -1,5 +1,23 @@
 <?php
 
+// TODO: implement into codebase
+function existsPayment($payment_id)
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+	$find_payment_stmt = $sql_conn->prepare("SELECT COUNT(*) FROM payment_details WHERE payment_id = ?");
+	$find_payment_stmt->bind_param('s', $payment_id);
+	$find_payment_stmt->bind_result($num_payments);
+
+	if (!$find_payment_stmt->execute())
+		die("Error occurred checking if payment exists: $find_payment_stmt->error");
+	$find_payment_stmt->fetch();
+
+	$sql_conn->close();
+	return ($num_payments == 1);
+}
+
 function existsTransaction($id, $payment_id): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
@@ -16,7 +34,7 @@ function existsTransaction($id, $payment_id): bool
 	$find_transaction_stmt->fetch();
 
 	$sql_conn->close();
-	return $num_transactions;
+	return ($num_transactions == 1);
 }
 
 function getTransactionStatus($id, $payment_id)
@@ -74,7 +92,8 @@ function logTransactionEvent($id, $payment_id, $action, $comment = null)
 
 function setTransaction($id, $payment_id, $owed, $paid, $modifiers): bool
 {
-	if (is_null($payment_id))
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
+	if (!existsPerson($id) || !existsPayment($payment_id))
 		return false;
 
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
@@ -100,7 +119,6 @@ function setTransaction($id, $payment_id, $owed, $paid, $modifiers): bool
 		$owed = $owed ?? 0;
 		$paid = $paid ?? 0;
 		$modifiers = $modifiers ?? '';
-//		die("YES '$modifiers'");
 
 		$insert_transaction_stmt = $sql_conn->prepare("INSERT INTO transactions (id, payment_id, owed, paid, modifiers) VALUES (?, ?, ?, ?, ?)");
 		/** @noinspection SpellCheckingInspection */
@@ -145,20 +163,6 @@ function archiveTransaction($id, $payment_id): bool
 	return false;
 }
 
-//echo setTransaction('0264171', 'FGCU 2021', 420, 69) ? "OK" : "BAD", '<br>';
-//
-//$result = getTransactionStatus('0264171', 'FGCU 2021');
-//echo 'OWED = ', $result['owed'], ', PAID = ', $result['paid'], '<br>';
-//
-//echo setTransaction('0264171', 'FGCU 2021', 1, 0) ? "OK" : "BAD", '<br>';
-//
-//$result = getTransactionStatus('0264171', 'FGCU 2021');
-//echo 'OWED = ', $result['owed'], ', PAID = ', $result['paid'], '<br>';
-//
-//logTransactionEvent('0264171', 'FGCU 2021', null, 'IM SO HAPPY!!!');
-//
-//echo archiveTransaction('0264171', 'FGCU 2021') ? "ARCHIVE GOOD" : "ARCHIVE BAD", '<br>';
-
 function isPaid($id, $payment_id): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
@@ -175,38 +179,3 @@ function isPaid($id, $payment_id): bool
 	$is_paid_stmt->close();
 	return $is_paid ?? false;
 }
-
-//function toggleTransactionStatus($id, $payment_id): bool
-//{
-//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-//	$sql_conn = getDBConn();
-//
-//	// If not already set as paid, then insert transaction (indicates paid); else (currently indicating paid), delete transaction
-//	if (!isPaid($id, $payment_id)) {
-//		$insert_transaction_statement = $sql_conn->prepare("INSERT INTO transactions(id, payment_id) VALUES (?, ?)");
-//
-//		$insert_transaction_statement->bind_param('ss', $id, $payment_id);
-//
-//		if (!$insert_transaction_statement->execute())
-//			return false;
-//	} else {
-//		$delete_transaction_statement = $sql_conn->prepare("DELETE FROM transactions WHERE id = ? AND payment_id = ?");
-//
-//		$delete_transaction_statement->bind_param('ss', $id, $payment_id);
-//
-//		if (!$delete_transaction_statement->execute())
-//			return false;
-//	}
-//
-//	return true;
-//}
-//
-//function setTransactionStatus($id, $pay_id, $status): bool
-//{
-//	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-//
-//	if (isPaid($id, $pay_id) != $status)
-//		return toggleTransactionStatus($id, $pay_id);
-//
-//	return true;
-//}

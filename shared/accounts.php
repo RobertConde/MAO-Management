@@ -6,6 +6,24 @@ function safelyStartSession()
 		session_start();
 }
 
+// TODO: implement into codebase
+function existsPerson($id): bool
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+	$find_person_stmt = $sql_conn->prepare("SELECT COUNT(*) FROM people WHERE id = ?");
+	$find_person_stmt->bind_param('s', $id);
+	$find_person_stmt->bind_result($num_people);
+
+	if (!$find_person_stmt->execute())
+		die("Error occurred checking if person exists: $find_person_stmt->error");
+	$find_person_stmt->fetch();
+
+	$sql_conn->close();
+	return ($num_people == 1);
+}
+
 function registerAccount($id, $first_name, $middle_initial, $last_name, $graduation_year, $email, $phone, $address): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
