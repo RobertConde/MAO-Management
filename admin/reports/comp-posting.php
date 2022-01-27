@@ -70,7 +70,6 @@ $pay_id = getDetail('competitions', 'payment_id', 'competition_name', $comp);
 
 <?php
 $sql_conn = getDBConn();
-/** @noinspection PhpUndefinedVariableInspection */
 $approved_IDs_stmt = $sql_conn->prepare(
 	"SELECT
                     cd.id,
@@ -88,18 +87,14 @@ $approved_IDs_stmt->bind_result($id, $last_name, $first_name, $forms);
 $approved_IDs_stmt->execute();
 
 $show_forms = getAssociatedCompInfo($comp, 'show_forms');
-//$show_bus = getAssociatedCompInfo($comp, 'show_bus');
-//$show_room = getAssociatedCompInfo($comp, 'show_room');
 
 $person = '';
 $table_num = 0;
 $page = "";
 while (!is_null($person)) { // For multi-column posting report
-//    echo "ITT";
 	$table_header_row =
 		"<tr><th colspan='100'>$comp</th></tr>
         <tr>
-            <th>ID</th>
             <th>Last Name</th>
             <th>First Name</th>
             <th>Grade</th>
@@ -115,9 +110,7 @@ while (!is_null($person)) { // For multi-column posting report
 			$table = $table_header_row;
 
 		// Table data
-		$row_interior = surrTags('td', $id, "style='padding: 1 2px;'");
-
-		$row_interior .= surrTags('td', $last_name, "style='text-align: left; padding: 1 2px;'");
+		$row_interior = surrTags('td', $last_name, "style='text-align: left; padding: 1 2px;'");
 
 		$row_interior .= surrTags('td', $first_name, "style='text-align: left; padding: 1 2px;'");
 
@@ -139,7 +132,7 @@ while (!is_null($person)) { // For multi-column posting report
 	}
 
 	$page .= surrTags('table', $table, "class='filled' style='font-size: small; display: inline-block; vertical-align: top;'");
-//    $page .= $table_num;
+
 	if (++$table_num % 2 == 0 || is_null($person)) {
 		echo $page, '<br>';
 
