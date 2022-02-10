@@ -252,7 +252,7 @@ if (getRank($_SESSION['id']) > STUDENT_RANK) {
                 <!--suppress SpellCheckingInspection -->
                 <label for="tshirt">T-Shirt Size:</label>
                 <!--suppress SpellCheckingInspection -->
-                <select id="tshirt" name="tshirt" required>
+                <select id="tshirt" name="tshirt">
                     <option disabled selected></option>
 
                     <option value="S" <?php if (getAccountDetail('competitor_info', 'tshirt_size', $id) == 'S') echo 'selected'; ?>>

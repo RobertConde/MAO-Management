@@ -24,6 +24,25 @@ function existsPerson($id): bool
 	return ($num_people == 1);
 }
 
+function getIDByName($last_name, $first_name)
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+	$last_name = strtoupper($last_name);
+	$first_name = strtoupper($first_name);
+
+	$find_person_stmt = $sql_conn->prepare("SELECT id FROM people WHERE UPPER(last_name) = ? AND UPPER(first_name) = ?");
+	$find_person_stmt->bind_param('ss', $last_name, $first_name);
+
+	if (!$find_person_stmt->execute())
+		die("Error occurred finding a person by name: $find_person_stmt->error");
+	$find_person_result = $find_person_stmt->get_result();
+
+	$find_person_count = $find_person_result->num_rows;
+	return ($find_person_count == 1 ? $find_person_result->fetch_assoc()['id'] : null);
+}
+
 function registerAccount($id, $first_name, $middle_initial, $last_name, $graduation_year, $email, $phone, $address): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
@@ -98,9 +117,7 @@ function updatePerson($id, $first_name, $middle_initial, $last_name, $graduation
 		$email, $phone, $address,
 		$id);
 
-	$update_people_stmt->execute();
-	echo $update_people_stmt->error;
-	return false;
+	return $update_people_stmt->execute();
 }
 
 function updateSchedule($id, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8,
@@ -219,4 +236,22 @@ function getGrade($id): int
 	}
 
 	return 0;
+}
+
+function setFAMAT_ID($id, $famat_id): bool
+{
+	if (strlen($famat_id) != 9)
+		die ("Bad FAMAT ID for with ID = $id!");
+
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+	$update_people_stmt = $sql_conn->prepare("UPDATE competitor_info
+		SET mu_student_id = ?, division = ? WHERE id = ?;");
+
+	$mu_student_id = substr($famat_id, 4, 3);
+	$division = (int)substr($famat_id, 7, 1);
+	$update_people_stmt->bind_param('sis', $mu_student_id, $division, $id);
+
+	return $update_people_stmt->execute();
 }

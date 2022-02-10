@@ -25,10 +25,7 @@ if (isset($_POST['selected']) && is_array($_POST['selected'])) {
 
 	$IDs = $_POST['selected'];
 
-	if (!isset($_POST['test']))
-		die("Test name not POSTed!");
-
-	$json_array['test'] = $_POST['test'];
+    $json_array['comp'] = $_POST['comp'];
 	$json_array['bubbles'] = array(
 		true,   // 1-4: FAMAT ID (unique for each school)
 		true,
@@ -40,7 +37,8 @@ if (isset($_POST['selected']) && is_array($_POST['selected'])) {
 		true,   // 8: Division
 		true);  // 9: Team
 
-	$index = 0;
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/competitions.php";
+
 	$json_array['students'] = array();
 	foreach ($IDs as $id) {
 		$student = array();
@@ -55,7 +53,7 @@ if (isset($_POST['selected']) && is_array($_POST['selected'])) {
 			$student['school'] = "Doral Academy High School";
 			$famat_id .= '5375';
 		} else {    // Invalid grade
-			$student['school'] = "Doral Academy Charter School";
+			$student['school'] = "Doral Academy __________ School";
 			$famat_id .= '537 ';
 		}
 
@@ -74,6 +72,8 @@ if (isset($_POST['selected']) && is_array($_POST['selected'])) {
 		else    // Invalid division
 			$famat_id .= ' ';
 
+		$student['test'] = DIVISIONS[$division] . " Individual";
+
 		// TODO: Implement team selection
 		$famat_id .= ' ';   // Team digit
 
@@ -81,13 +81,13 @@ if (isset($_POST['selected']) && is_array($_POST['selected'])) {
 
 		$json_array['students'][] = $student;
 	}
-} else if (isset($_GET['csv_filename'], $_GET['test'])) { // CSV file
-	$test = $_GET['test'];
+} else if (isset($_GET['csv_filename'], $_GET['comp'])) { // CSV file
+	$comp = $_GET['comp'];
 	$csv_filename = $_GET['csv_filename'];
 
 	$ref .= "true";
 
-	$json_array['test'] = $test;
+	$json_array['comp'] = $comp;
 	$json_array['bubbles'] = array(
 		true,   // 1-4: FAMAT ID (unique for each school)
 		true,
@@ -99,9 +99,8 @@ if (isset($_POST['selected']) && is_array($_POST['selected'])) {
 		true,   // 8: Division
 		true);  // 9: Team
 
-	$index = 0;
 	$json_array['students'] = array();
-	if (($handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/../uploads/$csv_filename", "r")) !== FALSE) {
+	if (($handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/../uploads/$csv_filename.csv", "r")) !== FALSE) {
 		fgetcsv($handle); // Skip header
 		while (($data = fgetcsv($handle)) !== FALSE) {
 			$student = array();
@@ -109,6 +108,8 @@ if (isset($_POST['selected']) && is_array($_POST['selected'])) {
 			$student['school'] = "Doral Academy Charter School";
 
 			$student['name'] = $data[1];
+
+            $student['test'] = "_______________ Individual";
 
 			$student['famat_id'] = $data[0];
 
@@ -145,9 +146,8 @@ $json = json_encode($json_array);
 		console.log(jsonText);
 		const json = JSON.parse(jsonText);
 
-		const bubbles = json['bubbles'];   // TODO: which bubbles to fill in
-
-		const test = json['test'];
+		const comp = json['comp'];
+		const bubbles = json['bubbles'];
 
 		const background = new Image;
 		background.src = 'blankBubbleSheet.png';
@@ -160,6 +160,7 @@ $json = json_encode($json_array);
 
 				const name = student['name'];
 				const school = student['school'];
+				const test = student['test'];
 				const id = student['famat_id'];
 
 				doc.addImage(background, 'PNG', 0, 0, 611.77, 791.88);
@@ -171,7 +172,7 @@ $json = json_encode($json_array);
 		}
 
 		try {
-			doc.save(test + " - " + (new Date().toLocaleString()) + ".pdf");
+			doc.save(comp + " - " + (new Date().toLocaleString()) + ".pdf");
 		} catch (error) {
 			console.log("Saving Error: " + error);
 		}

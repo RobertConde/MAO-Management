@@ -1,10 +1,11 @@
 <?php
 
-$SORT_OPTIONS = array('Name', 'Division', 'Division, Grade', 'Bus, Division, Grade', 'Grade', 'ID');
+$SORT_OPTIONS = array('Name', 'Division', 'Division, Grade', 'Bus, Name', 'Bus, Division, Grade', 'Grade', 'ID');
 const SORT_ORDER_BY = array(
 	'Name' => 'p.last_name, p.first_name',
 	'Division' => 'ci.division, p.last_name, p.first_name',
 	'Division, Grade' => 'ci.division, p.graduation_year DESC, p.last_name, p.first_name',
+	'Bus, Name' => 'cd.bus, (ci.division = 0) DESC, p.last_name, p.first_name',
 	'Bus, Division, Grade' => 'cd.bus, ci.division, p.graduation_year DESC, p.last_name, p.first_name',
 	'Grade' => 'p.graduation_year DESC, p.last_name, p.first_name',
 	'ID' => 'p.id, p.last_name, p.first_name');
@@ -195,6 +196,7 @@ function getCurrentDateTime($second = false): string
 }
 
 /* TODO: use `second` parameter?? */
+/** @noinspection PhpUnusedParameterInspection */
 function formatToUSDate($date_str, $second = false): string
 {
 	$datetime = date_create_from_format('Y-m-d', $date_str);
@@ -207,10 +209,12 @@ function noNavBar()
 	echo "<style>.navbar {display: none;} body {padding: 0;}</style>";
 }
 
-function koskiKids() {
+function koskiKids()
+{
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets/koski-kids.php";
 }
 
-function calendar(){
+function calendar()
+{
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/calendar.php";
 }

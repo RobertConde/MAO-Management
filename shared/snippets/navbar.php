@@ -79,7 +79,7 @@ $navbar_rank = getRank();
                         </a>
 
                         <ul class="dropdown-menu" hidden>
-                            <li class="dropdown-header">Account Administration</li>
+                            <li class="dropdown-header">🗃️ Account Administration 📇️</li>
 
                             <li><a target="_self" href="<?php echo relativeURL('student/info'); ?>">
                                     Update Accounts</a></li>
@@ -89,7 +89,7 @@ $navbar_rank = getRank();
 
                             <li class="divider" role="separator"></li>
 
-                            <li class="dropdown-header">Money 💰</li>
+                            <li class="dropdown-header">💸 Money 💰</li>
 
                             <li><a target="_self" href="<?php echo relativeURL('admin/payments/manage'); ?>">
                                     Manage Payments</a></li>
@@ -97,19 +97,26 @@ $navbar_rank = getRank();
                             <li><a target="_self"
                                    href="<?php echo relativeURL('student/transactions'); ?>">Transactions</a></li>
 
+                            <li><a target="_self"
+                                   href="<?php echo relativeURL('admin/transactions/fast-pay'); ?>">Fast Pay!</a></li>
+
                             <li class="divider" role="separator"></li>
 
-                            <li class="dropdown-header">Competitions</li>
+                            <li class="dropdown-header">📋 Competitions 🥏</li>
 
                             <li><a target="_self" href="<?php echo relativeURL('admin/competitions/manage'); ?>">
                                     Manage Competitions</a></li>
+
+                            <li><a target="_self"
+                                   href="<?php echo relativeURL('admin/accounts/fast-famat'); ?>">Fast FAMAT IDs!</a>
+                            </li>
 
                             <li><a target="_self" href="<?php echo relativeURL('admin/competitions/newTracker'); ?>">
                                     Competition Tracker</a></li>
 
                             <li class="divider" role="separator"></li>
 
-                            <li class="dropdown-header">Bubble Sheets</li>
+                            <li id="testing-alternate" class="dropdown-header">⚪ Bubble Sheets ⚫</li>
 
                             <li><a target="_self" href="<?php echo relativeURL('admin/bubbles/bubblesFromFile'); ?>">
                                     Bubble Sheets From File</a></li>

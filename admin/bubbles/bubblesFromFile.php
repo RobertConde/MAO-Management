@@ -11,7 +11,7 @@ checkPerms(OFFICER_PERMS);
 
 // Process upload and redirect to create bubble sheets
 $attribute_name = 'bubbleInfoCSV';
-if (isset($_FILES[$attribute_name], $_POST['test'])) {
+if (isset($_POST['comp'], $_FILES[$attribute_name])) {
 	$errors = array();
 	$file_name = $_FILES[$attribute_name]['name'];
 	$file_size = $_FILES[$attribute_name]['size'];
@@ -25,13 +25,13 @@ if (isset($_FILES[$attribute_name], $_POST['test'])) {
 		die("Error: File uploaded must be a CSV!");
 
 	if (empty($errors)) {
-		$test = $_POST['test'];
+		$comp = $_POST['comp'];
 
 		$new_filename = md5(rand());
-		if (!move_uploaded_file($file_tmp, $_SERVER['DOCUMENT_ROOT'] . "/../uploads/" . $new_filename))
+		if (!move_uploaded_file($file_tmp, $_SERVER['DOCUMENT_ROOT'] . "/../uploads/$new_filename.$file_ext"))
 			die("Error moving file to uploads folder.");
 
-		redirect(relativeURL('admin/bubbles/createPDF?ref=' . currentURL(false) . "&test=$test&csv_filename=$new_filename"));
+		redirect(relativeURL('admin/bubbles/createPDF?ref=' . currentURL(false) . "&comp=$comp&csv_filename=$new_filename"));
 	} else
 		print_r($errors);
 }
@@ -45,11 +45,11 @@ if (isset($_FILES[$attribute_name], $_POST['test'])) {
 <form method="post" action="" enctype="multipart/form-data"
       class="filled border">
     <fieldset>
-        <label for="test">Test Name:</label>
-        <input id="test" name="test" type="text"><br>
+        <label for="comp">Competition Name:</label>
+        <input id="comp" name="comp" type="text"><br>
         <br>
 
-        <label for="bubbleInfoCSV"><u>CSV Upload (<?php echo makeLink('Example', 'shared/examples/CSV Example.csv'); ?>
+        <label for="bubbleInfoCSV"><u>CSV Upload (<?php echo makeLink('Example', 'shared/examples/Bubble Sheets From File.csv'); ?>
                 )</u></label>
         <input id="bubbleInfoCSV" name="bubbleInfoCSV" type="file" required><br>
 

@@ -162,7 +162,7 @@ compReportForm($comp, 'comp-checkoff');
 		// Information for bubble sheet creator
 		if (!is_null($comp)) {
 			// Competition name for bubble sheet creator
-			echo "<input name='test' type='hidden' value='$comp'>";
+			echo "<input name='comp' type='hidden' value='$comp'>";
 
 			// Selected students IDs for bubble sheet creator
 			$select_studs_query =
