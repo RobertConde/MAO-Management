@@ -26,6 +26,16 @@ stylesheet();
             <label for="last_name">Last Name:</label>
             <input id="last_name" name="last_name" type="text" size="10" required><br>
 
+            <label for="school_code">School Code:</label>
+            <select id="school_code" name="school_code">
+                <option value="" selected></option>
+
+                <option value="3029">3029</option>
+                <option value="6030">6030</option>
+                <option value="7009">7009</option>
+                <option value="7020">7020</option>
+            </select><br>
+
             <label for="graduation_year">Grad. Year:</label>
             <input id="graduation_year" name="graduation_year" type="number" style="width: 4em;" required><br>
 
@@ -52,6 +62,7 @@ if (isset($_POST['register'])) { // If form is POSTed
 		$_POST['first_name'],
 		$_POST['middle_initial'],
 		$_POST['last_name'],
+		$_POST['school_code'],
 		$_POST['graduation_year'],
 		$_POST['email'],
 		$_POST['phone'],
@@ -66,7 +77,7 @@ if (isset($_POST['register'])) { // If form is POSTed
 			else
 				echo("<p style='color:red;'>Failed to send new login code to email (retry on login)!</p>\n");
 		} catch (\PHPMailer\PHPMailer\Exception $e) {
-		    $error_message = $e->errorMessage();
+			$error_message = $e->errorMessage();
 
 			echo("<p style='color:red;'>PHPMailer exception: '$error_message'!</p>\n");
 		}

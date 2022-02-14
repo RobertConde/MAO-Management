@@ -18,8 +18,8 @@ if (isset($_POST['select-id']) && compareRank($_SESSION['id'], $_POST['select-id
 	if (isset($_POST['update_person'])) {
 		$updated_person = updatePerson(
 			$_POST['select-id'],
-			$_POST['first_name'], $_POST['middle_initial'], $_POST['last_name'], $_POST['graduation_year'],
-			$_POST['email'], $_POST['phone'], $_POST['address']);
+			$_POST['first_name'], $_POST['middle_initial'], $_POST['last_name'], $_POST['school_code'],
+			$_POST['graduation_year'], $_POST['email'], $_POST['phone'], $_POST['address']);
 	} else if (isset($_POST['update_schedule']))
 		$updated_schedule = updateSchedule(
 			$_POST['select-id'],
@@ -64,7 +64,6 @@ if (!is_null($select_id)) {
 <h2 style="text-align: center; margin: 6px;"><u>Update Account Information</u></h2>
 
 <?php
-
 if (getRank($_SESSION['id']) > STUDENT_RANK) {
 	personSelectForm();
 	personSelect();
@@ -97,6 +96,27 @@ if (getRank($_SESSION['id']) > STUDENT_RANK) {
                 <label for="last_name">Last Name:</label>
                 <input id="last_name" name="last_name" type="text" size="15" required
                        value="<?php echo getAccountDetail('people', 'last_name', $id); ?>"><br>
+
+                <label for="school_code">School Code:</label>
+                <select id="school_code" name="school_code" required>
+                    <option value="" selected></option>
+
+                    <option value="3029" <?php if (getAccountDetail('people', 'school_code', $id) == '3029') echo 'selected'; ?>>
+                        3029
+                    </option>
+
+                    <option value="6030" <?php if (getAccountDetail('people', 'school_code', $id) == '6030') echo 'selected'; ?>>
+                        6030
+                    </option>
+
+                    <option value="7009" <?php if (getAccountDetail('people', 'school_code', $id) == '7009') echo 'selected'; ?>>
+                        7009
+                    </option>
+
+                    <option value="7020" <?php if (getAccountDetail('people', 'school_code', $id) == '7020') echo 'selected'; ?>>
+                        7020
+                    </option>
+                </select><br>
 
                 <label for="graduation_year">Grad. Year:</label>
                 <input id="graduation_year" name="graduation_year" type="number" style="width: 4em;" required

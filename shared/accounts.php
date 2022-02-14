@@ -43,18 +43,18 @@ function getIDByName($last_name, $first_name)
 	return ($find_person_count == 1 ? $find_person_result->fetch_assoc()['id'] : null);
 }
 
-function registerAccount($id, $first_name, $middle_initial, $last_name, $graduation_year, $email, $phone, $address): bool
+function registerAccount($id, $first_name, $middle_initial, $last_name, $school_code, $graduation_year, $email, $phone, $address): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
 	// People
 	$people_stmt = $sql_conn->prepare(
-		"INSERT INTO people (id, first_name, middle_initial, last_name, graduation_year, email, phone, address)
-			   VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+		"INSERT INTO people (id, first_name, middle_initial, last_name, school_code, graduation_year, email, phone, address)
+			   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 	/** @noinspection SpellCheckingInspection */
-	$people_stmt->bind_param('ssssisss', $id, $first_name, $middle_initial, $last_name, $graduation_year, $email, $phone, $address);
+	$people_stmt->bind_param('sssssisss', $id, $first_name, $middle_initial, $last_name, $school_code, $graduation_year, $email, $phone, $address);
 
 	// Empty rows
 	$accounts_stmt = $sql_conn->prepare("INSERT INTO accounts (id) VALUES (?)");
@@ -102,18 +102,18 @@ function cycleLoginCode($id): bool
 	return $cycle_statement->execute() && sendLoginCodeEmail($id);
 }
 
-function updatePerson($id, $first_name, $middle_initial, $last_name, $graduation_year, $email, $phone, $address): bool
+function updatePerson($id, $first_name, $middle_initial, $last_name, $school_code, $graduation_year, $email, $phone, $address): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
 	$update_people_stmt = $sql_conn->prepare("UPDATE people
-		SET first_name = ?, middle_initial = ?, last_name = ?, graduation_year = ?,
+		SET first_name = ?, middle_initial = ?, last_name = ?, school_code = ?, graduation_year = ?,
 		    email = ?, phone = ?, address = ? WHERE id = ?;");
 
 	/** @noinspection SpellCheckingInspection */
-	$update_people_stmt->bind_param('sssissss',
-		$first_name, $middle_initial, $last_name, $graduation_year,
+	$update_people_stmt->bind_param('ssssissss',
+		$first_name, $middle_initial, $last_name, $school_code, $graduation_year,
 		$email, $phone, $address,
 		$id);
 
