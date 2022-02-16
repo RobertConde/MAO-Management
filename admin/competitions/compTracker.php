@@ -10,7 +10,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(OFFICER_PERMS);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/competitions.php";
 
 // Get competition name if sent and is valid
@@ -37,35 +36,6 @@ $add_id = getSelectID('POST');
 if (!is_null($add_id)) {
 	addToComp($comp, $add_id);
 	refresh();
-}
-
-// Remove competitor from competition data for comp
-$remove_result = null;
-if (isset($_POST['remove'])) {
-	$remove_id = $_POST['id'];
-
-	$remove_result = removeFromComp($comp, $remove_id);
-	refresh();
-}
-
-// Update row of competitor competition data
-$update_result = null;
-if (isset($_POST['update'])) {
-	$update_id = $_POST['id'];
-
-	$update_forms = $show_forms && isset($_POST['forms']);
-	$update_bus = ($_POST['bus'] ?? '');
-	$update_room = ($_POST['room'] ?? '');
-
-	$updateCompData = updateCompData($comp, $update_id, $update_forms, $update_bus, $update_room);
-
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/transactions.php";
-
-	$update_paid_status = isset($_POST['paid']);
-	$setTransactionStatus = setTransaction($update_id, $pay_id, 1, ($update_paid_status ? 1 : 0), '');   // TODO: Integrate "Competition Fee" (not a generic payment) so that it is either paid or not
-
-	$update_result = ($updateCompData && $setTransactionStatus);
-	redirect(currentURL()); // Prevents go-back "submit form again" prompt by re-requesting the page through a GET request
 }
 ?>
 
@@ -268,11 +238,14 @@ compReportForm($comp, 'comp-checkoff');
 			// Table data
 			$row_interior =
 				"<div id='div-$id'>"
-				. "<input name='id' type='hidden' form='$id-update' value='$id'>"
-				. "<input name='id' type='hidden' form='$id-remove' value='$id'>"
+				. "<input name='do-id' type='hidden' form='$id-update' value='$id'>"
+				. "<input name='update' type='hidden' form='$id-update'>"
+
+				. "<input name='do-id' type='hidden' form='$id-remove' value='$id'>"
+				. "<input name='remove' type='hidden' form='$id-remove'>"
 				. "</div>";
 
-			$row_interior .= surrTags('td', "<!--suppress XmlInvalidId --><input name='remove' type='checkbox' form='$id-remove' onchange='this.form.submit()'>", 'class="no-print" style="text-align: center;"');
+			$row_interior .= surrTags('td', "<input id='$id-remove-submit' name='remove' type='submit' form='$id-remove' value='❌'>", 'class="no-print" style="text-align: center;"');
 
 			$row_interior .= surrTags('td', $index++, 'style="text-align: right;"');
 
@@ -298,12 +271,12 @@ compReportForm($comp, 'comp-checkoff');
 			if ($show_room)
 				$row_interior .= surrTags('td', "<input name='room' type='text' size='2' form='$id-update' value='$room'>");
 
-			$row_interior .= surrTags('td', "<input name='update' type='submit' form='$id-update' value='Update'>", "class='no-print'");
+			$row_interior .= surrTags('td', "<input id='$id-update-submit' name='update' type='submit' form='$id-update' value='Update'>", "class='no-print'");
 
 			// Define form then add table row (wrap row interior by table row)
 			$row = surrTags('tr',
-				"<form id='$id-update' method='post'></form>"
-				. "<form id='$id-remove' method='post'></form>"
+				"<form id='$id-update' name='update' method='post'></form>"
+				. "<form id='$id-remove' name='remove' method='post'></form>"
 				. $row_interior);
 
 			echo $row;
@@ -311,3 +284,96 @@ compReportForm($comp, 'comp-checkoff');
 	}
 	?>
 </table>
+
+<script>
+	function removeChildren(element) {
+		element.childNodes.forEach(element => element.remove())
+	}
+
+	function resetTableCell(cell) {
+		cell.innerText = '';
+		cell.style.backgroundColor = '';
+	}
+
+	function tableCellInProgress(cell) {
+		cell.innerHTML = '<div style="color: transparent; text-shadow: 0 0 0 ;">📡</div>';
+		cell.style.backgroundColor = 'yellow';
+	}
+
+	function tableCellSuccess(cell) {
+		cell.innerHTML = '<div style="color: white;">✔</div>';
+		cell.style.backgroundColor = '#00d26a';
+	}
+
+	function tableCellError(cell) {
+		cell.innerHTML = '<div style="color: transparent; text-shadow: 0 0 0 white;">❌</div>';
+		cell.style.backgroundColor = '#f92f60';
+	}
+
+	function tableCellTrash(cell) {
+		resetTableCell(cell);
+
+		cell.innerHTML = '<div style="color: white;">🗑️</div>';
+	}
+
+	function tableCellUpdatedButton(cell, button) {
+		resetTableCell(cell);
+
+		cell.appendChild(button);
+	}
+
+	$("form[name=update]").on("submit", function (event) {
+		event.preventDefault();
+
+		let form = event.originalEvent.target;
+		let updateButton = document.getElementById(form.id + '-submit');
+
+		let cell = updateButton.parentElement;
+
+		// Clear cell and indicate that the updating process has begun
+		tableCellInProgress(cell);
+
+		let dataString = $(this).serialize();
+		$.ajax({
+			type: "POST",
+			url: "helper?comp=<?php echo $comp; ?>",
+			data: dataString,
+
+			success: function () {  // On success, clear process indicator, display a green confirmation background for a second, then give back updating control to the user
+				tableCellSuccess(cell);
+
+				tableCellUpdatedButton(cell, updateButton);
+			},
+
+			error: function () {    // On error, clear process indicator, display a red background indicating that an error occurred
+				tableCellError(cell);
+			}
+		});
+		// });
+	});
+
+	$("form[name=remove]").on("submit", function (event) {
+		event.preventDefault();
+
+		let form = event.originalEvent.target;
+		let submitButton = document.getElementById(form.id + '-submit');
+
+		let cell = submitButton.parentElement;
+
+		tableCellInProgress(cell);
+		const dataString = $(this).serialize();
+		$.ajax({
+			type: "POST",
+			url: "helper?comp=<?php echo $comp; ?>",
+			data: dataString,
+			success: function () {
+				tableCellSuccess(cell);
+
+				tableCellTrash(cell);
+			},
+			error: function () {
+				tableCellError(cell);
+			}
+		});
+	});
+</script>

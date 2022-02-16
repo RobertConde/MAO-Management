@@ -2,9 +2,10 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . '/shared/snippets.php';
 stylesheet();
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/shared/permissions.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shared/accounts.php';
 safelyStartSession();
 
+require_once $_SERVER['DOCUMENT_ROOT'] . '/shared/permissions.php';
 $navbar_rank = getRank();
 ?>
 
@@ -111,7 +112,7 @@ $navbar_rank = getRank();
                                    href="<?php echo relativeURL('admin/accounts/fast-famat'); ?>">Fast FAMAT IDs!</a>
                             </li>
 
-                            <li><a target="_self" href="<?php echo relativeURL('admin/competitions/newTracker'); ?>">
+                            <li><a target="_self" href="<?php echo relativeURL('admin/competitions/compTracker'); ?>">
                                     Competition Tracker</a></li>
 
                             <li class="divider" role="separator"></li>

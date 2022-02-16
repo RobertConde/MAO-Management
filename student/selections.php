@@ -117,7 +117,7 @@ if (isset($_GET['id'])) {
 		// Paid
 		$paid_text = '';
 		$paid_color = 'black';
-		if (!is_null($payment_id = getAssociatedCompInfo($comp, 'payment_id'))) {
+		if ($in_comp && !is_null($payment_id = getAssociatedCompInfo($comp, 'payment_id'))) {
 			// Paid Color
 			if (isCompPaid($id, $comp))
 				$paid_color = 'lightgreen';
