@@ -1,6 +1,6 @@
 <?php
 
-$SORT_OPTIONS = array('Name', 'Division', 'Division, Grade', 'Bus, Name <b>[Bus List]</b>', 'Bus, Division, Grade', 'Grade', 'ID');
+$SORT_OPTIONS = array('Name', 'Division', 'Division, Grade', 'Bus, Name', 'Bus, Division, Grade', 'Grade', 'ID');
 const SORT_ORDER_BY = array(
 	'Name' => 'p.last_name, p.first_name',
 	'Division' => 'ci.division, p.last_name, p.first_name',
