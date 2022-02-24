@@ -82,6 +82,7 @@ if (!is_null($add_id)) {
 compReportForm($comp, 'comp-selections');
 compReportForm($comp, 'comp-posting');
 compReportForm($comp, 'comp-checkoff');
+compReportForm($comp, 'mentor-lists');
 ?>
 
 <form id="sort-form" method="get">
@@ -117,7 +118,9 @@ compReportForm($comp, 'comp-checkoff');
 
         <input type="submit" form="comp-selections" value="Selections [<?php echo numUnaddedSelections($comp); ?>]">
         <input type="submit" form="comp-posting" value="Posting">
-        <input type="submit" form="comp-checkoff" value="Checkoff List"><br>
+        <br>
+        <input type="submit" form="comp-checkoff" value="Checkoff List">
+        <input type="submit" form="mentor-lists" value="Mentor Lists"><br>
         <br>
 
         <u>Other Actions</u><br>

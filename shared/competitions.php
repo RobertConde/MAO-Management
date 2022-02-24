@@ -280,6 +280,22 @@ function getRoom($id, $comp)
 	return null;
 }
 
+function getCompDivCount($comp, $div): int
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+	$bus_counts_stmt = $sql_conn->prepare("SELECT COUNT(*) FROM competition_data cd
+                                                INNER JOIN competitor_info ci ON ci.id = cd.id
+                                                WHERE competition_name = ? AND ci.division = ?");
+	$bus_counts_stmt->bind_param('si', $comp, $div);
+	$bus_counts_stmt->bind_result($comp_div_count);
+	$bus_counts_stmt->execute();
+	$bus_counts_stmt->fetch();
+
+	return ($comp_div_count ?? 0);
+}
+
 function getBusCount($comp, $bus): int
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
@@ -294,4 +310,39 @@ function getBusCount($comp, $bus): int
 	$bus_counts_stmt->fetch();
 
 	return ($bus_count ?? 0);
+}
+
+function getCompNumber($comp): array
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+	$get_people_in_order_stmt = $sql_conn->prepare(
+		"SELECT 
+                cd.id,
+       			cd.bus,
+       			(ci.division != 0) AS is_competitor
+            FROM competition_data cd
+            INNER JOIN people p ON cd.id = p.id
+            INNER JOIN competitor_info ci ON cd.id = ci.id
+            WHERE competition_name = ?
+            ORDER BY (ci.division = 0), cd.bus, p.last_name, p.first_name");
+	$get_people_in_order_stmt->bind_param('s', $comp);
+	$get_people_in_order_stmt->execute();
+
+	$get_people_in_order_result = $get_people_in_order_stmt->get_result();
+	$people_in_order = $get_people_in_order_result->fetch_all(MYSQLI_ASSOC);
+
+	$bus_numbers_by_ID = array();
+	for ($comp_num = 1; $comp_num <= count($people_in_order); ++$comp_num) {
+		$person = $people_in_order[$comp_num - 1];
+
+		$id = $person['id'];
+		$bus = $person['bus'];
+		$is_competitor = $person['is_competitor'];
+
+		$bus_numbers_by_ID[$id] = array('comp_num' => ($is_competitor ? $comp_num : '0'), 'bus' => $bus);
+	}
+
+	return $bus_numbers_by_ID;
 }
