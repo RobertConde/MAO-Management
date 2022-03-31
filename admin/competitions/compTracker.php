@@ -81,6 +81,7 @@ if (!is_null($add_id)) {
 <?php
 compReportForm($comp, 'comp-selections');
 compReportForm($comp, 'comp-posting');
+compReportForm($comp, 'comp-unpaid');
 compReportForm($comp, 'comp-checkoff');
 compReportForm($comp, 'mentor-lists');
 ?>
@@ -118,6 +119,7 @@ compReportForm($comp, 'mentor-lists');
 
         <input type="submit" form="comp-selections" value="Selections [<?php echo numUnaddedSelections($comp); ?>]">
         <input type="submit" form="comp-posting" value="Posting">
+        <input type="submit" form="comp-unpaid" value="Not Paid [<?php echo unpaidCompCount($comp) ?>]">
         <br>
         <input type="submit" form="comp-checkoff" value="Checkoff List">
         <input type="submit" form="mentor-lists" value="Mentor Lists"><br>

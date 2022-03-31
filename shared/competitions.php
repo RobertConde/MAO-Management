@@ -346,3 +346,27 @@ function getCompNumber($comp): array
 
 	return $bus_numbers_by_ID;
 }
+
+function unpaidCompCount($comp): int
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+	if (!empty($payment_id = getAssociatedCompInfo($comp, 'payment_id'))) {
+		$unpaid_comp_count_stmt = $sql_conn->prepare(
+			"SELECT COUNT(*)
+					FROM competitor_info ci
+					JOIN transactions t ON t.id = ci.id
+					WHERE t.payment_id = ? AND (t.owed > t.paid) AND ci.division != 0");
+		$unpaid_comp_count_stmt->bind_param('s', $payment_id);
+		$unpaid_comp_count_stmt->bind_result($unpaid_comp_count);
+		$unpaid_comp_count_stmt->execute();
+
+		$unpaid_comp_count_stmt->fetch();
+
+		$unpaid_comp_count_stmt->close();
+		return $unpaid_comp_count;
+	}
+
+	return 0;
+}
