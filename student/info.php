@@ -19,7 +19,8 @@ if (isset($_POST['select-id']) && compareRank($_SESSION['id'], $_POST['select-id
 		$updated_person = updatePerson(
 			$_POST['select-id'],
 			$_POST['first_name'], $_POST['middle_initial'], $_POST['last_name'], $_POST['school_code'],
-			$_POST['graduation_year'], $_POST['email'], $_POST['phone'], $_POST['address']);
+			$_POST['graduation_year'], $_POST['email'], $_POST['phone'], $_POST['address'],
+			(getRank($_SESSION['id']) == ADMIN_RANK && ($_POST['select-id'] != $_SESSION['id']) ? $_POST['perms'] : null));
 	} else if (isset($_POST['update_schedule']))
 		$updated_schedule = updateSchedule(
 			$_POST['select-id'],
@@ -79,6 +80,24 @@ if (getRank($_SESSION['id']) > STUDENT_RANK) {
         <form method="post" action="info.php?select-id=<?php echo $id; ?>" class="filled border">
             <fieldset>
                 <legend><b>Personal Information</b></legend>
+
+                <label for="perms">Permissions:</label>
+                <select id="perms" name="perms"
+                        required <?php if (!(getRank($_SESSION['id']) == ADMIN_RANK && ($id != $_SESSION['id']))) echo 'disabled'; ?>>
+                    <option value="0" <?php if (getAccountDetail('people', 'permissions', $id) == 0) echo 'selected'; ?>>
+                        Student
+                    </option>
+
+                    <option value="10" <?php if (getAccountDetail('people', 'permissions', $id) == 10) echo 'selected'; ?>>
+                        Officer
+                    </option>
+
+                    <option value="100" <?php if (getAccountDetail('people', 'permissions', $id) == 100) echo 'selected'; ?>>
+                        Administrator
+                    </option>
+                </select><br>
+
+                <hr>
 
                 <label for="select-id">ID:</label>
                 <input id="select-id" type="text" pattern="[0-9]{7}" size="7" disabled

@@ -102,19 +102,23 @@ function cycleLoginCode($id): bool
 	return $cycle_statement->execute() && sendLoginCodeEmail($id);
 }
 
-function updatePerson($id, $first_name, $middle_initial, $last_name, $school_code, $graduation_year, $email, $phone, $address): bool
+function updatePerson($id, $first_name, $middle_initial, $last_name, $school_code, $graduation_year,
+                      $email, $phone, $address, $perms = null): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
 	$update_people_stmt = $sql_conn->prepare("UPDATE people
 		SET first_name = ?, middle_initial = ?, last_name = ?, school_code = ?, graduation_year = ?,
-		    email = ?, phone = ?, address = ? WHERE id = ?;");
+		    email = ?, phone = ?, address = ?, permissions = ? WHERE id = ?;");
+
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
+	$perms = ($perms ?? getPerms($id));
 
 	/** @noinspection SpellCheckingInspection */
-	$update_people_stmt->bind_param('ssssissss',
+	$update_people_stmt->bind_param('ssssisssis',
 		$first_name, $middle_initial, $last_name, $school_code, $graduation_year,
-		$email, $phone, $address,
+		$email, $phone, $address, $perms,
 		$id);
 
 	return $update_people_stmt->execute();
