@@ -45,6 +45,9 @@ function getIDByName($last_name, $first_name)
 
 function registerAccount($id, $first_name, $middle_initial, $last_name, $school_code, $graduation_year, $email, $phone, $address): bool
 {
+	if (!preg_match('/[0-9]{7}/', $id))
+		return false;
+
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
 
