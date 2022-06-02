@@ -13,7 +13,8 @@ function getDBConn(): mysqli
 }
 
 // TODO: lord, the <i>security</i>
-function getDetail($table, $col, $unique_col, $unique_val) {
+function getDetail($table, $col, $unique_col, $unique_val)
+{
 	$sql_conn = getDBConn();
 
 	if ($result = $sql_conn->query("SELECT $col FROM $table WHERE $unique_col = '$unique_val'")) {
@@ -24,5 +25,5 @@ function getDetail($table, $col, $unique_col, $unique_val) {
 		else
 			die("<p style='color:red;'>Get detail function fetched a non-singular result: num_rows = $result->num_rows.</p>\n");
 	} else
-        die("<p style='color:red;'>Get detail function occurred an error upon query!</p>\n");
+		die("<p style='color:red;'>Get detail function occurred an error upon query!</p>\n");
 }

@@ -13,7 +13,7 @@ $ref = "https://" . $_SERVER['HTTP_HOST'];
 if (isset($_GET['ref'])) {
 	$ref = $_GET['ref'];
 
-	if (strpos($_GET['ref'], '?') == false)
+	if (!strpos($_GET['ref'], '?'))
 		$ref .= "?return=";
 	else
 		$ref .= "&return=";

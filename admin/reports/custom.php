@@ -46,12 +46,23 @@ if (isset($_GET['order_by']))
 
             <!--suppress HtmlFormInputWithoutLabel -->
             <input id="order_by" name="order_by" type="text" placeholder="SQL Order By Expression" style="margin: 6px;"
-                   value="<?php echo $order_by; ?>">
-            <br>
+                   value="<?php echo $order_by; ?>"><br>
 
-            <input type="submit" value="Get!">
+            <input type="submit" value="Query" style="float: right;">
+        </fieldset>
+    </form><br>
+
+    <form id="export-form" method="get" action="/shared/export-csv.php" target="_blank" class="filled border" style="text-align: center;">
+        <fieldset>
+            <legend><b>Report Actions</b></legend>
+
+            <input type="hidden" name="table" value="<?php echo $table; ?>">
+            <input type="hidden" name="order_by" value="<?php echo $order_by; ?>">
+
+            <input type="submit" value="Export Report">
         </fieldset>
     </form>
+
 
 <?php
 if (isset($_GET['table'])) {
