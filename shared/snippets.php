@@ -210,12 +210,15 @@ function noNavBar()
 	echo "<style>.navbar {display: none;} body {padding: 0;}</style>";
 }
 
-function koskiKids()
+function loginBackground()
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets/koski-kids.php";
+	$custom_config = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . "/config.ini", true)['custom'];
+
+	if ($custom_config['background'])
+		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets/login-background.php";
 }
 
 function calendar()
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/calendar.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/custom/calendar.php";
 }
