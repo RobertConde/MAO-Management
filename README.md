@@ -9,9 +9,18 @@
 6. Move `./phpMyBackupPro/global_conf.php/` to `./../files/`.
 
 ## To-do
-- FAMAT ID Updater
+- Calendar & Login Form:
+  - Add calendar option in `config.ini`
+  - Put `calendar.php` in `shared/custom`
+  - Add instructions for calendar IFrame
+  - Fix styling for calendar and login form if calendar is not being used
+- Login Page Background:
+  - Add background option in `config.ini`
+  - _Maybe_: Put a default background in `shared/custom`
+  - Change function name of `koskiKids`
+  - Add instructions to change background
 - Competition Tracker:
-  - Competition Tracker Deselect Page Should Have Statistics on all Comps.
+  - Competition tracker deselect page should have statistics on all competitions
 - Administration Panel (_TBD, WIP_)
 
 ## Introduction
