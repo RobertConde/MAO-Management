@@ -257,10 +257,10 @@ function resetStudentConfirmations(): bool
 	$get_ids_stmt->execute();
 
 	while ($get_ids_stmt->fetch()) {
-		if (getGrade($curr_id) != 0 && getAccountDetail('competitor_info', 'division', $curr_id) != 0)
-			resetConfirmation($curr_id);
-		else
-			return false;
+		if (getGrade($curr_id) != 0 && getAccountDetail('competitor_info', 'division', $curr_id) != 0) {
+			if (!resetConfirmation($curr_id))
+				return false;
+		}	
 	}
 
 	return true;
