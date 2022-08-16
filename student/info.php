@@ -129,7 +129,7 @@ if (getRank($_SESSION['id']) > STUDENT_RANK) {
                        value="<?php echo getAccountDetail('people', 'last_name', $id); ?>"><br>
 
                 <label for="school_code">School Code:</label>
-                <select id="school_code" name="school_code" required>
+                <select id="school_code" name="school_code">
                     <option value="" selected></option>
 
                     <option value="3029" <?php if (getAccountDetail('people', 'school_code', $id) == '3029') echo 'selected'; ?>>
