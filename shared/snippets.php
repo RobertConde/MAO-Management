@@ -30,7 +30,7 @@ function currentURL($request = true): string
 {
 	$currentURL = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
-	if (!$request && strpos($currentURL, '?') != false)
+	if (!$request && strpos($currentURL, '?'))
 		return substr($currentURL, 0, strpos($currentURL, '?'));
 
 	return $currentURL;

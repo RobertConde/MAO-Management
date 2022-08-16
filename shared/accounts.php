@@ -218,6 +218,55 @@ function updateCompetitorInfo_Admin($id, $division, $tshirt, $mu_student_id, $is
 	return $update_competitor_stmt->execute();
 }
 
+
+function confirmAccount($id): bool
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+
+	$confirm_account_stmt = $sql_conn->prepare("UPDATE people SET is_confirmed = TRUE WHERE id = ?");
+
+	/** @noinspection SpellCheckingInspection */
+	$confirm_account_stmt->bind_param('s', $id);
+
+	return $confirm_account_stmt->execute();
+}
+
+function resetConfirmation($id): bool
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+
+	$reset_confirm_stmt = $sql_conn->prepare("UPDATE people SET is_confirmed = FALSE WHERE id = ?");
+
+	/** @noinspection SpellCheckingInspection */
+	$reset_confirm_stmt->bind_param('s', $id);
+
+	return $reset_confirm_stmt->execute();
+}
+
+function resetStudentConfirmations(): bool
+{
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+	$get_ids_stmt = $sql_conn->prepare("SELECT id FROM people");
+	$get_ids_stmt->bind_result($curr_id);
+	$get_ids_stmt->execute();
+
+	while ($get_ids_stmt->fetch()) {
+		if (getGrade($curr_id) != 0 && getAccountDetail('competitor_info', 'division', $curr_id) != 0)
+			resetConfirmation($curr_id);
+		else
+			return false;
+	}
+
+	return true;
+}
+
+
 // TODO comp info updates (student and >=officer)
 
 function getAccountDetail($table, $col, $id)

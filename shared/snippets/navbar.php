@@ -138,12 +138,20 @@ $navbar_rank = getRank();
                                     Backup</a>
                             </li>
 
+                            <li><a target="_self" href="<?php echo relativeURL('admin/panel/administration'); ?>">
+                                    Administration Panel</a>
+                            </li>
+
                             <li class="divider" role="separator"></li>
 
                             <li class="dropdown-header">Reports <i>(WIP!)</i></li>
 
                             <li><a target="_self" href="<?php echo relativeURL('admin/reports/custom'); ?>">
                                     Table Dump</a>
+                            </li>
+
+                            <li><a target="_self" href="<?php echo relativeURL('admin/reports/confirmations'); ?>">
+                                    Account Confirmations</a>
                             </li>
                         </ul>
                     </li>

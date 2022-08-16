@@ -73,8 +73,8 @@ do { // All tables for the report
 	do {  // All tables for a bus
 		echo "<table class='page-break' style='font-size: small;'>";
 
-		echo "<tr><th colspan='100'>$comp [Division: <u>" . DIVISIONS[$table_division]. "</u>]</th></tr>",
-			"<tr>
+		echo "<tr><th colspan='100'>$comp [Division: <u>" . DIVISIONS[$table_division] . "</u>]</th></tr>",
+		"<tr>
                 <th>$table_count</th>
                 <th>Bus</th>
                 <th>Name</th>
@@ -94,7 +94,7 @@ do { // All tables for the report
 
 		$table_index = 0;
 		do {
-            $curr_person_comp_num = $comp_nums[$curr_person['id']]['comp_num'];
+			$curr_person_comp_num = $comp_nums[$curr_person['id']]['comp_num'];
 			$curr_person_comp_bus = $comp_nums[$curr_person['id']]['bus'];
 			$curr_person_name = $curr_person['name'];
 			$curr_person_id = $curr_person['id'];
@@ -115,7 +115,7 @@ do { // All tables for the report
 			echo "<td style='text-align: right;'>$curr_person_comp_num</td>";
 
 			// Bus
-            echo "<td>$curr_person_comp_bus</td>";
+			echo "<td>$curr_person_comp_bus</td>";
 
 			// Name
 			echo "<td style='text-align: left;'>$curr_person_name</td>";
@@ -138,7 +138,8 @@ do { // All tables for the report
 		&& ($curr_person['division'] == $table_division));
 
 		echo "</table>";
-	} while (($curr_person['division'] == $table_division)
+	} while (!is_null($curr_person)
+	&& ($curr_person['division'] == $table_division)
 	&& (!is_null($curr_person = $approved_IDs_result->fetch_assoc())
 		&& ($curr_person['division'] == $table_division)));
 

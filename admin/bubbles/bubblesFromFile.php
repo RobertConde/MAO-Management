@@ -28,8 +28,8 @@ if (isset($_POST['comp'], $_FILES[$attribute_name])) {
 		$comp = $_POST['comp'];
 
 		$new_filename = md5(rand());
-		if (!move_uploaded_file($file_tmp, $_SERVER['DOCUMENT_ROOT'] . "/../uploads/$new_filename.$file_ext"))
-			die("Error moving file to uploads folder.");
+		if (!move_uploaded_file($file_tmp, $_SERVER['DOCUMENT_ROOT'] . "/temp/$new_filename.$file_ext"))
+			die("Error moving file to temp folder.");
 
 		redirect(relativeURL('admin/bubbles/createPDF?ref=' . currentURL(false) . "&comp=$comp&csv_filename=$new_filename"));
 	} else
@@ -49,8 +49,8 @@ if (isset($_POST['comp'], $_FILES[$attribute_name])) {
         <input id="comp" name="comp" type="text"><br>
         <br>
 
-        <label for="bubbleInfoCSV"><u>CSV Upload (<?php echo makeLink('Example', 'shared/examples/Bubble Sheets From File.csv'); ?>
-                )</u></label>
+        <label for="bubbleInfoCSV"><u>CSV Upload
+                (<?php echo makeLink('Example', 'shared/examples/Bubble Sheets From File.csv'); ?>)</u></label>
         <input id="bubbleInfoCSV" name="bubbleInfoCSV" type="file" required><br>
 
         <input type="submit" value="Create Bubbles!">
@@ -58,5 +58,6 @@ if (isset($_POST['comp'], $_FILES[$attribute_name])) {
 </form><br>
 <br>
 
-<a href="https://github.com/AnirudhRahul/FAMATBubbler" class="rainbow">
+<a href="https://github.com/AnirudhRahul/FAMATBubbler" target="_blank"
+   class="rainbow">
     ♥ Credit Where Credit Is Due ♥️</a>

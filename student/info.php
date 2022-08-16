@@ -37,12 +37,13 @@ if (isset($_POST['select-id']) && compareRank($_SESSION['id'], $_POST['select-id
 			$_POST['name'], $_POST['email'], $_POST['phone'], $_POST['alternate_phone'], $_POST['alternate_ride_home']);
 	else if (isset($_POST['update_competitor_info'])) {
 		if (getRank($_SESSION['id']) < OFFICER_RANK)
-			$updated_competitor_info = updateCompetitorInfo_Student($_POST['select-id'], $_POST['tshirt']);
+			$updated_competitor_info = updateCompetitorInfo_Student($_POST['select-id'], $_POST['tshirt'] ?? '');
 		else
 			$updated_competitor_info = updateCompetitorInfo_Admin(
-				$_POST['select-id'], $_POST['division'], $_POST['tshirt'], $_POST['mu_student_id'], $_POST['is_famat_member'],
+				$_POST['select-id'], $_POST['division'], $_POST['tshirt'] ?? '', $_POST['mu_student_id'], $_POST['is_famat_member'],
 				$_POST['is_national_member'], $_POST['has_medical'], $_POST['has_insurance'], $_POST['has_school_insurance']);
-	}
+	} else if (isset($_POST['confirm_account']))
+		$confirmed_account = confirmAccount($_POST['select-id']);
 
 	redirect(currentURL());
 }
@@ -74,6 +75,17 @@ if (getRank($_SESSION['id']) > STUDENT_RANK) {
 }
 ?>
 <!-- TODO: This is bad and ugly and makes me want to cry. I hate my old code :( -->
+
+<div <?php if (getAccountDetail('people', 'is_confirmed', $id)) echo 'style="display: none;"'; ?>>
+    <div style="display: flex; justify-content: center;">
+        <form method="post">
+            <input name="select-id" type="hidden" value="<?php echo $id; ?>">
+
+            <input id="confirm_account" name="confirm_account" type="submit" value="Confirm Account Information"
+                   class="btn btn-primary">
+        </form>
+    </div>
+</div>
 
 <div style="display: flex; justify-content: center; margin: 6px; text-align: left;">
     <div style="margin: 6px; padding-right: 6px;">

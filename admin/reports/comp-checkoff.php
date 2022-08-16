@@ -164,7 +164,8 @@ do { // All tables for the report
 		&& (!$is_bus_list || $curr_person['bus'] == $table_bus));
 
 		echo "</table>";
-	} while ((!$is_bus_list || $curr_person['bus'] == $table_bus)
+	} while (!is_null($curr_person)
+	&& (!$is_bus_list || $curr_person['bus'] == $table_bus)
 	&& (!is_null($curr_person = $approved_IDs_result->fetch_assoc())
 		&& (!$is_bus_list || $curr_person['bus'] == $table_bus)));
 

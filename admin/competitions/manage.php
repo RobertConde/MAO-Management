@@ -14,7 +14,7 @@ if (isset($_POST['create'])) {
 
 	$created = createCompetition(  // Create competition
 		$_POST['comp_name'], $_POST['start_date'], $_POST['end_date'], $_POST['payment_id'],
-		isset($_POST['forms']), isset($_POST['bus']), isset($_POST['rooms']),
+		isset($_POST['forms']), isset($_POST['bus']), isset($_POST['room']),
 		$_POST['info']);
 
 	redirect(currentURL(false) . '?comp_name=' . rawurlencode($_POST['comp_name'])); // Redirect to created competition manage page

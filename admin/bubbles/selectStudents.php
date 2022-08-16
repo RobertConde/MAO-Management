@@ -61,5 +61,6 @@ if (isset($_GET['return'])) {
 </form><br>
 <br>
 
-<a href="https://github.com/AnirudhRahul/FAMATBubbler" class="rainbow">
+<a href="https://github.com/AnirudhRahul/FAMATBubbler" target="_blank"
+   class="rainbow">
     ♥ Credit Where Credit Is Due ♥️</a>

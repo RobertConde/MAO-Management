@@ -119,10 +119,11 @@ function setTransaction($id, $payment_id, $owed, $paid, $modifiers): bool
 		$owed = $owed ?? 0;
 		$paid = $paid ?? 0;
 		$modifiers = $modifiers ?? '';
+		$log = '';
 
-		$insert_transaction_stmt = $sql_conn->prepare("INSERT INTO transactions (id, payment_id, owed, paid, modifiers) VALUES (?, ?, ?, ?, ?)");
+		$insert_transaction_stmt = $sql_conn->prepare("INSERT INTO transactions (id, payment_id, owed, paid, modifiers, log) VALUES (?, ?, ?, ?, ?, ?)");
 		/** @noinspection SpellCheckingInspection */
-		$insert_transaction_stmt->bind_param('ssiis', $id, $payment_id, $owed, $paid, $modifiers);
+		$insert_transaction_stmt->bind_param('ssiiss', $id, $payment_id, $owed, $paid, $modifiers, $log);
 
 		if (!$insert_transaction_stmt->execute())
 			die("Error inserting transaction: $insert_transaction_stmt->error");

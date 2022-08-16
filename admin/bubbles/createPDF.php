@@ -25,7 +25,7 @@ if (isset($_POST['selected']) && is_array($_POST['selected'])) {
 
 	$IDs = $_POST['selected'];
 
-    $json_array['comp'] = $_POST['comp'];
+	$json_array['comp'] = $_POST['comp'] ?? '';
 	$json_array['bubbles'] = array(
 		true,   // 1-4: FAMAT ID (unique for each school)
 		true,
@@ -47,13 +47,13 @@ if (isset($_POST['selected']) && is_array($_POST['selected'])) {
 
 		$grade = getGrade($id);
 		if (6 <= $grade && $grade <= 8) {
-			$student['school'] = "Doral Academy Middle School";
+			$student['school'] = "Doral Academy MS";
 			$famat_id .= '5377';
 		} else if (9 <= $grade && $grade <= 12) {
-			$student['school'] = "Doral Academy High School";
+			$student['school'] = "Doral Academy HS";
 			$famat_id .= '5375';
 		} else {    // Invalid grade
-			$student['school'] = "Doral Academy __________ School";
+			$student['school'] = "Doral Academy ____";
 			$famat_id .= '537 ';
 		}
 
@@ -100,16 +100,16 @@ if (isset($_POST['selected']) && is_array($_POST['selected'])) {
 		true);  // 9: Team
 
 	$json_array['students'] = array();
-	if (($handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/../uploads/$csv_filename.csv", "r")) !== FALSE) {
+	if (($handle = fopen($_SERVER['DOCUMENT_ROOT'] . "/temp/$csv_filename.csv", "r")) !== FALSE) {
 		fgetcsv($handle); // Skip header
 		while (($data = fgetcsv($handle)) !== FALSE) {
 			$student = array();
 
-			$student['school'] = "Doral Academy Charter School";
+			$student['school'] = "Doral Academy ____";
 
 			$student['name'] = $data[1];
 
-            $student['test'] = "_______________ Individual";
+			$student['test'] = "";
 
 			$student['famat_id'] = $data[0];
 
@@ -141,12 +141,11 @@ $json = json_encode($json_array);
 		doc.setFontSize(12);
 		doc.deletePage(1);  // Start off with no pages (delete blank page?)
 
-		// TODO
+		// TODO: make better
 		const jsonText = '<?php echo $json; ?>';
-		console.log(jsonText);
 		const json = JSON.parse(jsonText);
 
-		const comp = json['comp'];
+		const comp = json['comp'] !== '' ? json['comp'] : 'Competition';
 		const bubbles = json['bubbles'];
 
 		const background = new Image;
