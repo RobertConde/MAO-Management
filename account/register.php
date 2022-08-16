@@ -46,7 +46,7 @@ stylesheet();
             <input id="phone" name="phone" type="tel" pattern="[0-9]{10}" size="10" required><br>
 
             <label for="address">Address:</label>
-            <input id="address" name="address" type="text" size="25" required><br>
+            <input id="address" name="address" type="text" size="35" required><br>
             <br>
 
             <input id="register" name="register" type="submit" value="Register">
