@@ -267,8 +267,8 @@ function resetStudentConfirmations(): bool
 }
 
 
-// TODO comp info updates (student and >=officer)
-
+// TODO: comp info updates (student and >=officer)
+// TODO: getDivision function!!!
 function getAccountDetail($table, $col, $id)
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
