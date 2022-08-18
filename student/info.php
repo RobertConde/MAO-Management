@@ -96,7 +96,7 @@ if (getRank($_SESSION['id']) > STUDENT_RANK) {
                 <label for="perms">Permissions:</label>
                 <select id="perms" name="perms"
                         required <?php if (!(getRank($_SESSION['id']) == ADMIN_RANK && ($id != $_SESSION['id']))) echo 'disabled'; ?>>
-                    <option value="0" <?php if (getAccountDetail('people', 'permissions', $id) == 0) echo 'selected'; ?>>
+                    <option value="0" <?php if (getAccountDetail('people', 'permissions', $id) == 1) echo 'selected'; ?>>
                         Student
                     </option>
 
