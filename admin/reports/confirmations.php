@@ -14,6 +14,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/competitions.php";
 
 
+if (isset($_POST['reset_confirmation_id'])) {
+	resetConfirmation($_POST['reset_confirmation_id']);
+	redirect(currentURL());
+}
+
 $sort_by = 'name';
 if (isset($_GET['sort_by']))
 	$sort_by = $_GET['sort_by'];
@@ -75,7 +80,7 @@ if (isset($_GET['sort_by']))
 
 
 	// Not Confirmed Table
-	echo "<table class='page-break' style='font-size: small;'>",
+	echo "<table class='border filled page-break' style='font-size: small;'>",
 	"<tr><th colspan='100'>Not Confirmed Accounts</th></tr>",
 	"<tr>",
 	"<th>ID</th>",
@@ -101,13 +106,14 @@ if (isset($_GET['sort_by']))
 			"<td style='text-align: left;'>$curr_person_division</td>",
 			"<td style='text-align: left;'>$curr_person_phone</td>",
 			"<td style='text-align: left;'>$curr_person_email</td>",
-			"<tr>";
+			"</tr>";
 		}
 	}
 	echo "</table>";
 
 
-	echo "<table class='page-break' style='font-size: small;'>",
+	echo "<form id='reset_confirmation_form' method='post'></form>",
+	"<table class='border filled page-break' style='font-size: small;'>",
 	"<tr><th colspan='100'>Confirmed Accounts</th></tr>",
 	"<tr>",
 	"<th>ID</th>",
@@ -117,6 +123,7 @@ if (isset($_GET['sort_by']))
 	"<th>Division</th>",
 	"<th>Phone #</th>",
 	"<th>Email</th>",
+	"<th class='no-print'>Actions</th>",
 	"</tr>";
 
 	if ($curr_person) {
@@ -136,7 +143,10 @@ if (isset($_GET['sort_by']))
 				"<td style='text-align: left;'>$curr_person_division</td>",
 				"<td style='text-align: left;'>$curr_person_phone</td>",
 				"<td style='text-align: left;'>$curr_person_email</td>",
-				"<tr>";
+				"<td class='no-print'>",
+				"    <button name='reset_confirmation_id' type='submit' form='reset_confirmation_form' value='$curr_person_id' class='btn-xs btn-danger'>Reset Confirmation</button>",
+				"</td>",
+				"</tr>";
 			}
 		} while ($curr_person = $approved_IDs_result->fetch_assoc());
 	}

@@ -247,7 +247,7 @@ function resetConfirmation($id): bool
 	return $reset_confirm_stmt->execute();
 }
 
-function resetStudentConfirmations(): bool
+function resetNotGraduatedConfirmations(): bool
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 	$sql_conn = getDBConn();
