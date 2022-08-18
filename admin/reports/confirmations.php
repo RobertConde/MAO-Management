@@ -69,7 +69,6 @@ if (isset($_GET['sort_by']))
                 p.is_confirmed
             FROM people p
             INNER JOIN competitor_info ci ON ci.id = p.id
-            WHERE ci.division != 0
             ORDER BY p.is_confirmed, $sort_by");
 	$approved_IDs_stmt->execute();
 	$approved_IDs_result = $approved_IDs_stmt->get_result();
