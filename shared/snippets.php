@@ -80,7 +80,7 @@ function TR($row_array, $center = false): string
 		if ($center)
 			$row_data .= surrTags('td', $row_elem, "style='text-align: center;'");
 		else
-			$row_data .= surrTags('td', $row_elem);
+			$row_data .= surrTags('td', $row_elem, "style='text-align: left;'");
 	}
 
 	return surrTags('tr', $row_data);

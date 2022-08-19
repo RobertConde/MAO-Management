@@ -18,7 +18,7 @@ if (isset($_GET['order_by']))
 	$order_by = $_GET['order_by'];
 ?>
 
-    <title>MAO | Custom Report</title>
+    <title>MAO | Table Dump</title>
 
     <h2 style="margin: 6px;"><u>Custom Report</u></h2>
 

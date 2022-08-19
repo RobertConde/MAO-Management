@@ -146,7 +146,7 @@ $navbar_rank = getRank();
 
                             <li class="dropdown-header">Reports <i>(WIP!)</i></li>
 
-                            <li><a target="_self" href="<?php echo relativeURL('admin/reports/custom'); ?>">
+                            <li><a target="_self" href="<?php echo relativeURL('admin/reports/table_dump'); ?>">
                                     Table Dump</a>
                             </li>
 
