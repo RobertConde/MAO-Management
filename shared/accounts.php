@@ -258,9 +258,8 @@ function resetNotGraduatedConfirmations(): bool
 
 	while ($get_ids_stmt->fetch()) {
 		if (getGrade($curr_id) != 0)
-			resetConfirmation($curr_id);
-		else
-			return false;
+			if (!resetConfirmation($curr_id))
+				return false;
 	}
 
 	return true;
