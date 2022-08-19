@@ -1,5 +1,7 @@
 # MAO-Management
 
+Made with love for Doral Academy MAO.
+
 ## Installation Instructions
 
 1. Upload a copy of the latest release into your `public_html` directory.
