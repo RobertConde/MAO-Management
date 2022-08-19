@@ -55,7 +55,7 @@ $navbar_rank = getRank();
 
                     <li class="dropdown" <?php if ($navbar_rank < STUDENT_RANK) echo 'style="display: none;"'; ?>>
                         <a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" data-toggle="dropdown"
-                           role="button">Your Account
+                           role="button">View Account
                             <span class="caret"></span>
                         </a>
 
