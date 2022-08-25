@@ -112,6 +112,10 @@ $navbar_rank = getRank();
                                    href="<?php echo relativeURL('admin/accounts/fast-famat'); ?>">Fast FAMAT IDs!</a>
                             </li>
 
+                            <li><a target="_self"
+                                   href="<?php echo relativeURL('admin/accounts/set-divisions'); ?>">Set Divisions</a>
+                            </li>
+
                             <li><a target="_self" href="<?php echo relativeURL('admin/competitions/compTracker'); ?>">
                                     Competition Tracker</a></li>
 
@@ -186,14 +190,16 @@ $navbar_rank = getRank();
 </div> <!-- /container -->
 
 <!--suppress SpellCheckingInspection -->
-<script crossorigin="anonymous"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<!--<script crossorigin="anonymous"-->
+<!--        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"-->
+<!--        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>-->
 
 <!--suppress SpellCheckingInspection -->
-<script crossorigin="anonymous"
-        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<!--<script crossorigin="anonymous"-->
+<!--        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"-->
+<!--        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>-->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <!--suppress SpellCheckingInspection -->
 <script crossorigin="anonymous"

@@ -13,17 +13,17 @@ function existsPerson($id): bool
 		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 		$sql_conn = getDBConn();
 
-	$find_person_stmt = $sql_conn->prepare("SELECT COUNT(*) FROM people WHERE id = ?");
-	$find_person_stmt->bind_param('s', $id);
-	$find_person_stmt->bind_result($num_people);
+		$find_person_stmt = $sql_conn->prepare("SELECT COUNT(*) FROM people WHERE id = ?");
+		$find_person_stmt->bind_param('s', $id);
+		$find_person_stmt->bind_result($num_people);
 
-	if (!$find_person_stmt->execute())
-		die("Error occurred checking if person exists: $find_person_stmt->error");
-	$find_person_stmt->fetch();
+		if (!$find_person_stmt->execute())
+			die("Error occurred checking if person exists: $find_person_stmt->error");
+		$find_person_stmt->fetch();
 
-	$sql_conn->close();
-	return ($num_people == 1);
-}
+		$sql_conn->close();
+		return ($num_people == 1);
+	}
 
 	return false;
 }
@@ -271,7 +271,6 @@ function resetNotGraduatedConfirmations(): bool
 
 
 // TODO: comp info updates (student and >=officer)
-// TODO: getDivision function!!!
 function getAccountDetail($table, $col, $id)
 {
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
@@ -295,6 +294,31 @@ function getGrade($id): int
 	}
 
 	return 0;
+}
+
+// TODO: implement getDivision function
+function getDivision($id): int
+{
+	if (existsPerson($id))
+		return getDetail('competitor_info', 'division', 'id', $id);
+	else
+		die("Cannot get division of a user (ID = " . is_null($id) ? "NULL" : $id . ") that does not exist.");
+}
+
+function setDivision($id, $division): bool
+{
+	if (!existsPerson($id))
+		die("Cannot set division of a user (ID = " . is_null($id) ? "NULL" : $id . ") that does not exist.");
+	if (!($division >= 0 && $division <= 6))
+		die("Cannot set division to $division because it is an invalid division.");
+
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+	$sql_conn = getDBConn();
+
+	$update_division_stmt = $sql_conn->prepare("UPDATE competitor_info SET division = ? WHERE id = ?");
+	$update_division_stmt->bind_param('is', $division, $id);
+
+	return $update_division_stmt->execute();
 }
 
 function setFAMAT_ID($id, $famat_id): bool
