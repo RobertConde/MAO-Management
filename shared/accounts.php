@@ -9,8 +9,9 @@ function safelyStartSession()
 // TODO: implement into codebase
 function existsPerson($id): bool
 {
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
-	$sql_conn = getDBConn();
+	if (!is_null($id)) {
+		require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
+		$sql_conn = getDBConn();
 
 	$find_person_stmt = $sql_conn->prepare("SELECT COUNT(*) FROM people WHERE id = ?");
 	$find_person_stmt->bind_param('s', $id);
@@ -22,6 +23,9 @@ function existsPerson($id): bool
 
 	$sql_conn->close();
 	return ($num_people == 1);
+}
+
+	return false;
 }
 
 function getIDByName($last_name, $first_name)
