@@ -49,8 +49,8 @@ loginBackground();
             <fieldset style="text-align: left;">
                 <legend style="text-align: center;"><b>Get a Login Code</b></legend>
 
-                <label for="id">ID:</label>
-                <input id="id" name="id" type="text" pattern="[0-9]{7}" size="7" required><br>
+                <label for="id-code">ID:</label>
+                <input id="id-code" name="id" type="text" pattern="[0-9]{7}" size="7" required><br>
                 <br>
 
                 <input id="cycle_code" name="cycle_code" type="submit" value="Email Code">
@@ -71,8 +71,8 @@ loginBackground();
             <fieldset style="text-align: left;">
                 <legend style="text-align: center;"><b>Login!</b></legend>
 
-                <label for="id">ID:</label>
-                <input id="id" name="id" type="text" pattern="[0-9]{7}" size="7" required><br>
+                <label for="id-login">ID:</label>
+                <input id="id-login" name="id" type="text" pattern="[0-9]{7}" size="7" required><br>
 
                 <label for="code">Code:</label>
                 <input id="code" name="code" type="password" pattern="[0-9a-fA-F]{6}" size="6" required><br>
