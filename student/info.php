@@ -2,10 +2,6 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 safelyStartSession();
 
-require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
-navigationBarAndBootstrap();
-stylesheet();
-
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/permissions.php";
 checkPerms(STUDENT_PERMS);
 ?>
@@ -13,6 +9,7 @@ checkPerms(STUDENT_PERMS);
 <title>MAO | Update Account</title>
 
 <?php
+require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/snippets.php";
 //TODO: don't use $_POST['select-id']
 if (isset($_POST['select-id']) && compareRank($_SESSION['id'], $_POST['select-id'], true)) {
 	if (isset($_POST['update_person'])) {
@@ -46,7 +43,10 @@ if (isset($_POST['select-id']) && compareRank($_SESSION['id'], $_POST['select-id
 		$confirmed_account = confirmAccount($_POST['select-id']);
 
 	redirect(currentURL());
+    die();
 }
+navigationBarAndBootstrap();
+stylesheet();
 
 // View form (using correct ID)
 $id = $_SESSION['id'];
