@@ -106,8 +106,8 @@ while (!is_null($person)) {
 	$table_header_row =
 		"<tr><th colspan='100'>$comp</th></tr>
         <tr>
-            <th>❌</th>
-            <th style='color: transparent; text-shadow: 0 0 0 #16c60c;'>➕</th>
+            <th class='no-print'>❌</th>
+            <th class='no-print' style='color: transparent; text-shadow: 0 0 0 #16c60c;'>➕</th>
             <th>ID</th>
             <th>Last Name</th>
             <th>First Name</th>
@@ -133,9 +133,9 @@ while (!is_null($person)) {
 			$add_cell = "<input type='submit' form='$id' name='add' value='➕' title='Add'>";
 		}
 
-		$row_interior = surrTags('td', $remove_cell, "style='padding: 1 2px;'");
+		$row_interior = surrTags('td', $remove_cell, "class='no-print' style='padding: 1 2px;'");
 
-		$row_interior .= surrTags('td', $add_cell, "style='padding: 1 2px;'");
+		$row_interior .= surrTags('td', $add_cell, "class='no-print' style='padding: 1 2px;'");
 
 		$row_interior .= surrTags('td', $id, "style='padding: 1 2px;'");
 
