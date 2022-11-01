@@ -118,8 +118,8 @@ be used.
 ![](docs/images/Officer_Management/Manage_Competitions.png)
 ![](docs/images/Officer_Management/Manage_Competitions_Example.png)
 
-You can create new competitions, and update and delete existing ones. The fields that are selected are shown in the __
-Competition Tracker__ and in the competition _reports_ (shown later).
+You can create new competitions, and update and delete existing ones. The fields that are selected are shown in the
+__Competition Tracker__ and in the competition _reports_ (shown later).
 
 __Note:__ The description is shown as HTML! New lines are represented by `<br>`.
 
