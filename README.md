@@ -1,6 +1,6 @@
 # MAO-Management
 
-Made with love for Doral Academy MAO.
+Made with :heart: for Doral Academy MAO.
 
 ## Installation Instructions
 
