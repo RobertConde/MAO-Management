@@ -11,8 +11,8 @@ checkPerms(ADMIN_PERMS);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/sql.php";
 
-if (isset($_POST['reset_not_graduated_confirmations'])) {
-	resetNotGraduatedConfirmations();
+if (isset($_POST['reset_confirmations'])) {
+	resetConfirmations();
     redirect(currentURL());
 }
 ?>
@@ -26,7 +26,7 @@ if (isset($_POST['reset_not_graduated_confirmations'])) {
         <legend>Account Confirmations</legend>
 
         <div class="form-group">
-            <input name="reset_not_graduated_confirmations" type="submit" value="Reset Not Graduated Confirmations"
+            <input name="reset_confirmations" type="submit" value="Reset Confirmations"
                    class="btn">
         </div>
 
