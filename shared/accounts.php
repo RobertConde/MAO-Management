@@ -194,7 +194,7 @@ function updateCompetitorInfo_Student($id, $tshirt): bool
 		SET tshirt_size = ?
 		WHERE id = ?");
 
-	$update_competitor_stmt->bind_param('iss', $tshirt, $id);
+	$update_competitor_stmt->bind_param('ss', $tshirt, $id);
 
 	return $update_competitor_stmt->execute();
 }
