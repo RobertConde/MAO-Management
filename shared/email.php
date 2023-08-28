@@ -32,7 +32,7 @@ function sendEmail($to, $subj, $msg): bool
 	$mail->SMTPDebug = SMTP::DEBUG_OFF;
 
 	//Set the hostname of the mail server
-	$mail->Host = (strlen($email_config['smtp']) > 0 ? $email_config['smtp'] : gethostname());
+	$mail->Host = (isset($email_config['smtp']) && strlen($email_config['smtp']) > 0 ? $email_config['smtp'] : gethostname());
 	//Use `$mail->Host = gethostbyname('smtp.gmail.com');`
 	//if your network does not support SMTP over IPv6,
 	//though this may cause issues with TLS
