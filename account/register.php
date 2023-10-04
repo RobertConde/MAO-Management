@@ -55,33 +55,36 @@ stylesheet();
 
 <?php
 if (isset($_POST['register'])) { // If form is POSTed
-	require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/shared/accounts.php";
 
-	$registered = registerAccount(  // Register account
-		$_POST['id'],
-		$_POST['first_name'],
-		$_POST['middle_initial'],
-		$_POST['last_name'],
-		$_POST['school_code'],
-		$_POST['graduation_year'],
-		$_POST['email'],
-		$_POST['phone'],
-		$_POST['address']);
+    if (existsPerson($_POST['id'])) // Make sure they don't already exist
+        echo("<p style='color:red;'>Account already exists with this ID! Login, instead.</p>\n");
+    else { // If not, register them!
+        $registered = registerAccount(
+            $_POST['id'],
+            $_POST['first_name'],
+            $_POST['middle_initial'],
+            $_POST['last_name'],
+            $_POST['school_code'],
+            $_POST['graduation_year'],
+            $_POST['email'],
+            $_POST['phone'],
+            $_POST['address']);
 
-	if ($registered) {
-		echo "<p style='color:green;'>Successfully registered.</p>\n";
+        if ($registered) { // Did it work?
+            echo "<p style='color:green;'>Successfully registered.</p>\n";
 
-		try {
-			if (cycleLoginCode($_POST['id']))
-				echo("<p style='color:green;'>Successfully sent new login code to email!</p>\n");
-			else
-				echo("<p style='color:red;'>Failed to send new login code to email (retry on login)!</p>\n");
-		} catch (\PHPMailer\PHPMailer\Exception $e) {
-			$error_message = $e->errorMessage();
+            try { // Alright, let's get you a code to login
+                if (cycleLoginCode($_POST['id']))
+                    echo("<p style='color:green;'>Successfully sent new login code to email!</p>\n");
+                else
+                    echo("<p style='color:red;'>Failed to send new login code to email (retry on login)!</p>\n");
+            } catch (\PHPMailer\PHPMailer\Exception $e) { // Couldn't send the email
+                $error_message = $e->errorMessage();
 
-			echo("<p style='color:red;'>PHPMailer exception: '$error_message'!</p>\n");
-		}
-
-	} else
-		echo("<p style='color:red;'>Failed to register!</p>\n");
+                echo("<p style='color:red;'>PHPMailer exception: '$error_message'!</p>\n");
+            }
+        } else // Couldn't register
+            echo("<p style='color:red;'>Failed to register!</p>\n");
+    }
 }
