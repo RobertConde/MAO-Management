@@ -138,10 +138,6 @@ $navbar_rank = getRank();
                         </a>
 
                         <ul class="dropdown-menu" hidden>
-                            <li><a target="_self" href="<?php echo relativeURL('backup'); ?>">
-                                    Backup</a>
-                            </li>
-
                             <li><a target="_self" href="<?php echo relativeURL('admin/panel/administration'); ?>">
                                     Administration Panel</a>
                             </li>

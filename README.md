@@ -179,13 +179,6 @@ _WIP!_
 
 ![](docs/images/Admin_Management/Admin_Management.png)
 
-#### Backup
-
-![](docs/images/Admin_Management/Backup.png)
-![](docs/images/Admin_Management/Backup_Panel.png)
-
-Logging in with your database username and password allows you to backup your MAO database to `./../files/export`.
-
 #### Table Dump
 
 ![](docs/images/Admin_Management/Custom_Report.png)
