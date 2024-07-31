@@ -42,8 +42,6 @@ if (isset($_GET['select-id'])) {
 personSelectForm();
 personSelect();
 ?><br>
-
-    <!--    TODO: fix styling   -->
     <form method="post" style="margin: 6px;">
         <fieldset class="filled border">
             <legend>Account Information</legend>

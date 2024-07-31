@@ -11,7 +11,8 @@ else if (isset($_POST['cycle_code']))
 	try {
 		$cycle_and_email_result = cycleLoginCode($_POST['id']);
 	} catch (\PHPMailer\PHPMailer\Exception $e) {
-	}  // TODO: error message
+		$error_message = "Eror: Unable to process cycle login. " . $e->getMessage();
+	}
 else if (isset($_POST['login'])) {
 	if (getAccountDetail('login', 'code', $_POST['id']) == strtoupper($_POST['code'])) {
 		$_SESSION['id'] = $_POST['id']; // Login (session)
@@ -36,9 +37,7 @@ loginBackground();
 <div style="display: flex; justify-content: center; align-items: center; height: 85vh;">
     <div style="display: inline-block; background: rgba(255, 255, 255, 0.65); padding: 5px; border-radius: 10px;">
         <div style="display: inline-block; background: #e3e9ff; padding: 4px; border-radius: 10px;">
-			<?php
-			calendar();
-			?>
+		<!-- INSERT IFRAME HERE -->
         </div>
     </div>
 

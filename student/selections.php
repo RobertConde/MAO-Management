@@ -90,7 +90,7 @@ if (isset($_GET['id'])) {
 
 	$sql_conn = getDBConn();
 
-	$stmt = $sql_conn->prepare("SELECT c.competition_name AS comp, c.description AS comp_desc, c.start_date, c.end_date,  (cs.unique_id IS NOT NULL) AS is_selected FROM competitions c LEFT OUTER JOIN competition_selections cs ON c.competition_name = cs.competition_name AND cs.id = ? ORDER BY c.start_date, c.end_date, c.competition_name");
+	$stmt = $sql_conn->prepare("SELECT c.competition_name AS comp, c.description AS comp_desc, c.start_date, c.end_date,  (cs.unique_id IS NOT NULL) AS is_selected FROM competitions c LEFT OUTER JOIN competition_selections cs ON c.competition_name = cs.competition_name AND cs.id = ? WHERE NOT c.hidden ORDER BY c.start_date, c.end_date, c.competition_name");
 	$stmt->bind_param('s', $id);
 	$stmt->bind_result($comp, $comp_desc, $start_date, $end_date, $is_selected);
 	$stmt->execute();
